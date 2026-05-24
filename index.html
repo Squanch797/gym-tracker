@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gym Tracker Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen p-4 font-sans pb-20">
+
+    <div class="max-w-md mx-auto space-y-6">
+        
+        <div class="bg-gray-800 rounded-2xl shadow-xl p-5 border border-gray-700">
+            <h2 class="text-xl font-bold text-emerald-400 mb-3">📊 Dashboard</h2>
+            <p class="text-sm text-gray-400 mb-2">Letzte 7 Workouts:</p>
+            <div id="dashboardGrid" class="flex space-x-2 overflow-x-auto pb-2">
+                <p class="text-xs text-gray-500">Lade Daten...</p>
+            </div>
+        </div>
+
+        <div class="bg-gray-800 rounded-2xl shadow-xl p-5 border border-emerald-700 relative overflow-hidden">
+            <div class="absolute top-0 right-0 bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">HEUTE</div>
+            <h2 class="text-2xl font-bold text-white mb-1" id="todayWorkout">Lade Plan...</h2>
+            <p class="text-sm text-gray-400 mb-4" id="workoutDetails">Empfohlene Übungen werden geladen...</p>
+            
+            <div class="flex space-x-3">
+                <button onclick="logWorkout()" class="flex-1 bg-emerald-500 hover:bg-emerald-600 text-gray-900 font-bold py-3 rounded-xl transition cursor-pointer">
+                    ✅ Erledigt
+                </button>
+                <button onclick="skipWorkout()" class="flex-1 border border-gray-500 hover:bg-gray-700 text-gray-300 font-bold py-3 rounded-xl transition cursor-pointer">
+                    ⏭️ Skip Day
+                </button>
+            </div>
+        </div>
+
+        <div>
+            <h2 class="text-lg font-semibold mb-3 text-gray-300">Letzte Einträge</h2>
+            <div id="logContainer" class="space-y-3"></div>
+        </div>
+
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        // --- DEINE EIGENE FIREBASE CONFIGURATION ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyDVHnhz4l5txrDJLXLrkLvqtUKZkTuKIIU",
+            authDomain: "gymtrackersimon.firebaseapp.com",
+            projectId: "gymtrackersimon",
+            storageBucket: "gymtrackersimon.firebasestorage.app",
+            messagingSenderId: "391832088520",
+            appId: "1:391832088520:web:b7a843d1d8dfe6a604dafd"
+        };
+        // ---------------------------------------------
+
+        // Firebase initialisieren
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Dein optimierter Trainingsplan
+        const routine = [
+            { name: "Oberkörper", details: "Fokus: Kraft. Flachbank (5-8 Wdh), Rudern." },
+            { name: "Unterkörper", details: "Fokus: Kraft. Kniebeugen (5-8 Wdh), Kreuzheben." },
+            { name: "Cardio / Pause", details: "30-45 Min Zone-2 Cardio. Aktive Erholung." },
+            { name: "Push", details: "Fokus: Volumen. Schrägbank (8-12 Wdh), Seitheben." },
+            { name: "Pull", details: "Fokus: Volumen. Latzug (8-12 Wdh), Curls." },
+            { name: "Beine", details: "Fokus: Volumen. Beinpresse, Ausfallschritte." },
+            { name: "Pause", details: "Komplette Erholung." }
+        ];
+
+        let currentIndex = 0; 
+
+        // Lädt das aktuelle Training aus der Datenbank
+        function loadCurrentSchedule() {
+            db.collection('status').doc('schedule').onSnapshot((doc) => {
+                if (doc.exists) {
+                    currentIndex = doc.data().index;
+                } else {
+                    db.collection('status').doc('schedule').set({ index: 0 });
+                }
+                document.getElementById('todayWorkout').innerText = routine[currentIndex].name;
+                document.getElementById('workoutDetails').innerText = routine[currentIndex].details;
+            });
+        }
+
+        // Speichert das Workout als "Erledigt"
+        async function logWorkout() {
+            const today = new Date().toLocaleDateString('de-DE');
+            const workoutName = routine[currentIndex].name;
+
+            await db.collection('workouts').add({
+                date: today,
+                type: workoutName,
+                status: "done",
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            // Index um 1 erhöhen
+            const nextIndex = (currentIndex + 1) % routine.length;
+            await db.collection('status').doc('schedule').update({ index: nextIndex });
+            alert("Stark! Workout gespeichert.");
+        }
+
+        // Überspringt den aktuellen Tag
+        async function skipWorkout() {
+            const nextIndex = (currentIndex + 1) % routine.length;
+            await db.collection('status').doc('schedule').update({ index: nextIndex });
+            alert("Tag übersprungen. Plan hat sich verschoben!");
+        }
+
+        // Lädt das Dashboard und die letzten Workouts
+        function loadDashboard() {
+            db.collection('workouts').orderBy('timestamp', 'desc').limit(7).onSnapshot((snapshot) => {
+                const grid = document.getElementById('dashboardGrid');
+                const log = document.getElementById('logContainer');
+                grid.innerHTML = '';
+                log.innerHTML = '';
+
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    
+                    // Grünes Kästchen
+                    const box = document.createElement('div');
+                    box.className = "min-w-[40px] h-10 bg-emerald-500 rounded-md flex items-center justify-center font-bold text-gray-900 shadow";
+                    box.innerText = "✓";
+                    grid.appendChild(box);
+
+                    // Eintrag in der Liste
+                    const listItem = document.createElement('div');
+                    listItem.className = "bg-gray-800 p-3 rounded-lg border border-gray-700 flex justify-between";
+                    listItem.innerHTML = `<span class="text-gray-300 font-medium">${data.type}</span> <span class="text-sm text-gray-500">${data.date}</span>`;
+                    log.appendChild(listItem);
+                });
+            });
+        }
+
+        // Funktionen beim Start der App aufrufen
+        loadCurrentSchedule();
+        loadDashboard();
+
+    </script>
+</body>
+</html>
