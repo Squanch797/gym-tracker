@@ -5,37 +5,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gym Tracker Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Eigene kleine CSS-Anpassungen für das App-Feeling */
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            background-attachment: fixed;
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        /* Versteckt die Scrollbar für ein sauberes Design */
+        ::-webkit-scrollbar { display: none; }
+    </style>
 </head>
-<body class="bg-gray-900 text-gray-100 min-h-screen p-4 font-sans pb-20">
+<body class="text-gray-100 min-h-screen p-4 font-sans pb-24">
+
+    <div class="max-w-md mx-auto mb-6 mt-4 text-center">
+        <h1 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 tracking-tight">
+            GymTracker Pro
+        </h1>
+        <p class="text-xs text-gray-400 mt-1 uppercase tracking-widest">Scientific Body Recomposition</p>
+    </div>
 
     <div class="max-w-md mx-auto space-y-6">
         
-        <div class="bg-gray-800 rounded-2xl shadow-xl p-5 border border-gray-700">
-            <h2 class="text-xl font-bold text-emerald-400 mb-3">📊 Dashboard</h2>
-            <p class="text-sm text-gray-400 mb-2">Letzte 7 Workouts:</p>
-            <div id="dashboardGrid" class="flex space-x-2 overflow-x-auto pb-2">
-                <p class="text-xs text-gray-500">Lade Daten...</p>
+        <div class="glass-card rounded-3xl shadow-2xl p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                    <span>🔥</span> Deine Streak
+                </h2>
             </div>
+            <div id="dashboardGrid" class="flex space-x-2 overflow-x-auto pb-1">
+                </div>
         </div>
 
-        <div class="bg-gray-800 rounded-2xl shadow-xl p-5 border border-emerald-700 relative overflow-hidden">
-            <div class="absolute top-0 right-0 bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">HEUTE</div>
-            <h2 class="text-2xl font-bold text-white mb-1" id="todayWorkout">Lade Plan...</h2>
-            <p class="text-sm text-gray-400 mb-4" id="workoutDetails">Empfohlene Übungen werden geladen...</p>
+        <div class="glass-card rounded-3xl shadow-2xl p-6 relative overflow-hidden ring-1 ring-emerald-500/30">
+            <div class="absolute top-0 right-0 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-[10px] font-black px-4 py-1.5 rounded-bl-xl uppercase tracking-wider shadow-lg">
+                HEUTE ANSTEHEND
+            </div>
+            
+            <h2 class="text-3xl font-black text-white mt-2 mb-4 drop-shadow-md" id="todayWorkout">Lade...</h2>
+            
+            <div class="bg-gray-900/50 rounded-xl p-4 mb-6 border border-gray-700/50">
+                <ul id="workoutDetails" class="space-y-2 text-sm text-gray-300">
+                    </ul>
+            </div>
             
             <div class="flex space-x-3">
-                <button onclick="logWorkout()" class="flex-1 bg-emerald-500 hover:bg-emerald-600 text-gray-900 font-bold py-3 rounded-xl transition cursor-pointer">
-                    ✅ Erledigt
+                <button onclick="logWorkout()" class="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-400 hover:from-emerald-400 hover:to-emerald-300 text-gray-900 font-black py-4 rounded-2xl transition-all active:scale-95 shadow-lg shadow-emerald-500/20 cursor-pointer">
+                    ✓ ERLEDIGT
                 </button>
-                <button onclick="skipWorkout()" class="flex-1 border border-gray-500 hover:bg-gray-700 text-gray-300 font-bold py-3 rounded-xl transition cursor-pointer">
-                    ⏭️ Skip Day
+                <button onclick="skipWorkout()" class="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold py-4 rounded-2xl transition-all border border-gray-600 active:scale-95 cursor-pointer">
+                    ⏭ SKIP
                 </button>
             </div>
         </div>
 
-        <div>
-            <h2 class="text-lg font-semibold mb-3 text-gray-300">Letzte Einträge</h2>
-            <div id="logContainer" class="space-y-3"></div>
+        <div class="pt-2">
+            <h2 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4 ml-2">Letzte Einheiten</h2>
+            <div id="logContainer" class="space-y-3">
+                </div>
         </div>
 
     </div>
@@ -44,7 +75,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
     <script>
-        // --- DEINE EIGENE FIREBASE CONFIGURATION ---
+        // === DEINE FIREBASE DATEN (Automatisch eingefügt) ===
         const firebaseConfig = {
             apiKey: "AIzaSyDVHnhz4l5txrDJLXLrkLvqtUKZkTuKIIU",
             authDomain: "gymtrackersimon.firebaseapp.com",
@@ -53,26 +84,88 @@
             messagingSenderId: "391832088520",
             appId: "1:391832088520:web:b7a843d1d8dfe6a604dafd"
         };
-        // ---------------------------------------------
+        // ==============================================================
 
-        // Firebase initialisieren
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Dein optimierter Trainingsplan
+        // Der volle wissenschaftliche Plan (OK/UK/P/P/L)
         const routine = [
-            { name: "Oberkörper", details: "Fokus: Kraft. Flachbank (5-8 Wdh), Rudern." },
-            { name: "Unterkörper", details: "Fokus: Kraft. Kniebeugen (5-8 Wdh), Kreuzheben." },
-            { name: "Cardio / Pause", details: "30-45 Min Zone-2 Cardio. Aktive Erholung." },
-            { name: "Push", details: "Fokus: Volumen. Schrägbank (8-12 Wdh), Seitheben." },
-            { name: "Pull", details: "Fokus: Volumen. Latzug (8-12 Wdh), Curls." },
-            { name: "Beine", details: "Fokus: Volumen. Beinpresse, Ausfallschritte." },
-            { name: "Pause", details: "Komplette Erholung." }
+            { 
+                name: "Oberkörper", 
+                exercises: [
+                    "🎯 <b>Fokus: Mechanische Spannung (Kraft)</b>",
+                    "• Langhantel Flachbank: 3-4 Sätze x 5-8 Wdh",
+                    "• Kurzhantel Schulterdrücken: 3 Sätze x 6-8 Wdh",
+                    "• Latzug (oder Klimmzüge): 3 Sätze x 8-10 Wdh",
+                    "• Langhantel-Rudern: 3 Sätze x 8-10 Wdh"
+                ] 
+            },
+            { 
+                name: "Unterkörper", 
+                exercises: [
+                    "🎯 <b>Fokus: ZNS & Hormon-Ausschüttung</b>",
+                    "• Kniebeugen: 3-4 Sätze x 5-8 Wdh",
+                    "• Kreuzheben / RDLs: 3 Sätze x 5-8 Wdh",
+                    "• Beinpresse: 3 Sätze x 10-12 Wdh",
+                    "• Wadenheben: 3 Sätze x 12-15 Wdh"
+                ] 
+            },
+            { 
+                name: "Cardio (Pause)", 
+                exercises: [
+                    "🎯 <b>Fokus: Viszerales Fett & Mitochondrien</b>",
+                    "• 30-45 Minuten Zone-2 Cardio",
+                    "• (z.B. entspanntes Joggen oder Radfahren)",
+                    "• Keine Gewichte, reine aktive Erholung!"
+                ] 
+            },
+            { 
+                name: "Push", 
+                exercises: [
+                    "🎯 <b>Fokus: Volumen & Dehnung</b>",
+                    "• Schrägbankdrücken (KH, 30°): 3 Sätze x 8-12 Wdh",
+                    "• Kabelzug-Fliegende: 3 Sätze x 10-15 Wdh",
+                    "• Seitheben am Kabelturm: 4 Sätze x 10-15 Wdh",
+                    "• Trizeps über Kopf (Kabel): 3 Sätze x 10-12 Wdh",
+                    "• Trizeps Pushdowns: 3 Sätze x 12-15 Wdh"
+                ] 
+            },
+            { 
+                name: "Pull", 
+                exercises: [
+                    "🎯 <b>Fokus: Mind-Muscle-Connection</b>",
+                    "• Latzug (eng oder neutral): 3 Sätze x 8-12 Wdh",
+                    "• Rudern am Kabelzug: 3 Sätze x 10-12 Wdh",
+                    "• Face Pulls (für Schultergesundheit): 3 Sätze x 12-15 Wdh",
+                    "• Kurzhantel Curls: 3 Sätze x 10-12 Wdh",
+                    "• Hammer Curls (Seil): 3 Sätze x 10-12 Wdh"
+                ] 
+            },
+            { 
+                name: "Beine", 
+                exercises: [
+                    "🎯 <b>Fokus: Metabolischer Stress</b>",
+                    "• Beinpresse (schwer): 3 Sätze x 10-15 Wdh",
+                    "• Beinbeuger (Maschine): 3 Sätze x 10-15 Wdh",
+                    "• Beinstrecker (Maschine): 3 Sätze x 10-15 Wdh",
+                    "• Ausfallschritte (Walking Lunges): 2 Sätze x 12-15 Wdh"
+                ] 
+            },
+            { 
+                name: "Rest Day", 
+                exercises: [
+                    "🎯 <b>Fokus: Muskelwachstum & Erholung</b>",
+                    "• Muskeln wachsen in der Pause, nicht im Gym!",
+                    "• Genug Protein essen (ca. 160g)",
+                    "• Dehnen oder Spazieren gehen."
+                ] 
+            }
         ];
 
         let currentIndex = 0; 
 
-        // Lädt das aktuelle Training aus der Datenbank
+        // Plan laden & Übungen anzeigen
         function loadCurrentSchedule() {
             db.collection('status').doc('schedule').onSnapshot((doc) => {
                 if (doc.exists) {
@@ -81,11 +174,13 @@
                     db.collection('status').doc('schedule').set({ index: 0 });
                 }
                 document.getElementById('todayWorkout').innerText = routine[currentIndex].name;
-                document.getElementById('workoutDetails').innerText = routine[currentIndex].details;
+                
+                // Liste der Übungen generieren
+                const detailsContainer = document.getElementById('workoutDetails');
+                detailsContainer.innerHTML = routine[currentIndex].exercises.map(ex => `<li>${ex}</li>`).join('');
             });
         }
 
-        // Speichert das Workout als "Erledigt"
         async function logWorkout() {
             const today = new Date().toLocaleDateString('de-DE');
             const workoutName = routine[currentIndex].name;
@@ -97,20 +192,33 @@
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             });
 
-            // Index um 1 erhöhen
             const nextIndex = (currentIndex + 1) % routine.length;
             await db.collection('status').doc('schedule').update({ index: nextIndex });
-            alert("Stark! Workout gespeichert.");
         }
 
-        // Überspringt den aktuellen Tag
         async function skipWorkout() {
             const nextIndex = (currentIndex + 1) % routine.length;
             await db.collection('status').doc('schedule').update({ index: nextIndex });
-            alert("Tag übersprungen. Plan hat sich verschoben!");
         }
 
-        // Lädt das Dashboard und die letzten Workouts
+        // NEU: Workout löschen und Plan einen Schritt zurücksetzen
+        async function deleteEntry(docId) {
+            if(confirm("Workout wirklich löschen? Der Trainingsplan springt dann einen Tag zurück.")) {
+                try {
+                    // Aus Historie löschen
+                    await db.collection('workouts').doc(docId).delete();
+                    
+                    // Plan rotieren (-1, mit Absicherung für den Array-Anfang)
+                    const nextIndex = (currentIndex - 1 + routine.length) % routine.length;
+                    await db.collection('status').doc('schedule').update({ index: nextIndex });
+                    
+                } catch (error) {
+                    console.error("Fehler beim Löschen: ", error);
+                }
+            }
+        }
+
+        // Dashboard & Historie mit Lösch-Button
         function loadDashboard() {
             db.collection('workouts').orderBy('timestamp', 'desc').limit(7).onSnapshot((snapshot) => {
                 const grid = document.getElementById('dashboardGrid');
@@ -120,23 +228,31 @@
 
                 snapshot.forEach((doc) => {
                     const data = doc.data();
+                    const docId = doc.id; // Brauchen wir für den Lösch-Befehl
                     
-                    // Grünes Kästchen
+                    // Heatmap
                     const box = document.createElement('div');
-                    box.className = "min-w-[40px] h-10 bg-emerald-500 rounded-md flex items-center justify-center font-bold text-gray-900 shadow";
-                    box.innerText = "✓";
+                    box.className = "min-w-[44px] h-11 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-emerald-500/20";
+                    box.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>`;
                     grid.appendChild(box);
 
-                    // Eintrag in der Liste
+                    // Historie Item
                     const listItem = document.createElement('div');
-                    listItem.className = "bg-gray-800 p-3 rounded-lg border border-gray-700 flex justify-between";
-                    listItem.innerHTML = `<span class="text-gray-300 font-medium">${data.type}</span> <span class="text-sm text-gray-500">${data.date}</span>`;
+                    listItem.className = "glass-card p-4 rounded-2xl flex justify-between items-center group mb-3";
+                    listItem.innerHTML = `
+                        <div>
+                            <p class="text-white font-bold">${data.type}</p>
+                            <p class="text-xs text-emerald-400 mt-0.5">${data.date}</p>
+                        </div>
+                        <button onclick="deleteEntry('${docId}')" class="text-gray-500 hover:text-red-400 transition-colors p-2 bg-gray-800/50 rounded-lg cursor-pointer">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        </button>
+                    `;
                     log.appendChild(listItem);
                 });
             });
         }
 
-        // Funktionen beim Start der App aufrufen
         loadCurrentSchedule();
         loadDashboard();
 
