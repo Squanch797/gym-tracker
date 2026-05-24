@@ -36,16 +36,15 @@
                     KI VORSCHLAG
                 </div>
                 
-                <p class="text-xs text-emerald-400 font-bold uppercase tracking-wider mb-1">Empfohlenes Workout für heute:</p>
+                <p class="text-xs text-emerald-400 font-bold uppercase tracking-wider mb-1">Empfohlen für heute:</p>
                 <h2 class="text-3xl font-black text-white mb-4 drop-shadow-md" id="proposedWorkoutName">Berechne...</h2>
                 
                 <div class="bg-gray-900/50 rounded-xl p-4 mb-6 border border-gray-700/50">
-                    <ul id="proposedWorkoutDetails" class="space-y-2 text-sm text-gray-300">
-                        </ul>
+                    <ul id="proposedWorkoutDetails" class="space-y-2 text-sm text-gray-300"></ul>
                 </div>
                 
                 <div class="flex space-x-3">
-                    <button onclick="logSelectedWorkout('proposed')" class="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-400 hover:from-emerald-400 hover:to-emerald-300 text-gray-900 font-black py-4 rounded-2xl transition-all active:scale-95 shadow-lg cursor-pointer text-center text-sm">
+                    <button onclick="logSelectedWorkout('proposed')" class="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-400 hover:from-emerald-400 hover:to-emerald-300 text-gray-900 font-black py-4 rounded-2xl transition-all active:scale-95 shadow-lg cursor-pointer text-sm">
                         ✓ ERLEDIGT
                     </button>
                     <button onclick="logRestDay()" class="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold py-4 rounded-2xl transition-all border border-gray-600 active:scale-95 cursor-pointer text-sm">
@@ -56,25 +55,51 @@
 
             <div class="glass-card rounded-3xl shadow-2xl p-6">
                 <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-3">Anderes Workout wählen:</h3>
-                <div class="grid grid-cols-2 gap-2" id="manualButtons">
-                    </div>
+                <div class="grid grid-cols-2 gap-2" id="manualButtons"></div>
             </div>
         </div>
 
         <div id="tab-calendar" class="space-y-6 hidden">
-            <div class="glass-card rounded-3xl shadow-2xl p-6">
-                <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                    <span>📅</span> Trainings-Kalender
+            
+            <div class="glass-card rounded-3xl shadow-2xl p-5 border border-cyan-500/30 relative overflow-hidden">
+                <div class="absolute -right-6 -top-6 bg-cyan-500/10 rounded-full w-24 h-24 blur-xl"></div>
+                <h3 class="text-sm font-bold text-cyan-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <span>📊</span> Diese Woche
                 </h3>
+                
+                <div class="grid grid-cols-3 gap-3 mb-4">
+                    <div class="bg-gray-900/60 p-3 rounded-2xl text-center border border-gray-700">
+                        <p class="text-2xl font-black text-white" id="statTotal">0</p>
+                        <p class="text-[10px] text-gray-400 uppercase mt-1">Workouts</p>
+                    </div>
+                    <div class="bg-gray-900/60 p-3 rounded-2xl text-center border border-gray-700">
+                        <p class="text-2xl font-black text-emerald-400" id="statStrength">0</p>
+                        <p class="text-[10px] text-gray-400 uppercase mt-1">Kraft</p>
+                    </div>
+                    <div class="bg-gray-900/60 p-3 rounded-2xl text-center border border-gray-700">
+                        <p class="text-2xl font-black text-blue-400" id="statCardio">0</p>
+                        <p class="text-[10px] text-gray-400 uppercase mt-1">Cardio</p>
+                    </div>
+                </div>
+
+                <div class="bg-gray-900/60 p-3 rounded-2xl border border-gray-700">
+                    <p class="text-[10px] text-gray-400 uppercase mb-2 font-bold">Fokus der Woche (Muskeln):</p>
+                    <div id="statMuscles" class="flex flex-wrap gap-2">
+                        <span class="text-xs text-gray-500 italic">Noch keine Daten diese Woche...</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card rounded-3xl shadow-2xl p-6">
+                <h3 class="text-lg font-bold text-white mb-4">📅 Trainings-Kalender</h3>
                 <div class="grid grid-cols-7 gap-2 text-center text-xs font-bold text-gray-400 mb-2">
                     <div>MO</div><div>DI</div><div>MI</div><div>DO</div><div>FR</div><div>SA</div><div>SO</div>
                 </div>
-                <div class="grid grid-cols-7 gap-2" id="calendarGrid">
-                    </div>
+                <div class="grid grid-cols-7 gap-2" id="calendarGrid"></div>
             </div>
 
             <div>
-                <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-3 ml-2">Letzte Aktivitäten</h3>
+                <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-3 ml-2">Verlauf</h3>
                 <div id="logContainer" class="space-y-3"></div>
             </div>
         </div>
@@ -82,11 +107,11 @@
     </div>
 
     <div class="fixed bottom-0 left-0 right-0 bg-gray-900/90 backdrop-blur-md border-t border-gray-800 p-3 flex justify-around max-w-md mx-auto rounded-t-3xl shadow-2xl">
-        <button onclick="switchTab('tracker')" id="btn-tab-tracker" class="flex flex-col items-center gap-1 text-emerald-400 transition-colors font-bold text-xs cursor-pointer">
+        <button onclick="switchTab('tracker')" id="btn-tab-tracker" class="flex flex-col items-center gap-1 text-emerald-400 font-bold text-xs cursor-pointer">
             <span>🏋️‍♂️</span> Tracker
         </button>
-        <button onclick="switchTab('calendar')" id="btn-tab-calendar" class="flex flex-col items-center gap-1 text-gray-500 transition-colors font-bold text-xs cursor-pointer">
-            <span>📅</span> Kalender & Verlauf
+        <button onclick="switchTab('calendar')" id="btn-tab-calendar" class="flex flex-col items-center gap-1 text-gray-500 font-bold text-xs cursor-pointer">
+            <span>📊</span> Stats & Verlauf
         </button>
     </div>
 
@@ -94,7 +119,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
     <script>
-        // === FIREBASE CONFIGURATION (DEINE GEGEBENEN DATEN) ===
         const firebaseConfig = {
             apiKey: "AIzaSyDVHnhz4l5txrDJLXLrkLvqtUKZkTuKIIU",
             authDomain: "gymtrackersimon.firebaseapp.com",
@@ -107,200 +131,190 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Der wissenschaftliche Plan
+        // Wissenschaftlich optimierter Plan (Isolation am OK-Tag hinzugefügt!)
         const routine = [
-            { name: "Oberkörper", exercises: ["• LH Flachbank: 3-4 x 5-8 Wdh", "• KH Schulterdrücken: 3 x 6-8 Wdh", "• Latzug: 3 x 8-10 Wdh", "• LH-Rudern: 3 x 8-10 Wdh"] },
-            { name: "Unterkörper", exercises: ["• Kniebeugen: 3-4 x 5-8 Wdh", "• Kreuzheben / RDLs: 3 x 5-8 Wdh", "• Beinpresse: 3 x 10-12 Wdh", "• Wadenheben: 3 x 12-15 Wdh"] },
-            { name: "Push", exercises: ["• Schrägbank (KH 30°): 3 x 8-12 Wdh", "• Kabelzug-Fliegende: 3 x 10-15 Wdh", "• Seitheben Kabel: 4 x 10-15 Wdh", "• Trizeps über Kopf: 3 x 10-12 Wdh", "• Trizeps Pushdowns: 3 x 12-15 Wdh"] },
-            { name: "Pull", exercises: ["• Latzug (eng): 3 x 8-12 Wdh", "• Rudern am Kabel: 3 x 10-12 Wdh", "• Face Pulls: 3 x 12-15 Wdh", "• KH Curls: 3 x 10-12 Wdh", "• Hammer Curls: 3 x 10-12 Wdh"] },
-            { name: "Beine", exercises: ["• Beinpresse (schwer): 3 x 10-15 Wdh", "• Beinbeuger Maschine: 3 x 10-15 Wdh", "• Beinstrecker Maschine: 3 x 10-15 Wdh", "• Ausfallschritte: 2 x 12-15 Wdh"] },
-            { name: "Cardio", exercises: ["• 30-45 Minuten Zone-2 Cardio", "• (Lockeres Laufen / Radfahren)", "• Fokus: Viszerales Fett & Regeneration"] }
+            { name: "Oberkörper", exercises: ["• LH Flachbank: 3-4 x 5-8", "• KH Schulterdrücken: 3 x 6-8", "• Latzug: 3 x 8-10", "• LH-Rudern: 3 x 8-10", "<i>+ Optional: Bizeps, Trizeps, Seitheben (Je 2 Sätze)</i>"] },
+            { name: "Unterkörper", exercises: ["• Kniebeugen: 3-4 x 5-8", "• Kreuzheben / RDLs: 3 x 5-8", "• Beinpresse: 3 x 10-12", "• Waden & Bauch"] },
+            { name: "Push", exercises: ["• Schrägbank (KH): 3 x 8-12", "• Kabel-Fliegende: 3 x 10-15", "• Seitheben Kabel: 4 x 10-15", "• Trizeps über Kopf: 3 x 10-12", "• Trizeps Pushdowns: 3 x 12-15"] },
+            { name: "Pull", exercises: ["• Latzug (eng): 3 x 8-12", "• Rudern am Kabel: 3 x 10-12", "• Face Pulls: 3 x 12-15", "• KH Curls: 3 x 10-12", "• Hammer Curls: 3 x 10-12"] },
+            { name: "Beine", exercises: ["• Beinpresse (schwer): 3 x 10-15", "• Beinbeuger Maschine: 3 x 10-15", "• Beinstrecker Maschine: 3 x 10-15", "• Ausfallschritte: 2 x 12-15"] },
+            { name: "Cardio", exercises: ["• 30-45 Minuten Zone-2 Cardio", "• (Lockeres Laufen / Radfahren)", "• Fokus: Viszerales Fett"] }
         ];
 
         let proposedWorkout = routine[0];
-        let historyData = {}; // Speichert geloggte Tage für den Kalender
+        let historyData = {}; 
 
-        // Registerkarten-Wechsel (Tabs)
         function switchTab(tab) {
             if(tab === 'tracker') {
                 document.getElementById('tab-tracker').classList.remove('hidden');
                 document.getElementById('tab-calendar').classList.add('hidden');
-                document.getElementById('btn-tab-tracker').classList.add('text-emerald-400');
-                document.getElementById('btn-tab-tracker').classList.remove('text-gray-500');
-                document.getElementById('btn-tab-calendar').classList.add('text-gray-500');
-                document.getElementById('btn-tab-calendar').classList.remove('text-emerald-400');
+                document.getElementById('btn-tab-tracker').className = "flex flex-col items-center gap-1 text-emerald-400 font-bold text-xs cursor-pointer";
+                document.getElementById('btn-tab-calendar').className = "flex flex-col items-center gap-1 text-gray-500 font-bold text-xs cursor-pointer";
             } else {
                 document.getElementById('tab-tracker').classList.add('hidden');
                 document.getElementById('tab-calendar').classList.remove('hidden');
-                document.getElementById('btn-tab-tracker').classList.remove('text-emerald-400');
-                document.getElementById('btn-tab-tracker').classList.add('text-gray-500');
-                document.getElementById('btn-tab-calendar').classList.add('text-emerald-400');
-                document.getElementById('btn-tab-calendar').classList.remove('text-gray-500');
+                document.getElementById('btn-tab-tracker').className = "flex flex-col items-center gap-1 text-gray-500 font-bold text-xs cursor-pointer";
+                document.getElementById('btn-tab-calendar').className = "flex flex-col items-center gap-1 text-emerald-400 font-bold text-xs cursor-pointer";
             }
         }
 
-        // Intelligenter Algorithmus: Berechnet, welches Workout am längsten her ist
         function calculateProposal(workouts) {
-            if (workouts.length === 0) {
-                return routine[0]; // Standardmäßig mit Oberkörper starten
-            }
-            
-            // Finde das letzte echte Workout (kein Rest Day)
             let lastRealWorkout = workouts.find(w => w.status === 'done');
             if(!lastRealWorkout) return routine[0];
-
-            // Finde den Index im Plan
             let lastIndex = routine.findIndex(r => r.name === lastRealWorkout.type);
-            
-            // Schlage einfach das logisch NÄCHSTE Workout im Split vor
-            let nextIndex = (lastIndex + 1) % routine.length;
-            return routine[nextIndex];
+            return routine[(lastIndex + 1) % routine.length];
         }
 
-        // Workout eintragen (Entweder den Vorschlag oder manuell gewählt)
         async function logSelectedWorkout(type) {
             let workoutToLog = type === 'proposed' ? proposedWorkout : routine.find(r => r.name === type);
-            const todayKey = new Date().toISOString().split('T')[0];
-
             await db.collection('workouts').add({
-                date: todayKey,
+                date: new Date().toISOString().split('T')[0],
                 type: workoutToLog.name,
                 status: "done",
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             });
-            alert(`💪 ${workoutToLog.name} erfolgreich geloggt!`);
         }
 
-        // Rest Day eintragen (Löst deinen Skip-Wunsch)
         async function logRestDay() {
-            const todayKey = new Date().toISOString().split('T')[0];
-
             await db.collection('workouts').add({
-                date: todayKey,
+                date: new Date().toISOString().split('T')[0],
                 type: "Rest Day",
                 status: "rest",
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             });
-            alert("🧘 Schönen Rest Day! Ruh dich gut aus.");
         }
 
-        // Eintrag löschen
         async function deleteEntry(docId) {
-            if(confirm("Eintrag wirklich löschen?")) {
-                await db.collection('workouts').doc(docId).delete();
-            }
+            if(confirm("Eintrag löschen?")) await db.collection('workouts').doc(docId).delete();
         }
 
-        // Generiert die manuelle Auswahl-Buttons im Tracker Tab
         function renderManualButtons() {
-            const container = document.getElementById('manualButtons');
-            container.innerHTML = routine.map(r => `
-                <button onclick="logSelectedWorkout('${r.name}')" class="bg-gray-800 hover:bg-gray-700 text-xs border border-gray-700 p-3 rounded-xl font-bold text-gray-300 transition active:scale-95 cursor-pointer">
+            document.getElementById('manualButtons').innerHTML = routine.map(r => `
+                <button onclick="logSelectedWorkout('${r.name}')" class="bg-gray-800 hover:bg-gray-700 text-xs border border-gray-700 p-3 rounded-xl font-bold text-gray-300 transition active:scale-95">
                     ${r.name}
                 </button>
             `).join('');
         }
 
-        // Generiert den visuellen Kalender für den aktuellen Monat
         function renderCalendar() {
             const grid = document.getElementById('calendarGrid');
             grid.innerHTML = '';
-            
             const now = new Date();
             const year = now.getFullYear();
             const month = now.getMonth();
-            
-            // Erster Tag des Monats und Gesamtanzahl der Tage
-            const firstDayIndex = new Date(year, month, 1).getDay(); // 0 = So, 1 = Mo...
+            const firstDayIndex = new Date(year, month, 1).getDay();
             const totalDays = new Date(year, month + 1, 0).getDate();
-            
-            // Anpassung an europäische Woche (Mo = 0, Di = 1... So = 6)
             let startOffset = firstDayIndex === 0 ? 6 : firstDayIndex - 1;
 
-            // Leere Felder vor dem ersten Tag des Monats auffüllen
-            for (let i = 0; i < startOffset; i++) {
-                grid.appendChild(document.createElement('div'));
-            }
+            for (let i = 0; i < startOffset; i++) grid.appendChild(document.createElement('div'));
 
-            // Tage des Monats generieren
             for (let day = 1; day <= totalDays; day++) {
                 const dayDiv = document.createElement('div');
-                dayDiv.className = "h-9 w-9 mx-auto rounded-lg flex items-center justify-center text-xs font-bold transition-all relative ";
-                dayDiv.innerText = day;
-
-                // Formatiere das Datum wie den Key in der Datenbank (YYYY-MM-DD)
+                dayDiv.className = "h-9 w-9 mx-auto rounded-lg flex items-center justify-center text-xs font-bold ";
                 const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 
-                // Prüfen, was an diesem Tag im Gym-Tracker geloggt wurde
                 if (historyData[dateKey]) {
                     if (historyData[dateKey].status === 'done') {
-                        // Gym-Tag = Strahlend Grün
-                        dayDiv.className += "bg-gradient-to-br from-emerald-400 to-emerald-600 text-gray-950 shadow-md shadow-emerald-500/20";
+                        dayDiv.className += historyData[dateKey].type === 'Cardio' 
+                            ? "bg-gradient-to-br from-blue-400 to-blue-600 text-white shadow-md shadow-blue-500/20" 
+                            : "bg-gradient-to-br from-emerald-400 to-emerald-600 text-gray-950 shadow-md shadow-emerald-500/20";
                     } else if (historyData[dateKey].status === 'rest') {
-                        // Rest Day = Elegantes Dunkelgrau/Blau
                         dayDiv.className += "bg-gray-700 text-gray-400 border border-gray-600";
                     }
                 } else {
-                    // Zukünftige oder ungeplante Tage
                     dayDiv.className += "bg-gray-800/40 text-gray-500 border border-gray-800";
                 }
-
+                dayDiv.innerText = day;
                 grid.appendChild(dayDiv);
             }
         }
 
-        // Echtzeit-Synchronisation mit FirebaseFirestore
+        // ================= WÖCHENTLICHE STATISTIK BERECHNEN =================
+        function calculateWeeklyStats(workoutsList) {
+            const today = new Date();
+            // Finde den Montag dieser Woche (Montag = 1, Sonntag = 0)
+            const dayOfWeek = today.getDay() === 0 ? 7 : today.getDay(); 
+            const startOfWeek = new Date(today);
+            startOfWeek.setDate(today.getDate() - dayOfWeek + 1);
+            startOfWeek.setHours(0,0,0,0);
+
+            let stats = { total: 0, strength: 0, cardio: 0, muscles: {} };
+
+            workoutsList.forEach(w => {
+                if(w.date && w.status === 'done') {
+                    const workoutDate = new Date(w.date);
+                    // Zähle nur Workouts, die ab diesem Montag passiert sind
+                    if(workoutDate >= startOfWeek) {
+                        stats.total++;
+                        if(w.type === 'Cardio') {
+                            stats.cardio++;
+                        } else {
+                            stats.strength++;
+                            stats.muscles[w.type] = (stats.muscles[w.type] || 0) + 1;
+                        }
+                    }
+                }
+            });
+
+            // UI Updaten
+            document.getElementById('statTotal').innerText = stats.total;
+            document.getElementById('statStrength').innerText = stats.strength;
+            document.getElementById('statCardio').innerText = stats.cardio;
+
+            const muscleContainer = document.getElementById('statMuscles');
+            if(Object.keys(stats.muscles).length > 0) {
+                muscleContainer.innerHTML = Object.entries(stats.muscles).map(([name, count]) => 
+                    `<span class="bg-emerald-500/20 text-emerald-400 text-[10px] px-2 py-1 rounded-md font-bold">${name}: ${count}x</span>`
+                ).join('');
+            } else {
+                muscleContainer.innerHTML = `<span class="text-xs text-gray-500 italic">Noch keine Kraft-Einheiten diese Woche.</span>`;
+            }
+        }
+
+        // INIT
         function initApp() {
             renderManualButtons();
-
             db.collection('workouts').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
                 const logContainer = document.getElementById('logContainer');
                 logContainer.innerHTML = '';
-                
                 let workoutsList = [];
-                historyData = {}; // Reset
+                historyData = {};
 
                 snapshot.forEach((doc) => {
                     const data = doc.data();
                     const docId = doc.id;
                     workoutsList.push(data);
 
-                    // Speichere die Daten für das Kalender-Grid
-                    if(data.date) {
-                        historyData[data.date] = { status: data.status, type: data.type };
-                    }
+                    if(data.date) historyData[data.date] = { status: data.status, type: data.type };
 
-                    // Formatierung für die Verlaufs-Liste unter dem Kalender
                     const listItem = document.createElement('div');
                     listItem.className = "glass-card p-4 rounded-2xl flex justify-between items-center mb-2";
-                    
                     const isRest = data.status === 'rest';
-                    const titleColor = isRest ? "text-gray-400 italic" : "text-white font-bold";
-                    const dateDisplay = data.date ? data.date.split('-').reverse().join('.') : '';
+                    
+                    let titleStyle = "text-white font-bold";
+                    if(isRest) titleStyle = "text-gray-400 italic";
+                    if(data.type === 'Cardio') titleStyle = "text-blue-400 font-bold";
 
                     listItem.innerHTML = `
                         <div>
-                            <p class="${titleColor}">${data.type}</p>
-                            <p class="text-[10px] text-gray-500 mt-0.5">${dateDisplay}</p>
+                            <p class="${titleStyle}">${data.type}</p>
+                            <p class="text-[10px] text-gray-500 mt-0.5">${data.date.split('-').reverse().join('.')}</p>
                         </div>
-                        <button onclick="deleteEntry('${docId}')" class="text-gray-500 hover:text-red-400 transition-colors p-2 bg-gray-900/40 rounded-lg cursor-pointer">
+                        <button onclick="deleteEntry('${docId}')" class="text-gray-500 hover:text-red-400 p-2 bg-gray-900/40 rounded-lg cursor-pointer">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                         </button>
                     `;
                     logContainer.appendChild(listItem);
                 });
 
-                // 1. Berechne den KI-Vorschlag basierend auf dem Verlauf
                 proposedWorkout = calculateProposal(workoutsList);
                 document.getElementById('proposedWorkoutName').innerText = proposedWorkout.name;
                 document.getElementById('proposedWorkoutDetails').innerHTML = proposedWorkout.exercises.map(ex => `<li>${ex}</li>`).join('');
 
-                // 2. Zeichne den Kalender neu mit den aktuellen Daten
                 renderCalendar();
+                calculateWeeklyStats(workoutsList); // Update Dashboard Stats
             });
         }
-
-        // Starten
         initApp();
     </script>
 </body>
