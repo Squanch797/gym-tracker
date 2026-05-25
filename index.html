@@ -160,14 +160,33 @@
                 <h2 class="text-2xl font-black text-slate-800 mb-2">Der Masterplan</h2>
                 <p class="text-sm text-slate-500 mb-6 font-medium">Dein perfekter Rhythmus für maximales Wachstum.</p>
                 
-                <div class="grid grid-cols-7 gap-2 text-center mb-8">
-                    <div class="bg-white rounded-xl p-2 shadow-sm border border-emerald-100"><p class="text-[10px] text-slate-400 mb-1 font-bold">MO</p><p class="text-sm font-black text-emerald-600">OK</p></div>
-                    <div class="bg-white rounded-xl p-2 shadow-sm border border-emerald-100"><p class="text-[10px] text-slate-400 mb-1 font-bold">DI</p><p class="text-sm font-black text-emerald-600">UK</p></div>
-                    <div class="bg-slate-100 rounded-xl p-2 border border-slate-200"><p class="text-[10px] text-slate-400 mb-1 font-bold">MI</p><p class="text-xs font-bold text-slate-500 leading-tight">REST<br>CARDIO</p></div>
-                    <div class="bg-white rounded-xl p-2 shadow-sm border border-cyan-100"><p class="text-[10px] text-slate-400 mb-1 font-bold">DO</p><p class="text-sm font-black text-cyan-600">Push</p></div>
-                    <div class="bg-white rounded-xl p-2 shadow-sm border border-cyan-100"><p class="text-[10px] text-slate-400 mb-1 font-bold">FR</p><p class="text-sm font-black text-cyan-600">Pull</p></div>
-                    <div class="bg-white rounded-xl p-2 shadow-sm border border-cyan-100"><p class="text-[10px] text-slate-400 mb-1 font-bold">SA</p><p class="text-sm font-black text-cyan-600">Beine</p></div>
-                    <div class="bg-slate-100 rounded-xl p-2 border border-slate-200"><p class="text-[10px] text-slate-400 mb-1 font-bold">SO</p><p class="text-xs font-bold text-slate-500 leading-tight">REST<br>CARDIO</p></div>
+                <div class="grid grid-cols-7 gap-1.5 text-center mb-8 p-1.5">
+                    <div class="bg-white rounded-xl p-1.5 shadow-sm border border-emerald-100 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-400 mb-0.5 font-bold">MO</p><p class="text-sm font-black text-emerald-600">OK</p></div>
+                    <div class="bg-white rounded-xl p-1.5 shadow-sm border border-emerald-100 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-400 mb-0.5 font-bold">DI</p><p class="text-sm font-black text-emerald-600">UK</p></div>
+                    
+                    <div class="bg-slate-200/50 rounded-xl p-1.5 shadow-inner border border-slate-300 flex flex-col items-center justify-center h-16 w-full">
+                        <p class="text-[10px] text-slate-500 font-bold mb-0.5">MI</p>
+                        <div class="flex flex-col items-center">
+                            <p class="text-[9px] font-black text-slate-600 leading-none">REST</p>
+                            <p class="text-[9px] font-black text-slate-600 leading-none">CARDIO</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl p-1.5 shadow-sm border border-cyan-100 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-400 mb-0.5 font-bold">DO</p><p class="text-sm font-black text-cyan-600">Push</p></div>
+                    <div class="bg-white rounded-xl p-1.5 shadow-sm border border-cyan-100 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-400 mb-0.5 font-bold">FR</p><p class="text-sm font-black text-cyan-600">Pull</p></div>
+                    
+                    <div class="bg-white rounded-xl p-1.5 shadow-sm border border-cyan-100 flex flex-col items-center justify-center h-16 w-full">
+                        <p class="text-[10px] text-slate-400 mb-0.5 font-bold">SA</p>
+                        <p class="text-xs font-black text-cyan-600">Beine</p>
+                    </div>
+                    
+                    <div class="bg-slate-200/50 rounded-xl p-1.5 shadow-inner border border-slate-300 flex flex-col items-center justify-center h-16 w-full">
+                        <p class="text-[10px] text-slate-500 font-bold mb-0.5">SO</p>
+                        <div class="flex flex-col items-center">
+                            <p class="text-[9px] font-black text-slate-600 leading-none">REST</p>
+                            <p class="text-[9px] font-black text-slate-600 leading-none">CARDIO</p>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="bg-blue-50 rounded-2xl p-5 border border-blue-100 relative overflow-hidden">
@@ -361,7 +380,7 @@
 
         function renderLibrary() {
             document.getElementById('planLibraryContainer').innerHTML = routine.map(r => `
-                <div class="glass-card p-6 border-l-4 ${r.name === 'Cardio' ? 'border-l-blue-400' : 'border-l-emerald-400'}">
+                <div class="glass-card p-5 border-l-4 ${r.name === 'Cardio' ? 'border-l-blue-400' : 'border-l-emerald-400'}">
                     <h3 class="text-slate-800 font-black text-2xl mb-1">${r.name}</h3>
                     <p class="text-sm text-emerald-600 font-bold mb-5 italic">"${r.motto}"</p>
                     <div class="space-y-4">
@@ -405,7 +424,7 @@
                         dayDiv.className += "bg-slate-200 text-slate-500 shadow-inner";
                     }
                 } else {
-                    dayDiv.className += "bg-white/40 text-slate-400 border border-slate-100";
+                    dayDiv.className += "bg-white/40 text-slate-400 border border-white/50";
                 }
                 dayDiv.innerText = day;
                 grid.appendChild(dayDiv);
