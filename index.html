@@ -312,7 +312,46 @@
             let historyData = {}; 
             let todayDocId = null; 
 
-            // HILFSFUNKTION: Lokales Datum abrufen (Vermeidet den Mitternachts-Bug)
+            // ================== LOGIK FÜR DEN MASTERPLAN ZYKLUS ==================
+            // Die Logik sucht den letzten echten Workout-Eintrag und beachtet dabei auch, 
+            // ob nach diesem Eintrag ein Cardio oder Rest Day gemacht wurde.
+            function calculateProposal(workoutsList) {
+                if (!workoutsList || workoutsList.length === 0) return routine.find(r => r.name === "Oberkörper");
+
+                let lastRealWorkout = null;
+                let foundRestOrCardioSinceLastReal = false;
+
+                // Wir gehen die nach Zeit sortierten Workouts durch (0 ist das neueste)
+                for (let i = 0; i < workoutsList.length; i++) {
+                    const t = workoutsList[i].type;
+                    if (t === "Cardio" || t === "Rest Day") {
+                        if (i === 0) foundRestOrCardioSinceLastReal = true;
+                        continue;
+                    }
+                    lastRealWorkout = t;
+                    break;
+                }
+
+                if (!lastRealWorkout) return routine.find(r => r.name === "Oberkörper");
+
+                // Zyklus: OK -> UK -> Cardio -> Push -> Pull -> Beine -> Cardio -> Repeat
+                if (lastRealWorkout === "Oberkörper") return routine.find(r => r.name === "Unterkörper");
+                
+                if (lastRealWorkout === "Unterkörper") {
+                    return foundRestOrCardioSinceLastReal ? routine.find(r => r.name === "Push") : routine.find(r => r.name === "Cardio");
+                }
+                
+                if (lastRealWorkout === "Push") return routine.find(r => r.name === "Pull");
+                if (lastRealWorkout === "Pull") return routine.find(r => r.name === "Beine");
+                
+                if (lastRealWorkout === "Beine") {
+                    return foundRestOrCardioSinceLastReal ? routine.find(r => r.name === "Oberkörper") : routine.find(r => r.name === "Cardio");
+                }
+
+                return routine.find(r => r.name === "Oberkörper"); // Fallback
+            }
+
+            // HILFSFUNKTION: Lokales Datum abrufen (Vermeidet den Mitternachts-Bug UTC vs. MESZ)
             function getLocalTodayDate() {
                 const d = new Date();
                 return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
@@ -398,14 +437,6 @@
                 fetch('https://api.open-meteo.com/v1/forecast?latitude=48.1374&longitude=11.5755&current_weather=true')
                     .then(r => r.json()).then(d => { document.getElementById('currentWeather').innerText = `🌡️ ${Math.round(d.current_weather.temperature)}°C München`; })
                     .catch(() => { document.getElementById('currentWeather').innerText = `🌡️ München`; });
-            }
-
-            function calculateProposal(workouts) {
-                let lastRealWorkout = workouts.find(w => w.status === 'done');
-                if(!lastRealWorkout) return routine[0];
-                let lastIndex = routine.findIndex(r => r.name === lastRealWorkout.type);
-                if (lastIndex === -1) return routine[0];
-                return routine[(lastIndex + 1) % routine.length];
             }
 
             function renderManualButtons() {
@@ -577,7 +608,7 @@
 
                     snapshot.forEach((doc) => {
                         const data = doc.data();
-                        globalWorkoutsList.push(data);
+                        globalWorkoutsList.push({ ...data, id: doc.id });
                         if(data.date) historyData[data.date] = { status: data.status, type: data.type, id: doc.id };
                         if(data.date === todayStr) { isDoneToday = true; todayDocId = doc.id; }
                     });
