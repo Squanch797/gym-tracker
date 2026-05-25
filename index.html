@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Simons Fitness Tracker</title>
+    <title>ApexTrkr</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* === MODERN LIGHT BLURRY GLASS DESIGN 2.0 === */
         body {
-            /* Neuer, moderner Hintergrund mit sanften Farbtupfern */
             background-color: #f8fafc;
             background-image: 
                 radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.15) 0px, transparent 50%),
@@ -20,7 +18,6 @@
             overflow-x: hidden;
         }
 
-        /* Premium Glass Cards mit leichtem Gradient */
         .glass-card {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.6));
             backdrop-filter: blur(24px);
@@ -30,33 +27,39 @@
             border-radius: 1.5rem;
         }
 
-        /* Die neue, fest verankerte Bottom-Nav für iOS */
         .docked-nav {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(30px);
             -webkit-backdrop-filter: blur(30px);
             border-top: 1px solid rgba(255, 255, 255, 1);
             box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.05);
-            /* Sichert den Abstand für den iPhone-Balken unten */
             padding-bottom: env(safe-area-inset-bottom);
         }
 
-        /* Versteckt den hässlichen Scrollbalken */
         ::-webkit-scrollbar { display: none; }
-        
-        /* Smooth Fade-In Animation */
         .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .accordion-content {
+            transition: max-height 0.3s ease-out, opacity 0.2s ease-out;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        .accordion-content.open {
+            max-height: 1000px;
+            opacity: 1;
+        }
     </style>
 </head>
 <body class="min-h-screen p-4 pb-32"> 
 
     <header class="max-w-md mx-auto mb-8 mt-4 flex flex-col items-center">
         <h1 class="text-4xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-cyan-600 mb-2 drop-shadow-sm">
-            Simons Tracker
+            ApexTrkr
         </h1>
         
-        <div class="glass-card px-5 py-2.5 flex items-center gap-3 text-sm font-bold text-slate-500 rounded-full border-emerald-100">
+        <div class="glass-card px-5 py-2.5 flex items-center gap-3 text-sm font-bold text-slate-500 rounded-full">
             <span id="currentDate" class="flex items-center gap-1">📅 Lade...</span>
             <div class="w-1.5 h-1.5 rounded-full bg-slate-300"></div>
             <span id="currentWeather" class="flex items-center gap-1 text-emerald-600">🌡️ München...</span>
@@ -66,7 +69,6 @@
     <main class="max-w-md mx-auto space-y-6">
         
         <div id="tab-tracker" class="space-y-6 animate-fade-in">
-            
             <div id="pendingContainer" class="space-y-6">
                 <div class="glass-card p-6 relative overflow-hidden border-t-4 border-emerald-400">
                     <div class="absolute top-0 right-0 bg-emerald-100 text-emerald-700 text-[10px] font-extrabold px-3 py-1.5 rounded-bl-xl uppercase tracking-widest">
@@ -81,10 +83,10 @@
                     </div>
                     
                     <div class="flex gap-3 mt-2">
-                        <button onclick="logSelectedWorkout('proposed')" class="flex-1 bg-gradient-to-r from-emerald-400 to-emerald-500 hover:from-emerald-500 hover:to-emerald-600 text-white font-black py-4 rounded-2xl transition-all shadow-lg shadow-emerald-500/30 text-base active:scale-95">
+                        <button onclick="logSelectedWorkout('proposed')" class="flex-1 bg-gradient-to-r from-emerald-400 to-emerald-500 hover:from-emerald-500 hover:to-emerald-600 text-white font-black py-4 rounded-2xl transition-all shadow-lg shadow-emerald-500/30 text-base active:scale-95 cursor-pointer">
                             ✓ ERLEDIGT
                         </button>
-                        <button onclick="logRestDay()" class="flex-1 bg-white hover:bg-slate-50 text-slate-600 font-bold py-4 rounded-2xl transition-all border-2 border-slate-200 shadow-sm text-sm active:scale-95">
+                        <button onclick="logRestDay()" class="flex-1 bg-white hover:bg-slate-50 text-slate-600 font-bold py-4 rounded-2xl transition-all border-2 border-slate-200 shadow-sm text-sm active:scale-95 cursor-pointer">
                             ⏭ REST DAY
                         </button>
                     </div>
@@ -103,13 +105,12 @@
                     </div>
                     <h2 class="text-3xl font-black text-slate-800 mb-3">Stark abgeliefert!</h2>
                     <p class="text-slate-500 text-base mb-8 leading-relaxed font-medium">Dein Eintrag ist sicher. Erhole dich gut und genieß den restlichen Tag.</p>
-                    <button onclick="undoToday()" class="text-sm text-slate-400 hover:text-red-500 underline transition-colors font-bold">Oh, vertippt (Eintrag löschen)</button>
+                    <button onclick="undoToday()" class="text-sm text-slate-400 hover:text-red-500 underline transition-colors font-bold cursor-pointer">Oh, vertippt (Eintrag löschen)</button>
                 </div>
             </div>
         </div>
 
         <div id="tab-calendar" class="space-y-6 hidden animate-fade-in">
-            
             <div class="grid grid-cols-2 gap-4">
                 <div class="glass-card p-6 border-t-4 border-cyan-400">
                     <h3 class="text-xs font-black text-cyan-600 uppercase tracking-widest mb-4">Diese Woche</h3>
@@ -141,7 +142,16 @@
             </div>
 
             <div class="glass-card p-6">
-                <h3 class="text-lg font-black text-slate-800 mb-5">Trainings-Kalender</h3>
+                <div class="flex justify-between items-center mb-6">
+                    <button onclick="changeMonth(-1)" class="p-2 bg-white rounded-lg shadow-sm text-slate-500 hover:text-emerald-500 transition-colors cursor-pointer border border-slate-100">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+                    </button>
+                    <h3 class="text-xl font-black text-slate-800" id="monthYearDisplay">Monat Jahr</h3>
+                    <button onclick="changeMonth(1)" class="p-2 bg-white rounded-lg shadow-sm text-slate-500 hover:text-emerald-500 transition-colors cursor-pointer border border-slate-100">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                </div>
+
                 <div class="grid grid-cols-7 gap-1 text-center text-[10px] font-black text-slate-400 mb-3">
                     <div>MO</div><div>DI</div><div>MI</div><div>DO</div><div>FR</div><div>SA</div><div>SO</div>
                 </div>
@@ -149,13 +159,12 @@
             </div>
             
             <div class="glass-card p-6">
-                <h3 class="text-sm font-black text-slate-800 mb-4">Protokoll</h3>
+                <h3 class="text-sm font-black text-slate-800 mb-4">Protokoll <span class="text-xs text-slate-400 font-normal">(Auto-Restdays änderbar)</span></h3>
                 <div id="logContainer" class="space-y-3"></div>
             </div>
         </div>
 
         <div id="tab-plan" class="space-y-6 hidden animate-fade-in">
-            
             <div class="glass-card p-6 border-t-4 border-indigo-400 shadow-lg">
                 <h2 class="text-2xl font-black text-slate-800 mb-2">Der Masterplan</h2>
                 <p class="text-sm text-slate-500 mb-6 font-medium">Dein perfekter Rhythmus für maximales Wachstum.</p>
@@ -163,68 +172,41 @@
                 <div class="grid grid-cols-7 gap-1.5 text-center mb-8 p-1.5">
                     <div class="bg-white rounded-xl p-1.5 shadow-sm border border-emerald-100 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-400 mb-0.5 font-bold">MO</p><p class="text-sm font-black text-emerald-600">OK</p></div>
                     <div class="bg-white rounded-xl p-1.5 shadow-sm border border-emerald-100 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-400 mb-0.5 font-bold">DI</p><p class="text-sm font-black text-emerald-600">UK</p></div>
-                    
-                    <div class="bg-slate-200/50 rounded-xl p-1.5 shadow-inner border border-slate-300 flex flex-col items-center justify-center h-16 w-full">
-                        <p class="text-[10px] text-slate-500 font-bold mb-0.5">MI</p>
-                        <div class="flex flex-col items-center">
-                            <p class="text-[9px] font-black text-slate-600 leading-none">REST</p>
-                            <p class="text-[9px] font-black text-slate-600 leading-none">CARDIO</p>
-                        </div>
-                    </div>
-                    
+                    <div class="bg-slate-200/50 rounded-xl p-1.5 shadow-inner border border-slate-300 flex flex-col items-center justify-center h-16 w-full"><p class="text-[10px] text-slate-500 font-bold mb-0.5">MI</p><div class="flex flex-col items-center"><p class="text-[9px] font-black text-slate-600 leading-none">REST</p><p class="text-[9px] font-black text-slate-600 leading-none">CARDIO</p></div></div>
                     <div class="bg-white rounded-xl p-1.5 shadow-sm border border-cyan-100 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-400 mb-0.5 font-bold">DO</p><p class="text-sm font-black text-cyan-600">Push</p></div>
                     <div class="bg-white rounded-xl p-1.5 shadow-sm border border-cyan-100 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-400 mb-0.5 font-bold">FR</p><p class="text-sm font-black text-cyan-600">Pull</p></div>
-                    
-                    <div class="bg-white rounded-xl p-1.5 shadow-sm border border-cyan-100 flex flex-col items-center justify-center h-16 w-full">
-                        <p class="text-[10px] text-slate-400 mb-0.5 font-bold">SA</p>
-                        <p class="text-xs font-black text-cyan-600">Beine</p>
-                    </div>
-                    
-                    <div class="bg-slate-200/50 rounded-xl p-1.5 shadow-inner border border-slate-300 flex flex-col items-center justify-center h-16 w-full">
-                        <p class="text-[10px] text-slate-500 font-bold mb-0.5">SO</p>
-                        <div class="flex flex-col items-center">
-                            <p class="text-[9px] font-black text-slate-600 leading-none">REST</p>
-                            <p class="text-[9px] font-black text-slate-600 leading-none">CARDIO</p>
-                        </div>
-                    </div>
+                    <div class="bg-white rounded-xl p-1.5 shadow-sm border border-cyan-100 flex flex-col items-center justify-center h-16 w-full"><p class="text-[10px] text-slate-400 mb-0.5 font-bold">SA</p><p class="text-xs font-black text-cyan-600">Beine</p></div>
+                    <div class="bg-slate-200/50 rounded-xl p-1.5 shadow-inner border border-slate-300 flex flex-col items-center justify-center h-16 w-full"><p class="text-[10px] text-slate-500 font-bold mb-0.5">SO</p><div class="flex flex-col items-center"><p class="text-[9px] font-black text-slate-600 leading-none">REST</p><p class="text-[9px] font-black text-slate-600 leading-none">CARDIO</p></div></div>
                 </div>
 
                 <div class="bg-blue-50 rounded-2xl p-5 border border-blue-100 relative overflow-hidden">
                     <div class="absolute -right-4 -top-4 text-6xl opacity-10">🏃‍♂️</div>
-                    <h3 class="text-base font-black text-blue-800 flex items-center gap-2 mb-2">
-                        Wichtig: Cardio an Rest Days
-                    </h3>
-                    <p class="text-sm text-blue-900/80 leading-relaxed font-medium">
-                        Um das Krafttraining nicht zu stören, machst du dein Cardio an den Rest Days. Nutze diese Tage für ca. <strong>30-45 Min. Joggen oder Radfahren</strong>. Intensität: <strong>Zone 2</strong> (Du strengst dich an, kannst dich aber noch locker unterhalten).
-                    </p>
+                    <h3 class="text-base font-black text-blue-800 flex items-center gap-2 mb-2">Wichtig: Cardio an Rest Days</h3>
+                    <p class="text-sm text-blue-900/80 leading-relaxed font-medium">Um das Krafttraining nicht zu stören, machst du dein Cardio an den Rest Days. Nutze diese Tage für ca. <strong>30-45 Min. Joggen oder Radfahren</strong>. Intensität: <strong>Zone 2</strong>.</p>
                 </div>
             </div>
 
-            <div id="planLibraryContainer" class="space-y-5">
-                </div>
+            <div id="planLibraryContainer" class="space-y-3"></div>
         </div>
 
     </main>
 
     <nav class="docked-nav fixed bottom-0 left-0 right-0 z-50">
         <div class="max-w-md mx-auto flex justify-between items-center px-6 pt-3 pb-2">
-            <button onclick="switchTab('tracker')" id="btn-tab-tracker" class="flex flex-col items-center gap-1 text-emerald-600 transition-colors w-20">
+            <button onclick="switchTab('tracker')" id="btn-tab-tracker" class="flex flex-col items-center gap-1 text-emerald-600 transition-colors w-20 cursor-pointer">
                 <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 <span class="text-xs font-bold">Heute</span>
             </button>
-            <button onclick="switchTab('calendar')" id="btn-tab-calendar" class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-600 transition-colors w-20">
+            <button onclick="switchTab('calendar')" id="btn-tab-calendar" class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-600 transition-colors w-20 cursor-pointer">
                 <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                 <span class="text-xs font-bold">Stats</span>
             </button>
-            <button onclick="switchTab('plan')" id="btn-tab-plan" class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-600 transition-colors w-20">
+            <button onclick="switchTab('plan')" id="btn-tab-plan" class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-600 transition-colors w-20 cursor-pointer">
                 <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path></svg>
                 <span class="text-xs font-bold">Plan</span>
             </button>
         </div>
     </nav>
-
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
     <script>
         const firebaseConfig = {
@@ -238,20 +220,14 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Datum & Wetter
-        function initHeader() {
-            const options = { weekday: 'short', day: '2-digit', month: 'short' };
-            document.getElementById('currentDate').innerHTML = `📅 ${new Date().toLocaleDateString('de-DE', options)}`;
-            fetch('https://api.open-meteo.com/v1/forecast?latitude=48.1374&longitude=11.5755&current_weather=true')
-                .then(r => r.json()).then(d => { document.getElementById('currentWeather').innerText = `🌡️ ${Math.round(d.current_weather.temperature)}°C München`; })
-                .catch(() => { document.getElementById('currentWeather').innerText = `🌡️ München`; });
-        }
+        // GLOBALE VARIABLEN FÜR KALENDER
+        let displayYear = new Date().getFullYear();
+        let displayMonth = new Date().getMonth();
+        let globalWorkoutsList = []; 
 
-        // ================= VOLLSTÄNDIGER WISSENSCHAFTLICHER PLAN =================
         const routine = [
             { 
-                name: "Oberkörper", 
-                motto: "Schwere Gewichte. Voller Fokus. Frisches ZNS.",
+                name: "Oberkörper", motto: "Schwere Gewichte. Voller Fokus. Frisches ZNS.",
                 exercises: ["LH Flachbank", "LH Rudern", "Schrägbank (KH)", "Latzug", "Seitheben", "Trizeps & Bizeps"],
                 library: [
                     { name: "Langhantel Flachbank", sets: "4x 5-8", desc: "Brust-Fokus. Kontrolliert ab, explosiv hoch. 2 RIR." },
@@ -263,8 +239,7 @@
                 ]
             },
             { 
-                name: "Unterkörper", 
-                motto: "Beine wachsen nicht vom Reden. Ab in die Beuge.",
+                name: "Unterkörper", motto: "Beine wachsen nicht vom Reden. Ab in die Beuge.",
                 exercises: ["Kniebeugen", "RDLs", "Beinpresse", "Beinbeuger", "Waden"],
                 library: [
                     { name: "Kniebeugen (Squats)", sets: "4x 5-8", desc: "Quads & Glutes. Tiefe mind. parallel, Rumpf unter Spannung." },
@@ -275,8 +250,7 @@
                 ]
             },
             { 
-                name: "Push", 
-                motto: "Pump, Volumen und maximale Dehnung.",
+                name: "Push", motto: "Pump, Volumen und maximale Dehnung.",
                 exercises: ["Schrägbank (KH)", "Brustpresse", "Schulterdrücken", "Seitheben (Kabel)", "Trizeps"],
                 library: [
                     { name: "KH Schrägbank", sets: "4x 8-10", desc: "Fokus auf die Dehnung der oberen Brust." },
@@ -288,8 +262,7 @@
                 ]
             },
             { 
-                name: "Pull", 
-                motto: "Starker Rücken, dicker Bizeps.",
+                name: "Pull", motto: "Starker Rücken, dicker Bizeps.",
                 exercises: ["Klimmzüge", "Kabelrudern", "Überzüge", "Face Pulls", "Curls"],
                 library: [
                     { name: "Klimmzüge / Latzug", sets: "4x 8-10", desc: "Vertikaler Zug. Schulterblätter vor dem Zug nach unten." },
@@ -301,8 +274,7 @@
                 ]
             },
             { 
-                name: "Beine", 
-                motto: "Metabolischer Stress pur.",
+                name: "Beine", motto: "Metabolischer Stress pur.",
                 exercises: ["Beinpresse (Schwer)", "Beinstrecker", "Beinbeuger", "Ausfallschritte", "Waden"],
                 library: [
                     { name: "Beinpresse", sets: "4x 8-10", desc: "Schwerer Einstieg, sichere Ausführung." },
@@ -313,8 +285,7 @@
                 ]
             },
             { 
-                name: "Cardio", 
-                motto: "Regeneration & Fettabbau.",
+                name: "Cardio", motto: "Regeneration & Fettabbau.",
                 exercises: ["Zone 2 Cardio"],
                 library: [
                     { name: "Zone 2 Training", sets: "30-45 Min", desc: "Radfahren, Walken. Du musst noch sprechen können." }
@@ -326,7 +297,14 @@
         let historyData = {}; 
         let todayDocId = null; 
 
-        // Tabs
+        function initHeader() {
+            const options = { weekday: 'short', day: '2-digit', month: 'short' };
+            document.getElementById('currentDate').innerHTML = `📅 ${new Date().toLocaleDateString('de-DE', options)}`;
+            fetch('https://api.open-meteo.com/v1/forecast?latitude=48.1374&longitude=11.5755&current_weather=true')
+                .then(r => r.json()).then(d => { document.getElementById('currentWeather').innerText = `🌡️ ${Math.round(d.current_weather.temperature)}°C München`; })
+                .catch(() => { document.getElementById('currentWeather').innerText = `🌡️ München`; });
+        }
+
         function switchTab(tab) {
             ['tracker', 'calendar', 'plan'].forEach(t => {
                 document.getElementById(`tab-${t}`).classList.add('hidden');
@@ -334,10 +312,9 @@
             });
             document.getElementById(`tab-${tab}`).classList.remove('hidden');
             document.getElementById(`btn-tab-${tab}`).classList.replace('text-slate-400', 'text-emerald-600');
-            window.scrollTo(0, 0); // Scrollt beim Tabwechsel nach oben
+            window.scrollTo(0, 0);
         }
 
-        // Logic
         function calculateProposal(workouts) {
             let lastRealWorkout = workouts.find(w => w.status === 'done');
             if(!lastRealWorkout) return routine[0];
@@ -358,32 +335,63 @@
             });
         }
 
+        async function convertRestToWorkout(dateKey, docId) {
+            const type = prompt("Welches Workout hast du gemacht? (Oberkörper, Unterkörper, Push, Pull, Beine, Cardio)");
+            if (type && routine.some(r => r.name.toLowerCase() === type.toLowerCase())) {
+                const standardName = routine.find(r => r.name.toLowerCase() === type.toLowerCase()).name;
+                
+                if(docId && !docId.startsWith('auto-')) {
+                    await db.collection('workouts').doc(docId).update({ type: standardName, status: "done" });
+                } else {
+                    await db.collection('workouts').add({
+                        date: dateKey, type: standardName, status: "done", timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                }
+            } else if (type) {
+                alert("Ungültiger Workout-Typ! Bitte genauen Namen eingeben.");
+            }
+        }
+
         async function deleteEntry(docId) {
             if(confirm("Eintrag löschen?")) await db.collection('workouts').doc(docId).delete();
         }
 
         async function undoToday() {
-            if(todayDocId) {
-                await db.collection('workouts').doc(todayDocId).delete();
-                todayDocId = null;
-            }
+            if(todayDocId) { await db.collection('workouts').doc(todayDocId).delete(); todayDocId = null; }
         }
 
-        // Render UI
         function renderManualButtons() {
             document.getElementById('manualButtons').innerHTML = routine.map(r => `
-                <button onclick="logSelectedWorkout('${r.name}')" class="bg-white/80 hover:bg-white text-sm border border-slate-200 p-4 rounded-xl font-bold text-slate-700 transition-all shadow-sm active:scale-95 flex flex-col items-center gap-1">
+                <button onclick="logSelectedWorkout('${r.name}')" class="bg-white/60 hover:bg-white text-sm border border-slate-200 p-4 rounded-xl font-bold text-slate-700 shadow-sm active:scale-95 cursor-pointer flex flex-col items-center">
                     ${r.name}
                 </button>
             `).join('');
         }
 
+        function toggleAccordion(index) {
+            const content = document.getElementById(`accordion-${index}`);
+            const chevron = document.getElementById(`chevron-${index}`);
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                chevron.style.transform = "rotate(0deg)";
+            } else {
+                content.classList.add('open');
+                chevron.style.transform = "rotate(180deg)";
+            }
+        }
+
         function renderLibrary() {
-            document.getElementById('planLibraryContainer').innerHTML = routine.map(r => `
-                <div class="glass-card p-5 border-l-4 ${r.name === 'Cardio' ? 'border-l-blue-400' : 'border-l-emerald-400'}">
-                    <h3 class="text-slate-800 font-black text-2xl mb-1">${r.name}</h3>
-                    <p class="text-sm text-emerald-600 font-bold mb-5 italic">"${r.motto}"</p>
-                    <div class="space-y-4">
+            document.getElementById('planLibraryContainer').innerHTML = routine.map((r, idx) => `
+                <div class="glass-card border-l-4 ${r.name === 'Cardio' ? 'border-l-blue-400' : 'border-l-emerald-400'} overflow-hidden">
+                    <div onclick="toggleAccordion(${idx})" class="p-5 flex justify-between items-center cursor-pointer select-none hover:bg-white/20 transition-colors">
+                        <div>
+                            <h3 class="text-slate-800 font-black text-xl">${r.name}</h3>
+                            <p class="text-xs text-slate-400 font-bold mt-0.5 uppercase tracking-wider">${r.library.length} Übungen</p>
+                        </div>
+                        <svg id="chevron-${idx}" class="w-6 h-6 text-slate-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                    <div id="accordion-${idx}" class="accordion-content px-5 pb-5 space-y-3">
+                        <p class="text-xs text-emerald-600 font-black italic mb-2">"${r.motto}"</p>
                         ${r.library.map(ex => `
                             <div class="bg-white/70 rounded-xl p-4 border border-white shadow-sm">
                                 <div class="flex justify-between items-start mb-2">
@@ -398,36 +406,100 @@
             `).join('');
         }
 
-        function renderCalendar() {
+        function changeMonth(dir) {
+            displayMonth += dir;
+            if (displayMonth < 0) { displayMonth = 11; displayYear--; } 
+            else if (displayMonth > 11) { displayMonth = 0; displayYear++; }
+            renderCalendarAndLogs(globalWorkoutsList);
+        }
+
+        function renderCalendarAndLogs(workoutsList) {
             const grid = document.getElementById('calendarGrid');
+            const logContainer = document.getElementById('logContainer');
             grid.innerHTML = '';
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = now.getMonth();
-            const firstDayIndex = new Date(year, month, 1).getDay();
-            const totalDays = new Date(year, month + 1, 0).getDate();
+            logContainer.innerHTML = '';
+
+            // Header Datum aktualisieren (z.B. "Mai 2026")
+            const monthNames = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
+            document.getElementById('monthYearDisplay').innerText = `${monthNames[displayMonth]} ${displayYear}`;
+
+            const today = new Date();
+            const todayKey = today.toISOString().split('T')[0];
+            
+            // Finde das Datum, an dem die App das allererste Mal benutzt wurde
+            let firstAppUseDate = "9999-99-99";
+            workoutsList.forEach(w => {
+                if (w.date && w.date < firstAppUseDate) firstAppUseDate = w.date;
+            });
+            if (firstAppUseDate === "9999-99-99") firstAppUseDate = todayKey;
+
+            const firstDayIndex = new Date(displayYear, displayMonth, 1).getDay();
+            const totalDays = new Date(displayYear, displayMonth + 1, 0).getDate();
             let startOffset = firstDayIndex === 0 ? 6 : firstDayIndex - 1;
 
             for (let i = 0; i < startOffset; i++) grid.appendChild(document.createElement('div'));
 
+            let combinedLogData = [];
+
             for (let day = 1; day <= totalDays; day++) {
+                const dateKey = `${displayYear}-${String(displayMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                 const dayDiv = document.createElement('div');
                 dayDiv.className = "h-10 w-10 mx-auto rounded-lg flex items-center justify-center text-xs font-bold ";
-                const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                dayDiv.innerText = day;
 
                 if (historyData[dateKey]) {
-                    if (historyData[dateKey].status === 'done') {
-                        dayDiv.className += historyData[dateKey].type === 'Cardio' 
-                            ? "bg-blue-500 text-white shadow-md shadow-blue-500/30" 
-                            : "bg-emerald-500 text-white shadow-md shadow-emerald-500/30";
-                    } else if (historyData[dateKey].status === 'rest') {
+                    const data = historyData[dateKey];
+                    combinedLogData.push({ date: dateKey, type: data.type, status: data.status, id: data.id });
+                    
+                    if (data.status === 'done') {
+                        dayDiv.className += data.type === 'Cardio' ? "bg-blue-500 text-white shadow-md shadow-blue-500/30" : "bg-emerald-500 text-white shadow-md shadow-emerald-500/30";
+                    } else {
                         dayDiv.className += "bg-slate-200 text-slate-500 shadow-inner";
                     }
                 } else {
-                    dayDiv.className += "bg-white/40 text-slate-400 border border-white/50";
+                    // Auto-Rest Day LOGIK: Nur wenn der Tag vor heute liegt UND nach dem allerersten App-Start!
+                    if(dateKey < todayKey && dateKey >= firstAppUseDate) {
+                        dayDiv.className += "bg-slate-200 text-slate-400 shadow-inner opacity-60";
+                        combinedLogData.push({ date: dateKey, type: "Rest Day (Auto)", status: "rest", id: `auto-${dateKey}` });
+                    } else {
+                        dayDiv.className += "bg-white/40 text-slate-400 border border-slate-100";
+                    }
                 }
-                dayDiv.innerText = day;
                 grid.appendChild(dayDiv);
+            }
+
+            // Protokoll für den AUSGEWÄHLTEN Monat rendern
+            if(combinedLogData.length === 0) {
+                logContainer.innerHTML = `<p class="text-sm text-slate-400 italic text-center py-4">Keine Einträge in diesem Monat.</p>`;
+            } else {
+                combinedLogData.sort((a,b) => b.date.localeCompare(a.date)).forEach(item => {
+                    const listItem = document.createElement('div');
+                    listItem.className = "bg-white/80 p-4 rounded-xl flex justify-between items-center border border-slate-100 shadow-sm";
+                    
+                    const isRest = item.status === 'rest';
+                    let titleStyle = isRest ? "text-slate-400 italic" : (item.type === 'Cardio' ? "text-blue-600 font-bold" : "text-slate-800 font-bold");
+                    const formattedDate = item.date.split('-').reverse().join('.');
+
+                    listItem.innerHTML = `
+                        <div>
+                            <p class="${titleStyle} text-base">${item.type}</p>
+                            <p class="text-xs text-slate-500 mt-1 font-bold uppercase">${formattedDate}</p>
+                        </div>
+                        <div class="flex gap-2">
+                            ${isRest ? `
+                                <button onclick="convertRestToWorkout('${item.date}', '${item.id}')" class="text-xs bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold px-3 py-2 rounded-lg border border-emerald-200 cursor-pointer">
+                                    🏋️‍♂️ Ändern
+                                </button>
+                            ` : ''}
+                            ${!item.id.startsWith('auto-') ? `
+                                <button onclick="deleteEntry('${item.id}')" class="text-slate-400 hover:text-red-500 transition-colors p-2 rounded-lg bg-slate-50 border border-slate-200 cursor-pointer">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                </button>
+                            ` : ''}
+                        </div>
+                    `;
+                    logContainer.appendChild(listItem);
+                });
             }
         }
 
@@ -448,18 +520,12 @@
                     if(workoutDate >= startOfWeek) {
                         weekStats.total++;
                         if(w.type === 'Cardio') weekStats.cardio++;
-                        else {
-                            weekStats.strength++;
-                            weekStats.muscles[w.type] = (weekStats.muscles[w.type] || 0) + 1;
-                        }
+                        else { weekStats.strength++; weekStats.muscles[w.type] = (weekStats.muscles[w.type] || 0) + 1; }
                     }
                     if(w.date.startsWith(currentMonthStr)) {
                         monthStats.total++;
                         if(w.type === 'Cardio') monthStats.cardio++;
-                        else {
-                            monthStats.strength++;
-                            monthStats.muscles[w.type] = (monthStats.muscles[w.type] || 0) + 1;
-                        }
+                        else { monthStats.strength++; monthStats.muscles[w.type] = (monthStats.muscles[w.type] || 0) + 1; }
                     }
                 }
             });
@@ -471,11 +537,9 @@
             document.getElementById('statMonthStrength').innerText = monthStats.strength;
             document.getElementById('statMonthCardio').innerText = monthStats.cardio;
 
-            const formatMuscles = (muscles) => Object.keys(muscles).length > 0 
-                ? Object.entries(muscles).map(([name, count]) => `<span class="bg-emerald-100 text-emerald-700 border border-emerald-200 text-xs px-3 py-1.5 rounded-lg font-black">${name}: ${count}x</span>`).join('')
+            document.getElementById('statMonthMuscles').innerHTML = Object.keys(monthStats.muscles).length > 0 
+                ? Object.entries(monthStats.muscles).map(([name, count]) => `<span class="bg-emerald-100 text-emerald-700 border border-emerald-200 text-xs px-3 py-1.5 rounded-lg font-black">${name}: ${count}x</span>`).join('')
                 : `<span class="text-sm text-slate-400 font-medium">Keine Daten</span>`;
-
-            document.getElementById('statMonthMuscles').innerHTML = formatMuscles(monthStats.muscles);
         }
 
         function initApp() {
@@ -484,9 +548,7 @@
             renderLibrary();
 
             db.collection('workouts').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
-                const logContainer = document.getElementById('logContainer');
-                logContainer.innerHTML = '';
-                let workoutsList = [];
+                globalWorkoutsList = [];
                 historyData = {};
                 const todayStr = new Date().toISOString().split('T')[0];
                 let isDoneToday = false;
@@ -494,28 +556,12 @@
 
                 snapshot.forEach((doc) => {
                     const data = doc.data();
-                    workoutsList.push(data);
-                    if(data.date) historyData[data.date] = { status: data.status, type: data.type };
+                    globalWorkoutsList.push(data);
+                    if(data.date) historyData[data.date] = { status: data.status, type: data.type, id: doc.id };
                     if(data.date === todayStr) { isDoneToday = true; todayDocId = doc.id; }
-
-                    const isRest = data.status === 'rest';
-                    let titleStyle = isRest ? "text-slate-400 italic" : (data.type === 'Cardio' ? "text-blue-600 font-bold" : "text-slate-800 font-bold");
-                    
-                    const listItem = document.createElement('div');
-                    listItem.className = "bg-white/80 p-4 rounded-xl flex justify-between items-center border border-slate-100 shadow-sm";
-                    listItem.innerHTML = `
-                        <div>
-                            <p class="${titleStyle} text-base">${data.type}</p>
-                            <p class="text-xs text-slate-500 mt-1 uppercase tracking-wider font-bold">${data.date.split('-').reverse().join('.')}</p>
-                        </div>
-                        <button onclick="deleteEntry('${doc.id}')" class="text-slate-400 hover:text-red-500 transition-colors p-2 rounded-lg bg-slate-50 shadow-sm border border-slate-200">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                        </button>
-                    `;
-                    logContainer.appendChild(listItem);
                 });
 
-                proposedWorkout = calculateProposal(workoutsList);
+                proposedWorkout = calculateProposal(globalWorkoutsList);
                 document.getElementById('proposedWorkoutName').innerText = proposedWorkout.name;
                 document.getElementById('proposedWorkoutDetails').innerHTML = proposedWorkout.exercises.map(ex => `<li class="flex items-center gap-3"><div class="w-2 h-2 bg-emerald-400 rounded-full shadow-sm"></div>${ex}</li>`).join('');
                 document.getElementById('motivationQuote').innerText = isDoneToday ? `"Muskeln wachsen in der Ruhephase."` : `"${proposedWorkout.motto}"`;
@@ -528,8 +574,8 @@
                     document.getElementById('doneContainer').classList.add('hidden');
                 }
 
-                renderCalendar();
-                calculateStats(workoutsList);
+                renderCalendarAndLogs(globalWorkoutsList);
+                calculateStats(globalWorkoutsList);
             });
         }
         initApp();
