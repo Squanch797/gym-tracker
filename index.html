@@ -6,7 +6,6 @@
     <title>Simons Fitness</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* === MODERN LIGHT BLURRY GLASS DESIGN === */
         body {
             background-color: #f8fafc;
             background-image: 
@@ -215,7 +214,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
     <script>
-        // Sicheres Starten des Scripts
         document.addEventListener('DOMContentLoaded', () => {
             
             const firebaseConfig = {
@@ -314,7 +312,12 @@
             let historyData = {}; 
             let todayDocId = null; 
 
-            // Helfer-Funktionen als Globale Objekte für die HTML Buttons verfügbar machen
+            // HILFSFUNKTION: Lokales Datum abrufen (Vermeidet den Mitternachts-Bug)
+            function getLocalTodayDate() {
+                const d = new Date();
+                return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+            }
+
             window.switchTab = function(tab) {
                 ['tracker', 'calendar', 'plan'].forEach(t => {
                     document.getElementById(`tab-${t}`).classList.add('hidden');
@@ -328,13 +331,13 @@
             window.logSelectedWorkout = async function(type) {
                 let workoutToLog = type === 'proposed' ? proposedWorkout : routine.find(r => r.name === type);
                 await db.collection('workouts').add({
-                    date: new Date().toISOString().split('T')[0], type: workoutToLog.name, status: "done", timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    date: getLocalTodayDate(), type: workoutToLog.name, status: "done", timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
             };
 
             window.logRestDay = async function() {
                 await db.collection('workouts').add({
-                    date: new Date().toISOString().split('T')[0], type: "Rest Day", status: "rest", timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    date: getLocalTodayDate(), type: "Rest Day", status: "rest", timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
             };
 
@@ -448,8 +451,7 @@
                 const monthNames = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
                 document.getElementById('monthYearDisplay').innerText = `${monthNames[displayMonth]} ${displayYear}`;
 
-                const today = new Date();
-                const todayKey = today.toISOString().split('T')[0];
+                const todayKey = getLocalTodayDate();
                 
                 let firstAppUseDate = "9999-99-99";
                 workoutsList.forEach(w => {
@@ -526,20 +528,21 @@
             }
 
             function calculateStats(workoutsList) {
+                const todayStr = getLocalTodayDate();
+                const currentMonthStr = todayStr.slice(0, 7); 
+                
                 const today = new Date();
-                const currentMonthStr = today.toISOString().slice(0, 7); 
                 const dayOfWeek = today.getDay() === 0 ? 7 : today.getDay(); 
                 const startOfWeek = new Date(today);
                 startOfWeek.setDate(today.getDate() - dayOfWeek + 1);
-                startOfWeek.setHours(0,0,0,0);
+                const startOfWeekStr = `${startOfWeek.getFullYear()}-${String(startOfWeek.getMonth() + 1).padStart(2, '0')}-${String(startOfWeek.getDate()).padStart(2, '0')}`;
 
                 let weekStats = { total: 0, strength: 0, cardio: 0, muscles: {} };
                 let monthStats = { total: 0, strength: 0, cardio: 0, muscles: {} };
 
                 workoutsList.forEach(w => {
                     if(w.date && w.status === 'done') {
-                        const workoutDate = new Date(w.date);
-                        if(workoutDate >= startOfWeek) {
+                        if(w.date >= startOfWeekStr) {
                             weekStats.total++;
                             if(w.type === 'Cardio') weekStats.cardio++;
                             else { weekStats.strength++; weekStats.muscles[w.type] = (weekStats.muscles[w.type] || 0) + 1; }
@@ -568,7 +571,7 @@
                 db.collection('workouts').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
                     globalWorkoutsList = [];
                     historyData = {};
-                    const todayStr = new Date().toISOString().split('T')[0];
+                    const todayStr = getLocalTodayDate();
                     let isDoneToday = false;
                     todayDocId = null;
 
