@@ -3,212 +3,257 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Simons Fitness</title>
+    <title>Fitness Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        /* === PREMIUM eSPORTS / ARENA THEME (Dark Navy, Deep Purple, Clean White) === */
         body {
-            background-color: #f8fafc;
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, rgba(6, 182, 212, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.1) 0px, transparent 50%);
-            background-attachment: fixed;
-            color: #0f172a;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
+            color: #1e293b;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             overflow-x: hidden;
         }
 
-        .glass-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.6));
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 1);
-            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.08);
-            border-radius: 1.5rem;
+        #app-root {
+            max-width: 1050px; 
+            margin: 0 auto; 
+            padding: 20px; 
         }
 
-        .docked-nav {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border-top: 1px solid rgba(255, 255, 255, 1);
-            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.05);
-            padding-bottom: env(safe-area-inset-bottom);
-        }
-
-        ::-webkit-scrollbar { display: none; }
-        .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .accordion-content {
-            transition: max-height 0.3s ease-out, opacity 0.2s ease-out;
-            max-height: 0;
-            opacity: 0;
+        /* HEADER EYECATCHER */
+        .kps-header {
+            position: relative; 
+            text-align: center; 
+            margin-bottom: 25px; 
+            padding: 45px 20px; 
+            background: linear-gradient(135deg, #09090b 0%, #1e1b4b 100%); 
+            color: white; 
+            border-radius: 24px; 
+            box-shadow: 0 15px 35px rgba(109, 40, 217, 0.2);
+            border-bottom: 6px solid #6d28d9;
             overflow: hidden;
         }
-        .accordion-content.open {
-            max-height: 1000px;
-            opacity: 1;
+        .kps-header::before {
+            content: ""; position: absolute; bottom: -50%; left: 25%; width: 50%; height: 100%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.25) 0%, transparent 70%);
+            pointer-events: none; z-index: 1;
         }
+        .kps-header::after {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(rgba(255,255,255,0.06) 1.5px, transparent 1.5px);
+            background-size: 20px 20px; pointer-events: none; z-index: 1;
+        }
+        .kps-header * { position: relative; z-index: 2; }
+
+        .kps-badge {
+            display: inline-block; background: rgba(139, 92, 246, 0.15); color: #c084fc; 
+            padding: 6px 20px; border-radius: 30px; font-size: 11px; font-weight: 900; 
+            text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; 
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+        .kps-header h1 { 
+            text-shadow: 0 4px 15px rgba(0,0,0,0.4); font-size: 38px; font-weight: 900; 
+            letter-spacing: 1px; text-transform: uppercase; margin: 0; 
+        }
+
+        /* TABS NAVIGATION (Oben, verhindert Scroll-Bug!) */
+        .kps-tabs-container {
+            display: flex; justify-content: flex-start; gap: 10px; margin-bottom: 30px; 
+            overflow-x: auto; padding-bottom: 5px; scrollbar-width: none;
+        }
+        .kps-tabs-container::-webkit-scrollbar { display: none; }
+        
+        .main-tab-btn {
+            background: #ffffff; border: 1px solid #cbd5e1; color: #64748b; 
+            padding: 14px 24px; border-radius: 30px; font-weight: 800; font-size: 14px; 
+            cursor: pointer; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02); display: flex; align-items: center; gap: 8px;
+            white-space: nowrap; flex-shrink: 0;
+        }
+        .main-tab-btn:hover { color: #6d28d9; border-color: #6d28d9; transform: translateY(-2px); }
+        .main-tab-btn.active {
+            background: linear-gradient(135deg, #312e81 0%, #4c1d95 100%); color: #fff; 
+            border-color: #312e81; box-shadow: 0 6px 15px rgba(49, 46, 129, 0.3);
+        }
+        
+        .tab-section { display: none; animation: fadeIn 0.3s ease; }
+        .tab-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* CONTENT BOXEN */
+        .kps-box {
+            background: #ffffff; padding: 25px; margin-bottom: 25px; 
+            border-radius: 16px; border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+        .kps-box h3 { 
+            margin-top: 0; color: #09090b; font-size: 20px; font-weight: 900; 
+            margin-bottom: 20px; border-left: 5px solid #6d28d9; padding-left: 12px; 
+        }
+
+        /* BUTTONS */
+        .kps-btn-main {
+            background: linear-gradient(135deg, #4c1d95 0%, #6d28d9 100%); color: #ffffff;
+            border: none; padding: 18px 30px; border-radius: 40px; font-size: 16px;
+            font-weight: 900; cursor: pointer; box-shadow: 0 8px 25px rgba(109, 40, 217, 0.35);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); text-transform: uppercase; 
+            letter-spacing: 1px; width: 100%; position: relative; overflow: hidden;
+        }
+        .kps-btn-main:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 12px 35px rgba(109, 40, 217, 0.5); }
+        
+        .kps-btn-action { 
+            background: #f8fafc; border: 1px solid #cbd5e1; color: #334155; padding: 16px 20px; 
+            border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.2s; font-size: 14px; width: 100%; text-align: center;
+        }
+        .kps-btn-action:hover { background: #e2e8f0; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.05);}
+        
+        /* DROPDOWN & AKKORDEON */
+        .accordion-content {
+            transition: max-height 0.3s ease-out, opacity 0.2s ease-out;
+            max-height: 0; opacity: 0; overflow: hidden;
+        }
+        .accordion-content.open { max-height: 1000px; opacity: 1; }
+
+        .stat-card {
+            background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 12px; text-align: center;
+        }
+        .stat-card.purple { background: #f5f3ff; border-color: #ede9fe; color: #6d28d9; }
     </style>
 </head>
-<body class="min-h-screen p-4 pb-32"> 
+<body> 
+    <div id="app-root">
 
-    <header class="max-w-md mx-auto mb-8 mt-4 flex flex-col items-center">
-        <h1 class="text-4xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-cyan-600 mb-2 drop-shadow-sm">
-            Simons Fitness
-        </h1>
-        
-        <div class="glass-card px-5 py-2.5 flex items-center gap-3 text-sm font-bold text-slate-500 rounded-full border border-slate-200">
-            <span id="currentDate" class="flex items-center gap-1">📅 Datum lädt...</span>
-            <div class="w-1.5 h-1.5 rounded-full bg-slate-300"></div>
-            <span id="currentWeather" class="flex items-center gap-1 text-emerald-600">🌡️ Wetter lädt...</span>
-        </div>
-    </header>
-
-    <main class="max-w-md mx-auto space-y-6">
-        
-        <div id="tab-tracker" class="space-y-6 animate-fade-in">
-            <div id="pendingContainer" class="space-y-6">
-                <div class="glass-card p-6 relative overflow-hidden border-t-4 border-emerald-400">
-                    <div class="absolute top-0 right-0 bg-emerald-100 text-emerald-700 text-[10px] font-extrabold px-3 py-1.5 rounded-bl-xl uppercase tracking-widest">
-                        Heutiger Fokus
-                    </div>
-                    
-                    <h2 class="text-4xl font-black text-slate-800 mt-3 mb-1" id="proposedWorkoutName">Lade...</h2>
-                    <p class="text-sm text-emerald-600 mb-6 italic font-bold" id="motivationQuote">"Konsistenz schlägt Intensität."</p>
-                    
-                    <div class="bg-white/60 rounded-2xl p-5 mb-6 border border-emerald-50 shadow-sm">
-                        <ul id="proposedWorkoutDetails" class="space-y-3 text-base text-slate-700 font-semibold">
-                            <li class="text-slate-400 italic text-sm">Daten werden synchronisiert...</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="flex gap-3 mt-2">
-                        <button onclick="logSelectedWorkout('proposed')" class="flex-1 bg-gradient-to-r from-emerald-400 to-emerald-500 hover:from-emerald-500 hover:to-emerald-600 text-white font-black py-4 rounded-2xl transition-all shadow-lg shadow-emerald-500/30 text-base active:scale-95 cursor-pointer">
-                            ✓ ERLEDIGT
-                        </button>
-                        <button onclick="logRestDay()" class="flex-1 bg-white hover:bg-slate-50 text-slate-600 font-bold py-4 rounded-2xl transition-all border-2 border-slate-200 shadow-sm text-sm active:scale-95 cursor-pointer">
-                            ⏭ REST DAY
-                        </button>
-                    </div>
-                </div>
-
-                <div class="glass-card p-6">
-                    <h3 class="text-sm font-black text-slate-400 uppercase tracking-wider mb-4">Plan B wählen</h3>
-                    <div class="grid grid-cols-2 gap-3" id="manualButtons"></div>
-                </div>
-            </div>
-
-            <div id="doneContainer" class="hidden animate-fade-in">
-                <div class="glass-card p-8 text-center flex flex-col items-center border-t-4 border-emerald-400">
-                    <div class="w-24 h-24 bg-emerald-100 rounded-full flex items-center justify-center mb-6 shadow-inner border border-white">
-                        <svg class="w-12 h-12 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-                    </div>
-                    <h2 class="text-3xl font-black text-slate-800 mb-3">Stark abgeliefert!</h2>
-                    <p class="text-slate-500 text-base mb-8 leading-relaxed font-medium">Dein Eintrag ist sicher. Erhole dich gut und genieß den restlichen Tag.</p>
-                    <button onclick="undoToday()" class="text-sm text-slate-400 hover:text-red-500 underline transition-colors font-bold cursor-pointer">Oh, vertippt (Eintrag löschen)</button>
-                </div>
-            </div>
+        <div class="kps-header">
+            <span class="kps-badge" id="currentDate">📅 Lade...</span>
+            <h1>Fitness Tracker</h1>
+            <div id="currentWeather" style="color: #c084fc; font-weight: 800; margin-top: 12px; font-size: 14px; letter-spacing: 0.5px;">🌡️ München...</div>
         </div>
 
-        <div id="tab-calendar" class="space-y-6 hidden animate-fade-in">
-            <div class="grid grid-cols-2 gap-4">
-                <div class="glass-card p-6 border-t-4 border-cyan-400">
-                    <h3 class="text-xs font-black text-cyan-600 uppercase tracking-widest mb-4">Diese Woche</h3>
-                    <div class="flex items-baseline gap-2 mb-5">
-                        <span class="text-5xl font-black text-slate-800" id="statWeekTotal">0</span>
-                        <span class="text-sm text-slate-400 font-bold uppercase">Workouts</span>
-                    </div>
-                    <div class="space-y-3">
-                        <div class="flex justify-between items-center text-sm font-bold"><span class="text-slate-500">Kraft:</span><span class="text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded text-base" id="statWeekStrength">0</span></div>
-                        <div class="flex justify-between items-center text-sm font-bold"><span class="text-slate-500">Cardio:</span><span class="text-cyan-600 bg-cyan-50 px-2 py-0.5 rounded text-base" id="statWeekCardio">0</span></div>
-                    </div>
-                </div>
-                <div class="glass-card p-6 border-t-4 border-emerald-400">
-                    <h3 class="text-xs font-black text-emerald-600 uppercase tracking-widest mb-4">Dieser Monat</h3>
-                    <div class="flex items-baseline gap-2 mb-5">
-                        <span class="text-5xl font-black text-slate-800" id="statMonthTotal">0</span>
-                        <span class="text-sm text-slate-400 font-bold uppercase">Workouts</span>
-                    </div>
-                    <div class="space-y-3">
-                        <div class="flex justify-between items-center text-sm font-bold"><span class="text-slate-500">Kraft:</span><span class="text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded text-base" id="statMonthStrength">0</span></div>
-                        <div class="flex justify-between items-center text-sm font-bold"><span class="text-slate-500">Cardio:</span><span class="text-cyan-600 bg-cyan-50 px-2 py-0.5 rounded text-base" id="statMonthCardio">0</span></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="glass-card p-6">
-                <h3 class="text-sm font-black text-slate-800 mb-4">Monats-Fokus (Muskeln)</h3>
-                <div id="statMonthMuscles" class="flex flex-wrap gap-2"></div>
-            </div>
-
-            <div class="glass-card p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <button onclick="changeMonth(-1)" class="p-2 bg-white rounded-lg shadow-sm text-slate-500 hover:text-emerald-500 transition-colors cursor-pointer border border-slate-100">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
-                    </button>
-                    <h3 class="text-xl font-black text-slate-800" id="monthYearDisplay">Lade Monat...</h3>
-                    <button onclick="changeMonth(1)" class="p-2 bg-white rounded-lg shadow-sm text-slate-500 hover:text-emerald-500 transition-colors cursor-pointer border border-slate-100">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
-                    </button>
-                </div>
-
-                <div class="grid grid-cols-7 gap-1 text-center text-[10px] font-black text-slate-400 mb-3">
-                    <div>MO</div><div>DI</div><div>MI</div><div>DO</div><div>FR</div><div>SA</div><div>SO</div>
-                </div>
-                <div class="grid grid-cols-7 gap-1" id="calendarGrid"></div>
-            </div>
-            
-            <div class="glass-card p-6">
-                <h3 class="text-sm font-black text-slate-800 mb-4">Protokoll <span class="text-xs text-slate-400 font-normal">(Auto-Restdays änderbar)</span></h3>
-                <div id="logContainer" class="space-y-3"></div>
-            </div>
+        <div class="kps-tabs-container">
+            <button class="main-tab-btn active" id="btn-tab-tracker" onclick="switchTab('tracker')">🏋️‍♂️ Workout loggen</button>
+            <button class="main-tab-btn" id="btn-tab-calendar" onclick="switchTab('calendar')">📊 Statistiken</button>
+            <button class="main-tab-btn" id="btn-tab-plan" onclick="switchTab('plan')">📋 Masterplan</button>
         </div>
 
-        <div id="tab-plan" class="space-y-6 hidden animate-fade-in">
-            <div class="glass-card p-6 border-t-4 border-indigo-400 shadow-lg">
-                <h2 class="text-2xl font-black text-slate-800 mb-2">Der Masterplan</h2>
-                <p class="text-sm text-slate-500 mb-6 font-medium">Dein perfekter Rhythmus für maximales Wachstum.</p>
+        <main>
+            <div id="tab-tracker" class="tab-section active">
                 
-                <div class="grid grid-cols-7 gap-1.5 text-center mb-8 p-1.5">
-                    <div class="bg-white rounded-xl p-1.5 shadow-sm border border-emerald-100 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-400 mb-0.5 font-bold">MO</p><p class="text-sm font-black text-emerald-600">OK</p></div>
-                    <div class="bg-white rounded-xl p-1.5 shadow-sm border border-emerald-100 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-400 mb-0.5 font-bold">DI</p><p class="text-sm font-black text-emerald-600">UK</p></div>
-                    <div class="bg-slate-200/50 rounded-xl p-1.5 shadow-inner border border-slate-300 flex flex-col items-center justify-center h-16 w-full"><p class="text-[10px] text-slate-500 font-bold mb-0.5">MI</p><div class="flex flex-col items-center"><p class="text-[9px] font-black text-slate-600 leading-none">REST</p><p class="text-[9px] font-black text-slate-600 leading-none">CARDIO</p></div></div>
-                    <div class="bg-white rounded-xl p-1.5 shadow-sm border border-cyan-100 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-400 mb-0.5 font-bold">DO</p><p class="text-sm font-black text-cyan-600">Push</p></div>
-                    <div class="bg-white rounded-xl p-1.5 shadow-sm border border-cyan-100 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-400 mb-0.5 font-bold">FR</p><p class="text-sm font-black text-cyan-600">Pull</p></div>
-                    <div class="bg-white rounded-xl p-1.5 shadow-sm border border-cyan-100 flex flex-col items-center justify-center h-16 w-full"><p class="text-[10px] text-slate-400 mb-0.5 font-bold">SA</p><p class="text-xs font-black text-cyan-600">Beine</p></div>
-                    <div class="bg-slate-200/50 rounded-xl p-1.5 shadow-inner border border-slate-300 flex flex-col items-center justify-center h-16 w-full"><p class="text-[10px] text-slate-500 font-bold mb-0.5">SO</p><div class="flex flex-col items-center"><p class="text-[9px] font-black text-slate-600 leading-none">REST</p><p class="text-[9px] font-black text-slate-600 leading-none">CARDIO</p></div></div>
+                <div id="pendingContainer">
+                    <div class="kps-box" style="border-top: 4px solid #6d28d9; position: relative;">
+                        <div style="position: absolute; top: 0; right: 0; background: #f5f3ff; color: #6d28d9; font-size: 10px; font-weight: 900; padding: 6px 12px; border-bottom-left-radius: 12px; text-transform: uppercase;">
+                            Heutiger Fokus
+                        </div>
+                        
+                        <h2 class="text-4xl font-black text-slate-800 mt-2 mb-1" id="proposedWorkoutName">Lade...</h2>
+                        <p class="text-sm text-purple-600 mb-6 italic font-bold" id="motivationQuote">"Konsistenz schlägt Intensität."</p>
+                        
+                        <div style="background: #f8fafc; border-radius: 12px; padding: 20px; margin-bottom: 25px; border: 1px solid #e2e8f0;">
+                            <ul id="proposedWorkoutDetails" class="space-y-3 text-base text-slate-700 font-semibold">
+                                <li class="text-slate-400 italic text-sm">Daten werden synchronisiert...</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="flex gap-3">
+                            <button onclick="logSelectedWorkout('proposed')" class="kps-btn-main">
+                                ✓ ERLEDIGT
+                            </button>
+                            <button onclick="logRestDay()" class="kps-btn-action" style="flex: 0.5;">
+                                ⏭ REST
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="kps-box">
+                        <h3>Plan B wählen</h3>
+                        <div class="grid grid-cols-2 gap-3" id="manualButtons"></div>
+                    </div>
                 </div>
 
-                <div class="bg-blue-50 rounded-2xl p-5 border border-blue-100 relative overflow-hidden">
-                    <div class="absolute -right-4 -top-4 text-6xl opacity-10">🏃‍♂️</div>
-                    <h3 class="text-base font-black text-blue-800 flex items-center gap-2 mb-2">Wichtig: Cardio an Rest Days</h3>
-                    <p class="text-sm text-blue-900/80 leading-relaxed font-medium">Um das Krafttraining nicht zu stören, machst du dein Cardio an den Rest Days. Nutze diese Tage für ca. <strong>30-45 Min. Joggen oder Radfahren</strong>. Intensität: <strong>Zone 2</strong>.</p>
+                <div id="doneContainer" class="hidden">
+                    <div class="kps-box" style="text-align: center; padding: 40px 20px; border-top: 4px solid #10b981;">
+                        <div style="width: 80px; height: 80px; background: #dcfce7; color: #16a34a; font-size: 40px; line-height: 80px; border-radius: 50%; margin: 0 auto 20px auto;">
+                            ✓
+                        </div>
+                        <h2 class="text-3xl font-black text-slate-800 mb-3">Stark abgeliefert!</h2>
+                        <p class="text-slate-500 text-base mb-8 font-medium">Dein Eintrag ist sicher. Erhole dich gut und genieß den restlichen Tag.</p>
+                        <button onclick="undoToday()" class="text-sm text-slate-400 hover:text-red-500 underline font-bold cursor-pointer bg-transparent border-none">Oh, vertippt (Eintrag löschen)</button>
+                    </div>
                 </div>
             </div>
 
-            <div id="planLibraryContainer" class="space-y-3"></div>
-        </div>
+            <div id="tab-calendar" class="tab-section">
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="kps-box" style="padding: 20px; margin-bottom: 15px;">
+                        <h4 class="text-xs font-black text-purple-600 uppercase tracking-widest mb-3">Diese Woche</h4>
+                        <div class="text-4xl font-black text-slate-800 mb-3" id="statWeekTotal">0 <span class="text-sm text-slate-400 font-bold uppercase">Workouts</span></div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-sm font-bold"><span class="text-slate-500">Kraft:</span><span class="text-purple-600" id="statWeekStrength">0</span></div>
+                            <div class="flex justify-between text-sm font-bold"><span class="text-slate-500">Cardio:</span><span class="text-cyan-600" id="statWeekCardio">0</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="kps-box" style="padding: 20px; margin-bottom: 15px;">
+                        <h4 class="text-xs font-black text-emerald-600 uppercase tracking-widest mb-3">Dieser Monat</h4>
+                        <div class="text-4xl font-black text-slate-800 mb-3" id="statMonthTotal">0 <span class="text-sm text-slate-400 font-bold uppercase">Workouts</span></div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-sm font-bold"><span class="text-slate-500">Kraft:</span><span class="text-emerald-600" id="statMonthStrength">0</span></div>
+                            <div class="flex justify-between text-sm font-bold"><span class="text-slate-500">Cardio:</span><span class="text-cyan-600" id="statMonthCardio">0</span></div>
+                        </div>
+                    </div>
+                </div>
 
-    </main>
+                <div class="kps-box" style="margin-top: 10px;">
+                    <h3>Monats-Fokus (Muskeln)</h3>
+                    <div id="statMonthMuscles" class="flex flex-wrap gap-2"></div>
+                </div>
 
-    <nav class="docked-nav fixed bottom-0 left-0 right-0 z-50">
-        <div class="max-w-md mx-auto flex justify-between items-center px-6 pt-3 pb-2">
-            <button onclick="switchTab('tracker')" id="btn-tab-tracker" class="flex flex-col items-center gap-1 text-emerald-600 transition-colors w-20 cursor-pointer">
-                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <span class="text-xs font-bold">Heute</span>
-            </button>
-            <button onclick="switchTab('calendar')" id="btn-tab-calendar" class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-600 transition-colors w-20 cursor-pointer">
-                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                <span class="text-xs font-bold">Stats</span>
-            </button>
-            <button onclick="switchTab('plan')" id="btn-tab-plan" class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-600 transition-colors w-20 cursor-pointer">
-                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path></svg>
-                <span class="text-xs font-bold">Plan</span>
-            </button>
-        </div>
-    </nav>
+                <div class="kps-box">
+                    <div class="flex justify-between items-center mb-6">
+                        <button onclick="changeMonth(-1)" class="kps-btn-action" style="width: auto; padding: 10px 15px;">❮</button>
+                        <h3 style="margin: 0; border: none; padding: 0;" id="monthYearDisplay">Lade Monat...</h3>
+                        <button onclick="changeMonth(1)" class="kps-btn-action" style="width: auto; padding: 10px 15px;">❯</button>
+                    </div>
+
+                    <div class="grid grid-cols-7 gap-1 text-center text-[10px] font-black text-slate-400 mb-3">
+                        <div>MO</div><div>DI</div><div>MI</div><div>DO</div><div>FR</div><div>SA</div><div>SO</div>
+                    </div>
+                    <div class="grid grid-cols-7 gap-1.5" id="calendarGrid"></div>
+                </div>
+                
+                <div class="kps-box">
+                    <h3>Protokoll <span class="text-xs text-slate-400 font-normal ml-2">(Auto-Restdays änderbar)</span></h3>
+                    <div id="logContainer" class="space-y-3"></div>
+                </div>
+            </div>
+
+            <div id="tab-plan" class="tab-section">
+                <div class="kps-box" style="border-top: 4px solid #1e1b4b;">
+                    <h3>Der Masterplan</h3>
+                    <p class="text-sm text-slate-500 mb-6 font-medium">Dein perfekter Rhythmus für maximales Wachstum.</p>
+                    
+                    <div class="grid grid-cols-7 gap-1.5 text-center mb-6">
+                        <div class="bg-white rounded-xl p-1 shadow-sm border border-slate-200 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-400 mb-0.5 font-bold">MO</p><p class="text-sm font-black text-purple-600">OK</p></div>
+                        <div class="bg-white rounded-xl p-1 shadow-sm border border-slate-200 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-400 mb-0.5 font-bold">DI</p><p class="text-sm font-black text-purple-600">UK</p></div>
+                        <div class="bg-slate-100 rounded-xl p-1 border border-slate-200 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-500 font-bold mb-0.5">MI</p><div class="flex flex-col items-center"><p class="text-[9px] font-black text-slate-600 leading-none">REST</p><p class="text-[9px] font-black text-slate-600 leading-none">CARDIO</p></div></div>
+                        <div class="bg-white rounded-xl p-1 shadow-sm border border-slate-200 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-400 mb-0.5 font-bold">DO</p><p class="text-sm font-black text-cyan-600">Push</p></div>
+                        <div class="bg-white rounded-xl p-1 shadow-sm border border-slate-200 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-400 mb-0.5 font-bold">FR</p><p class="text-sm font-black text-cyan-600">Pull</p></div>
+                        <div class="bg-white rounded-xl p-1 shadow-sm border border-slate-200 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-400 mb-0.5 font-bold">SA</p><p class="text-xs font-black text-cyan-600">Beine</p></div>
+                        <div class="bg-slate-100 rounded-xl p-1 border border-slate-200 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-500 font-bold mb-0.5">SO</p><div class="flex flex-col items-center"><p class="text-[9px] font-black text-slate-600 leading-none">REST</p><p class="text-[9px] font-black text-slate-600 leading-none">CARDIO</p></div></div>
+                    </div>
+
+                    <div style="background: #f0f9ff; border: 1px solid #bae6fd; padding: 15px; border-radius: 12px;">
+                        <h4 class="text-sm font-black text-cyan-800 mb-2">🏃‍♂️ Wichtig: Cardio an Rest Days</h4>
+                        <p class="text-sm text-cyan-900 leading-relaxed font-medium">Um das Krafttraining nicht zu stören, machst du dein Cardio an den Rest Days. Nutze diese Tage für ca. <strong>30-45 Min. Joggen oder Radfahren</strong>. Intensität: <strong>Zone 2</strong>.</p>
+                    </div>
+                </div>
+
+                <div id="planLibraryContainer"></div>
+            </div>
+        </main>
+    </div>
 
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -235,14 +280,13 @@
             
             const db = firebase.firestore();
 
-            // GLOBALE VARIABLEN
             let displayYear = new Date().getFullYear();
             let displayMonth = new Date().getMonth();
             let globalWorkoutsList = []; 
 
             const routine = [
                 { 
-                    name: "Oberkörper", motto: "Schwere Gewichte. Voller Fokus. Frisches ZNS.",
+                    name: "Oberkörper", motto: "Schwere Gewichte. Voller Fokus. Frisches ZNS.", color: "purple",
                     exercises: ["LH Flachbank", "LH Rudern", "Schrägbank (KH)", "Latzug", "Seitheben", "Trizeps & Bizeps"],
                     library: [
                         { name: "Langhantel Flachbank", sets: "4x 5-8", desc: "Brust-Fokus. Kontrolliert ab, explosiv hoch. 2 RIR." },
@@ -254,7 +298,7 @@
                     ]
                 },
                 { 
-                    name: "Unterkörper", motto: "Beine wachsen nicht vom Reden. Ab in die Beuge.",
+                    name: "Unterkörper", motto: "Beine wachsen nicht vom Reden. Ab in die Beuge.", color: "purple",
                     exercises: ["Kniebeugen", "RDLs", "Beinpresse", "Beinbeuger", "Waden"],
                     library: [
                         { name: "Kniebeugen (Squats)", sets: "4x 5-8", desc: "Quads & Glutes. Tiefe mind. parallel, Rumpf unter Spannung." },
@@ -265,7 +309,7 @@
                     ]
                 },
                 { 
-                    name: "Push", motto: "Pump, Volumen und maximale Dehnung.",
+                    name: "Push", motto: "Pump, Volumen und maximale Dehnung.", color: "cyan",
                     exercises: ["Schrägbank (KH)", "Brustpresse", "Schulterdrücken", "Seitheben (Kabel)", "Trizeps"],
                     library: [
                         { name: "KH Schrägbank", sets: "4x 8-10", desc: "Fokus auf die Dehnung der oberen Brust." },
@@ -277,7 +321,7 @@
                     ]
                 },
                 { 
-                    name: "Pull", motto: "Starker Rücken, dicker Bizeps.",
+                    name: "Pull", motto: "Starker Rücken, dicker Bizeps.", color: "cyan",
                     exercises: ["Klimmzüge", "Kabelrudern", "Überzüge", "Face Pulls", "Curls"],
                     library: [
                         { name: "Klimmzüge / Latzug", sets: "4x 8-10", desc: "Vertikaler Zug. Schulterblätter vor dem Zug nach unten." },
@@ -289,7 +333,7 @@
                     ]
                 },
                 { 
-                    name: "Beine", motto: "Metabolischer Stress pur.",
+                    name: "Beine", motto: "Metabolischer Stress pur.", color: "cyan",
                     exercises: ["Beinpresse (Schwer)", "Beinstrecker", "Beinbeuger", "Ausfallschritte", "Waden"],
                     library: [
                         { name: "Beinpresse", sets: "4x 8-10", desc: "Schwerer Einstieg, sichere Ausführung." },
@@ -300,7 +344,7 @@
                     ]
                 },
                 { 
-                    name: "Cardio", motto: "Regeneration & Fettabbau.",
+                    name: "Cardio", motto: "Regeneration & Fettabbau.", color: "blue",
                     exercises: ["Zone 2 Cardio"],
                     library: [
                         { name: "Zone 2 Training", sets: "30-45 Min", desc: "Radfahren, Walken. Du musst noch sprechen können." }
@@ -312,16 +356,13 @@
             let historyData = {}; 
             let todayDocId = null; 
 
-            // ================== LOGIK FÜR DEN MASTERPLAN ZYKLUS ==================
-            // Die Logik sucht den letzten echten Workout-Eintrag und beachtet dabei auch, 
-            // ob nach diesem Eintrag ein Cardio oder Rest Day gemacht wurde.
+            // LOGIK MASTERPLAN
             function calculateProposal(workoutsList) {
                 if (!workoutsList || workoutsList.length === 0) return routine.find(r => r.name === "Oberkörper");
 
                 let lastRealWorkout = null;
                 let foundRestOrCardioSinceLastReal = false;
 
-                // Wir gehen die nach Zeit sortierten Workouts durch (0 ist das neueste)
                 for (let i = 0; i < workoutsList.length; i++) {
                     const t = workoutsList[i].type;
                     if (t === "Cardio" || t === "Rest Day") {
@@ -334,24 +375,15 @@
 
                 if (!lastRealWorkout) return routine.find(r => r.name === "Oberkörper");
 
-                // Zyklus: OK -> UK -> Cardio -> Push -> Pull -> Beine -> Cardio -> Repeat
                 if (lastRealWorkout === "Oberkörper") return routine.find(r => r.name === "Unterkörper");
-                
-                if (lastRealWorkout === "Unterkörper") {
-                    return foundRestOrCardioSinceLastReal ? routine.find(r => r.name === "Push") : routine.find(r => r.name === "Cardio");
-                }
-                
+                if (lastRealWorkout === "Unterkörper") return foundRestOrCardioSinceLastReal ? routine.find(r => r.name === "Push") : routine.find(r => r.name === "Cardio");
                 if (lastRealWorkout === "Push") return routine.find(r => r.name === "Pull");
                 if (lastRealWorkout === "Pull") return routine.find(r => r.name === "Beine");
-                
-                if (lastRealWorkout === "Beine") {
-                    return foundRestOrCardioSinceLastReal ? routine.find(r => r.name === "Oberkörper") : routine.find(r => r.name === "Cardio");
-                }
+                if (lastRealWorkout === "Beine") return foundRestOrCardioSinceLastReal ? routine.find(r => r.name === "Oberkörper") : routine.find(r => r.name === "Cardio");
 
-                return routine.find(r => r.name === "Oberkörper"); // Fallback
+                return routine.find(r => r.name === "Oberkörper");
             }
 
-            // HILFSFUNKTION: Lokales Datum abrufen (Vermeidet den Mitternachts-Bug UTC vs. MESZ)
             function getLocalTodayDate() {
                 const d = new Date();
                 return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
@@ -359,11 +391,11 @@
 
             window.switchTab = function(tab) {
                 ['tracker', 'calendar', 'plan'].forEach(t => {
-                    document.getElementById(`tab-${t}`).classList.add('hidden');
-                    document.getElementById(`btn-tab-${t}`).classList.replace('text-emerald-600', 'text-slate-400');
+                    document.getElementById(`tab-${t}`).classList.remove('active');
+                    document.getElementById(`btn-tab-${t}`).classList.remove('active');
                 });
-                document.getElementById(`tab-${tab}`).classList.remove('hidden');
-                document.getElementById(`btn-tab-${tab}`).classList.replace('text-slate-400', 'text-emerald-600');
+                document.getElementById(`tab-${tab}`).classList.add('active');
+                document.getElementById(`btn-tab-${tab}`).classList.add('active');
                 window.scrollTo(0, 0);
             };
 
@@ -394,7 +426,7 @@
             };
 
             window.convertRestToWorkout = async function(dateKey, docId) {
-                const type = prompt("Welches Workout hast du gemacht? (Oberkörper, Unterkörper, Push, Pull, Beine, Cardio)");
+                const type = prompt("Welches Workout? (Oberkörper, Unterkörper, Push, Pull, Beine, Cardio)");
                 if (type) {
                     const found = routine.find(r => r.name.toLowerCase() === type.trim().toLowerCase());
                     if (found) {
@@ -407,7 +439,7 @@
                             });
                         }
                     } else {
-                        alert("Ungültiger Workout-Typ! Bitte genauen Namen eingeben.");
+                        alert("Ungültig!");
                     }
                 }
             };
@@ -435,42 +467,44 @@
                 const options = { weekday: 'short', day: '2-digit', month: 'short' };
                 document.getElementById('currentDate').innerHTML = `📅 ${new Date().toLocaleDateString('de-DE', options)}`;
                 fetch('https://api.open-meteo.com/v1/forecast?latitude=48.1374&longitude=11.5755&current_weather=true')
-                    .then(r => r.json()).then(d => { document.getElementById('currentWeather').innerText = `🌡️ ${Math.round(d.current_weather.temperature)}°C München`; })
+                    .then(r => r.json()).then(d => { document.getElementById('currentWeather').innerText = `🌡️ ${Math.round(d.current_weather.temperature)}°C in München`; })
                     .catch(() => { document.getElementById('currentWeather').innerText = `🌡️ München`; });
             }
 
             function renderManualButtons() {
                 document.getElementById('manualButtons').innerHTML = routine.map(r => `
-                    <button onclick="logSelectedWorkout('${r.name}')" class="bg-white/60 hover:bg-white text-sm border border-slate-200 p-4 rounded-xl font-bold text-slate-700 shadow-sm active:scale-95 cursor-pointer flex flex-col items-center">
+                    <button onclick="logSelectedWorkout('${r.name}')" class="kps-btn-action">
                         ${r.name}
                     </button>
                 `).join('');
             }
 
             function renderLibrary() {
-                document.getElementById('planLibraryContainer').innerHTML = routine.map((r, idx) => `
-                    <div class="glass-card border-l-4 ${r.name === 'Cardio' ? 'border-l-blue-400' : 'border-l-emerald-400'} overflow-hidden">
-                        <div onclick="toggleAccordion(${idx})" class="p-5 flex justify-between items-center cursor-pointer select-none hover:bg-white/20 transition-colors">
+                document.getElementById('planLibraryContainer').innerHTML = routine.map((r, idx) => {
+                    let borderColor = r.color === "purple" ? "#6d28d9" : (r.color === "blue" ? "#3b82f6" : "#06b6d4");
+                    return `
+                    <div class="kps-box" style="padding:0; border-left: 6px solid ${borderColor}; overflow: hidden;">
+                        <div onclick="toggleAccordion(${idx})" class="p-5 flex justify-between items-center cursor-pointer select-none hover:bg-slate-50 transition-colors">
                             <div>
-                                <h3 class="text-slate-800 font-black text-xl">${r.name}</h3>
-                                <p class="text-xs text-slate-400 font-bold mt-0.5 uppercase tracking-wider">${r.library.length} Übungen</p>
+                                <h3 style="border:none; padding:0; margin:0; font-size:22px;">${r.name}</h3>
+                                <p class="text-xs text-slate-400 font-bold mt-1 uppercase tracking-wider">${r.library.length} Übungen</p>
                             </div>
                             <svg id="chevron-${idx}" class="w-6 h-6 text-slate-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
                         </div>
-                        <div id="accordion-${idx}" class="accordion-content px-5 pb-5 space-y-3">
-                            <p class="text-xs text-emerald-600 font-black italic mb-2">"${r.motto}"</p>
+                        <div id="accordion-${idx}" class="accordion-content px-5 pb-5 space-y-3 bg-slate-50">
+                            <p class="text-xs font-black italic mb-3 mt-2" style="color:${borderColor};">"${r.motto}"</p>
                             ${r.library.map(ex => `
-                                <div class="bg-white/70 rounded-xl p-4 border border-white shadow-sm">
+                                <div style="background:#fff; border-radius:12px; padding:15px; border:1px solid #e2e8f0;">
                                     <div class="flex justify-between items-start mb-2">
                                         <p class="text-base font-bold text-slate-800">${ex.name}</p>
-                                        <span class="text-[11px] font-black bg-emerald-100 text-emerald-700 px-2 py-1 rounded uppercase tracking-wider">${ex.sets}</span>
+                                        <span class="text-[11px] font-black px-2 py-1 rounded uppercase" style="background: rgba(109, 40, 217, 0.1); color: ${borderColor};">${ex.sets}</span>
                                     </div>
                                     <p class="text-sm text-slate-500 leading-relaxed font-medium">${ex.desc}</p>
                                 </div>
                             `).join('')}
                         </div>
                     </div>
-                `).join('');
+                `}).join('');
             }
 
             function renderCalendarAndLogs(workoutsList) {
@@ -483,11 +517,8 @@
                 document.getElementById('monthYearDisplay').innerText = `${monthNames[displayMonth]} ${displayYear}`;
 
                 const todayKey = getLocalTodayDate();
-                
                 let firstAppUseDate = "9999-99-99";
-                workoutsList.forEach(w => {
-                    if (w.date && w.date < firstAppUseDate) firstAppUseDate = w.date;
-                });
+                workoutsList.forEach(w => { if (w.date && w.date < firstAppUseDate) firstAppUseDate = w.date; });
                 if (firstAppUseDate === "9999-99-99") firstAppUseDate = todayKey;
 
                 const firstDayIndex = new Date(displayYear, displayMonth, 1).getDay();
@@ -509,7 +540,7 @@
                         combinedLogData.push({ date: dateKey, type: data.type, status: data.status, id: data.id });
                         
                         if (data.status === 'done') {
-                            dayDiv.className += data.type === 'Cardio' ? "bg-blue-500 text-white shadow-md shadow-blue-500/30" : "bg-emerald-500 text-white shadow-md shadow-emerald-500/30";
+                            dayDiv.className += data.type === 'Cardio' ? "bg-cyan-500 text-white shadow-md" : "bg-purple-600 text-white shadow-md";
                         } else {
                             dayDiv.className += "bg-slate-200 text-slate-500 shadow-inner";
                         }
@@ -518,7 +549,7 @@
                             dayDiv.className += "bg-slate-200 text-slate-400 shadow-inner opacity-60";
                             combinedLogData.push({ date: dateKey, type: "Rest Day (Auto)", status: "rest", id: `auto-${dateKey}` });
                         } else {
-                            dayDiv.className += "bg-white/40 text-slate-400 border border-slate-100";
+                            dayDiv.className += "bg-white text-slate-400 border border-slate-200";
                         }
                     }
                     grid.appendChild(dayDiv);
@@ -529,10 +560,10 @@
                 } else {
                     combinedLogData.sort((a,b) => b.date.localeCompare(a.date)).forEach(item => {
                         const listItem = document.createElement('div');
-                        listItem.className = "bg-white/80 p-4 rounded-xl flex justify-between items-center border border-slate-100 shadow-sm";
+                        listItem.className = "bg-white p-4 rounded-xl flex justify-between items-center border border-slate-200 shadow-sm";
                         
                         const isRest = item.status === 'rest';
-                        let titleStyle = isRest ? "text-slate-400 italic" : (item.type === 'Cardio' ? "text-blue-600 font-bold" : "text-slate-800 font-bold");
+                        let titleStyle = isRest ? "text-slate-400 italic" : (item.type === 'Cardio' ? "text-cyan-600 font-bold" : "text-slate-800 font-bold");
                         const formattedDate = item.date.split('-').reverse().join('.');
 
                         listItem.innerHTML = `
@@ -542,7 +573,7 @@
                             </div>
                             <div class="flex gap-2">
                                 ${isRest ? `
-                                    <button onclick="convertRestToWorkout('${item.date}', '${item.id}')" class="text-xs bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold px-3 py-2 rounded-lg border border-emerald-200 cursor-pointer">
+                                    <button onclick="convertRestToWorkout('${item.date}', '${item.id}')" class="text-xs bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold px-3 py-2 rounded-lg border border-purple-200 cursor-pointer">
                                         🏋️‍♂️ Ändern
                                     </button>
                                 ` : ''}
@@ -594,7 +625,7 @@
                 document.getElementById('statMonthCardio').innerText = monthStats.cardio;
 
                 document.getElementById('statMonthMuscles').innerHTML = Object.keys(monthStats.muscles).length > 0 
-                    ? Object.entries(monthStats.muscles).map(([name, count]) => `<span class="bg-emerald-100 text-emerald-700 border border-emerald-200 text-xs px-3 py-1.5 rounded-lg font-black">${name}: ${count}x</span>`).join('')
+                    ? Object.entries(monthStats.muscles).map(([name, count]) => `<span class="bg-purple-100 text-purple-700 border border-purple-200 text-xs px-3 py-1.5 rounded-lg font-black">${name}: ${count}x</span>`).join('')
                     : `<span class="text-sm text-slate-400 font-medium">Keine Daten</span>`;
             }
 
@@ -615,9 +646,8 @@
 
                     proposedWorkout = calculateProposal(globalWorkoutsList);
                     document.getElementById('proposedWorkoutName').innerText = proposedWorkout.name;
-                    document.getElementById('proposedWorkoutDetails').innerHTML = proposedWorkout.exercises.map(ex => `<li class="flex items-center gap-3"><div class="w-2 h-2 bg-emerald-400 rounded-full shadow-sm"></div>${ex}</li>`).join('');
-                    document.getElementById('motivationQuote').innerText = isDoneToday ? `"Muskeln wachsen in der Ruhephase."` : `"${proposedWorkout.motto}"`;
-
+                    document.getElementById('proposedWorkoutDetails').innerHTML = proposedWorkout.exercises.map(ex => `<li class="flex items-center gap-3"><div class="w-2 h-2 bg-purple-600 rounded-full shadow-sm"></div>${ex}</li>`).join('');
+                    
                     if(isDoneToday) {
                         document.getElementById('pendingContainer').classList.add('hidden');
                         document.getElementById('doneContainer').classList.remove('hidden');
@@ -630,17 +660,15 @@
                     calculateStats(globalWorkoutsList);
                 }, (error) => {
                     console.error("Firestore Error:", error);
-                    alert("Verbindung zur Datenbank fehlgeschlagen. Bitte aktualisiere die Seite.");
                 });
             }
 
-            // Init Logik
             initHeader();
             renderManualButtons();
             renderLibrary();
             startFirestoreSync();
 
-        }); // Ende DOMContentLoaded
+        });
     </script>
 </body>
 </html>
