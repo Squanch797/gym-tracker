@@ -23,7 +23,6 @@
             padding-bottom: 50px;
         }
 
-        /* HEADER EYECATCHER */
         .kps-header {
             position: relative; 
             text-align: center; 
@@ -35,7 +34,7 @@
             box-shadow: 0 15px 35px rgba(109, 40, 217, 0.2);
             border-bottom: 6px solid #6d28d9;
             overflow: hidden;
-            z-index: 10; /* Header Layer */
+            z-index: 10;
         }
         .kps-header::before {
             content: ""; position: absolute; bottom: -50%; left: 25%; width: 50%; height: 100%;
@@ -70,11 +69,10 @@
             letter-spacing: 1px; text-transform: uppercase; margin: 0; color: #ffffff;
         }
 
-        /* TABS NAVIGATION - HÖCHSTER Z-INDEX DAMIT SIE KLICKBAR SIND */
         .kps-tabs-container {
             display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; 
             position: relative;
-            z-index: 50; /* Verhindert, dass der Header die Klicks blockiert! */
+            z-index: 50;
         }
         
         .main-tab-btn {
@@ -93,7 +91,6 @@
         .tab-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* CONTENT BOXEN */
         .kps-box {
             background: #ffffff; padding: 25px; margin-bottom: 25px; 
             border-radius: 16px; border: 1px solid #e2e8f0;
@@ -106,7 +103,6 @@
             margin-bottom: 20px; border-left: 5px solid #6d28d9; padding-left: 12px; 
         }
 
-        /* BUTTONS */
         .kps-btn-main {
             background: linear-gradient(135deg, #4c1d95 0%, #6d28d9 100%); color: #ffffff;
             border: none; padding: 18px 20px; border-radius: 40px; font-size: 15px;
@@ -122,7 +118,6 @@
         }
         .kps-btn-action:active { background: #e2e8f0; transform: scale(0.95); }
         
-        /* DROPDOWN & AKKORDEON */
         .accordion-content {
             transition: max-height 0.3s ease-out, opacity 0.2s ease-out;
             max-height: 0; opacity: 0; overflow: hidden;
@@ -183,48 +178,30 @@
                 </div>
 
                 <div id="doneContainer" class="hidden">
-                    <div class="kps-box" style="text-align: center; padding: 40px 20px; border-top: 5px solid #10b981;">
+                    <div class="kps-box" style="text-align: center; padding: 40px 20px 20px 20px; border-top: 5px solid #10b981;">
                         <div style="width: 80px; height: 80px; background: #dcfce7; color: #16a34a; font-size: 40px; line-height: 80px; border-radius: 50%; margin: 0 auto 20px auto;">
                             ✓
                         </div>
                         <h2 class="text-3xl font-black text-slate-800 mb-3">Stark abgeliefert!</h2>
-                        <p class="text-slate-500 text-base mb-8 font-medium">Dein Eintrag ist sicher. Erhole dich gut und genieß den restlichen Tag.</p>
+                        <p class="text-slate-500 text-base mb-6 font-medium">Dein Eintrag ist sicher. Erhole dich gut und genieß den restlichen Tag.</p>
                         <button onclick="undoToday()" class="text-sm text-slate-400 hover:text-red-500 underline font-bold cursor-pointer bg-transparent border-none p-0 m-0">Oh, vertippt (Eintrag löschen)</button>
+                        
+                        <div class="mt-10 pt-6 border-t border-slate-100 text-left">
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 text-center">Morgen anstehend</p>
+                            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 flex items-center justify-center shadow-sm">
+                                <h3 class="text-xl font-black text-slate-800 m-0 p-0 border-none" id="tomorrowWorkoutPreview">Lade...</h3>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div id="tab-calendar" class="tab-section">
                 
-                <div class="grid grid-cols-2 gap-4 mb-6">
-                    <div class="kps-box" style="padding: 20px; margin: 0;">
-                        <h4 class="text-xs font-black text-purple-600 uppercase tracking-widest mb-3">Woche</h4>
-                        <div class="text-4xl font-black text-slate-800 mb-3" id="statWeekTotal">0</div>
-                        <div class="space-y-2">
-                            <div class="flex justify-between text-sm font-bold"><span class="text-slate-500">Kraft:</span><span class="text-purple-600" id="statWeekStrength">0</span></div>
-                            <div class="flex justify-between text-sm font-bold"><span class="text-slate-500">Cardio:</span><span class="text-cyan-600" id="statWeekCardio">0</span></div>
-                        </div>
-                    </div>
-                    
-                    <div class="kps-box" style="padding: 20px; margin: 0;">
-                        <h4 class="text-xs font-black text-emerald-600 uppercase tracking-widest mb-3">Monat</h4>
-                        <div class="text-4xl font-black text-slate-800 mb-3" id="statMonthTotal">0</div>
-                        <div class="space-y-2">
-                            <div class="flex justify-between text-sm font-bold"><span class="text-slate-500">Kraft:</span><span class="text-emerald-600" id="statMonthStrength">0</span></div>
-                            <div class="flex justify-between text-sm font-bold"><span class="text-slate-500">Cardio:</span><span class="text-cyan-600" id="statMonthCardio">0</span></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="kps-box">
-                    <h3>Monats-Fokus (Muskeln)</h3>
-                    <div id="statMonthMuscles" class="flex flex-wrap gap-2"></div>
-                </div>
-
-                <div class="kps-box">
+                <div class="kps-box" style="border-top: 5px solid #334155;">
                     <div class="flex justify-between items-center mb-6">
                         <button onclick="changeMonth(-1)" class="kps-btn-action" style="width: auto; padding: 10px 15px;">❮</button>
-                        <h3 style="margin: 0; border: none; padding: 0;" id="monthYearDisplay">Lade...</h3>
+                        <h3 style="margin: 0; border: none; padding: 0;" id="monthYearDisplay">Lade Monat...</h3>
                         <button onclick="changeMonth(1)" class="kps-btn-action" style="width: auto; padding: 10px 15px;">❯</button>
                     </div>
 
@@ -232,6 +209,37 @@
                         <div>MO</div><div>DI</div><div>MI</div><div>DO</div><div>FR</div><div>SA</div><div>SO</div>
                     </div>
                     <div class="grid grid-cols-7 gap-1.5" id="calendarGrid"></div>
+                    
+                    <div class="flex justify-center gap-4 mt-5 text-[10px] font-bold text-slate-500 uppercase">
+                        <span class="flex items-center gap-1"><div class="w-2.5 h-2.5 bg-emerald-500 rounded-sm"></div> Kraft</span>
+                        <span class="flex items-center gap-1"><div class="w-2.5 h-2.5 bg-sky-400 rounded-sm"></div> Laufen</span>
+                        <span class="flex items-center gap-1"><div class="w-2.5 h-2.5 bg-red-400 rounded-sm"></div> Rest</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="kps-box" style="padding: 20px; margin: 0;">
+                        <h4 class="text-[10px] font-black text-purple-600 uppercase tracking-widest mb-3">Woche <br><span class="text-slate-400">(Aktuell)</span></h4>
+                        <div class="text-4xl font-black text-slate-800 mb-3" id="statWeekTotal">0</div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-sm font-bold"><span class="text-slate-500">Kraft:</span><span class="text-purple-600" id="statWeekStrength">0</span></div>
+                            <div class="flex justify-between text-sm font-bold"><span class="text-slate-500">Cardio:</span><span class="text-sky-500" id="statWeekCardio">0</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="kps-box" style="padding: 20px; margin: 0;">
+                        <h4 class="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-3">Monat <br><span class="text-slate-400" id="selectedMonthLabel">(Ausgewählt)</span></h4>
+                        <div class="text-4xl font-black text-slate-800 mb-3" id="statMonthTotal">0</div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-sm font-bold"><span class="text-slate-500">Kraft:</span><span class="text-emerald-600" id="statMonthStrength">0</span></div>
+                            <div class="flex justify-between text-sm font-bold"><span class="text-slate-500">Cardio:</span><span class="text-sky-500" id="statMonthCardio">0</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="kps-box">
+                    <h3>Monats Fokus (Workouts)</h3>
+                    <div id="statMonthMuscles" class="flex flex-wrap gap-2"></div>
                 </div>
                 
                 <div class="kps-box">
@@ -241,23 +249,23 @@
             </div>
 
             <div id="tab-plan" class="tab-section">
-                <div class="kps-box" style="border-top: 5px solid #1e1b4b;">
+                <div class="kps-box" style="border-top: 4px solid #1e1b4b;">
                     <h3>Der Masterplan</h3>
                     <p class="text-sm text-slate-500 mb-6 font-medium">Dein perfekter Rhythmus für maximales Wachstum.</p>
                     
                     <div class="grid grid-cols-7 gap-1.5 text-center mb-6">
                         <div class="bg-white rounded-xl p-1 shadow-sm border border-slate-200 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-400 mb-0.5 font-bold">MO</p><p class="text-sm font-black text-purple-600">OK</p></div>
                         <div class="bg-white rounded-xl p-1 shadow-sm border border-slate-200 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-400 mb-0.5 font-bold">DI</p><p class="text-sm font-black text-purple-600">UK</p></div>
-                        <div class="bg-slate-100 rounded-xl p-1 border border-slate-200 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-500 font-bold mb-0.5">MI</p><div class="flex flex-col items-center"><p class="text-[9px] font-black text-slate-600 leading-none">REST</p><p class="text-[9px] font-black text-slate-600 leading-none">CARDIO</p></div></div>
+                        <div class="bg-slate-100 rounded-xl p-1 border border-slate-200 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-500 font-bold mb-0.5">MI</p><div class="flex flex-col items-center"><p class="text-[9px] font-black text-red-500 leading-none">REST</p><p class="text-[9px] font-black text-sky-500 leading-none">CARDIO</p></div></div>
                         <div class="bg-white rounded-xl p-1 shadow-sm border border-slate-200 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-400 mb-0.5 font-bold">DO</p><p class="text-sm font-black text-cyan-600">Push</p></div>
                         <div class="bg-white rounded-xl p-1 shadow-sm border border-slate-200 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-400 mb-0.5 font-bold">FR</p><p class="text-sm font-black text-cyan-600">Pull</p></div>
                         <div class="bg-white rounded-xl p-1 shadow-sm border border-slate-200 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-400 mb-0.5 font-bold">SA</p><p class="text-xs font-black text-cyan-600">Beine</p></div>
-                        <div class="bg-slate-100 rounded-xl p-1 border border-slate-200 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-500 font-bold mb-0.5">SO</p><div class="flex flex-col items-center"><p class="text-[9px] font-black text-slate-600 leading-none">REST</p><p class="text-[9px] font-black text-slate-600 leading-none">CARDIO</p></div></div>
+                        <div class="bg-slate-100 rounded-xl p-1 border border-slate-200 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-500 font-bold mb-0.5">SO</p><div class="flex flex-col items-center"><p class="text-[9px] font-black text-red-500 leading-none">REST</p><p class="text-[9px] font-black text-sky-500 leading-none">CARDIO</p></div></div>
                     </div>
 
                     <div style="background: #f0f9ff; border: 1px solid #bae6fd; padding: 15px; border-radius: 12px;">
-                        <h4 class="text-sm font-black text-cyan-800 mb-2">🏃‍♂️ Wichtig: Cardio an Rest Days</h4>
-                        <p class="text-sm text-cyan-900 leading-relaxed font-medium">Cardio immer an den Pausentagen machen. Nutze diese Tage für ca. <strong>30-45 Min. Joggen/Radfahren</strong> in <strong>Zone 2</strong>.</p>
+                        <h4 class="text-sm font-black text-sky-600 mb-2">🏃‍♂️ Wichtig: Cardio an Rest Days</h4>
+                        <p class="text-sm text-sky-900 leading-relaxed font-medium">Cardio immer an den Pausentagen machen. Nutze diese Tage für ca. <strong>30-45 Min. Joggen oder Radfahren</strong> in <strong>Zone 2</strong>.</p>
                     </div>
                 </div>
 
@@ -270,7 +278,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
     <script>
-        // GLOBALE VARIABLEN & FIREBASE SETUP
         const firebaseConfig = {
             apiKey: "AIzaSyDVHnhz4l5txrDJLXLrkLvqtUKZkTuKIIU",
             authDomain: "gymtrackersimon.firebaseapp.com",
@@ -289,8 +296,8 @@
         let displayMonth = new Date().getMonth();
         let globalWorkoutsList = []; 
         let todayDocId = null; 
+        const monthNames = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
 
-        // TRAININGSBIBLIOTHEK
         const routine = [
             { 
                 name: "Oberkörper", motto: "Schwere Gewichte. Voller Fokus. Frisches ZNS.", color: "purple",
@@ -298,7 +305,7 @@
                 library: [
                     { name: "Langhantel Flachbank", sets: "4x 5-8", desc: "Brust-Fokus. Kontrolliert ab, explosiv hoch. 2 RIR." },
                     { name: "Langhantel Rudern", sets: "4x 6-8", desc: "Rücken-Fokus. Oberkörper 45° nach vorne, Stange zum Bauchnabel ziehen." },
-                    { name: "KH Schrägbank", sets: "3x 8-12", desc: "Obere Brust. 30° Winkel." },
+                    { name: "KH Schrägbank", sets: "3x 8-12", desc: "Obere Brust. 30° Winkel, volle Dehnung unten spüren." },
                     { name: "Latzug (Breit)", sets: "3x 8-10", desc: "Latissimus. Brust raus, Stange zur oberen Brust ziehen." },
                     { name: "KH Seitheben", sets: "3x 12-15", desc: "Seitliche Schulter. Arme leicht angewinkelt." },
                     { name: "Trizeps & Bizeps", sets: "Je 3x 10-12", desc: "Super-Satz für die Arme als Finisher." }
@@ -361,28 +368,29 @@
 
         let proposedWorkout = routine[0];
 
-        // DATUMS-HILFSFUNKTION (verhindert den UTC-Bug)
         function getLocalTodayDate() {
             const d = new Date();
             return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
         }
 
         // NAVIGATION
-        function switchTab(tab) {
+        window.switchTab = function(tab) {
             ['tracker', 'calendar', 'plan'].forEach(t => {
                 document.getElementById(`tab-${t}`).classList.remove('active');
                 document.getElementById(`btn-tab-${t}`).classList.remove('active');
             });
             document.getElementById(`tab-${tab}`).classList.add('active');
             document.getElementById(`btn-tab-${tab}`).classList.add('active');
-        }
+            window.scrollTo(0, 0);
+        };
 
-        function changeMonth(dir) {
+        window.changeMonth = function(dir) {
             displayMonth += dir;
             if (displayMonth < 0) { displayMonth = 11; displayYear--; } 
             else if (displayMonth > 11) { displayMonth = 0; displayYear++; }
             renderCalendarAndLogs(globalWorkoutsList);
-        }
+            calculateStats(globalWorkoutsList);
+        };
 
         // UI RENDER FUNKTIONEN
         function initHeader() {
@@ -401,7 +409,7 @@
             `).join('');
         }
 
-        function toggleAccordion(index) {
+        window.toggleAccordion = function(index) {
             const content = document.getElementById(`accordion-${index}`);
             const chevron = document.getElementById(`chevron-${index}`);
             if (content.classList.contains('open')) {
@@ -411,11 +419,11 @@
                 content.classList.add('open');
                 chevron.style.transform = "rotate(180deg)";
             }
-        }
+        };
 
         function renderLibrary() {
             document.getElementById('planLibraryContainer').innerHTML = routine.map((r, idx) => {
-                let borderColor = r.color === "purple" ? "#6d28d9" : (r.color === "blue" ? "#3b82f6" : "#06b6d4");
+                let borderColor = r.color === "purple" ? "#6d28d9" : (r.color === "blue" ? "#0ea5e9" : "#06b6d4");
                 return `
                 <div class="kps-box" style="padding:0; border-left: 5px solid ${borderColor}; overflow: hidden;">
                     <div onclick="toggleAccordion(${idx})" class="p-5 flex justify-between items-center cursor-pointer select-none hover:bg-slate-50 transition-colors">
@@ -431,7 +439,7 @@
                             <div style="background:#fff; border-radius:12px; padding:15px; border:1px solid #e2e8f0;">
                                 <div class="flex justify-between items-start mb-2">
                                     <p class="text-sm font-bold text-slate-800">${ex.name}</p>
-                                    <span class="text-[10px] font-black px-2 py-1 rounded uppercase" style="background: rgba(109, 40, 217, 0.05); color: ${borderColor};">${ex.sets}</span>
+                                    <span class="text-[10px] font-black px-2 py-1 rounded uppercase" style="background: #f1f5f9; color: ${borderColor}; border: 1px solid #e2e8f0;">${ex.sets}</span>
                                 </div>
                                 <p class="text-xs text-slate-500 leading-relaxed font-medium">${ex.desc}</p>
                             </div>
@@ -450,7 +458,8 @@
 
             for (let i = 0; i < workoutsList.length; i++) {
                 const t = workoutsList[i].type;
-                if (t === "Cardio" || t === "Rest Day" || (t && t.includes("Auto"))) {
+                if (!t) continue;
+                if (t.includes("Cardio") || t.includes("Rest")) {
                     if (i === 0) foundRestOrCardioSinceLastReal = true;
                     continue;
                 }
@@ -460,7 +469,7 @@
 
             if (!lastRealWorkout) return routine[0];
 
-            let nextWorkout = routine[0]; // Fallback
+            let nextWorkout = routine[0]; 
             if (lastRealWorkout === "Oberkörper") nextWorkout = routine.find(r => r.name === "Unterkörper");
             else if (lastRealWorkout === "Unterkörper") nextWorkout = foundRestOrCardioSinceLastReal ? routine.find(r => r.name === "Push") : routine.find(r => r.name === "Cardio");
             else if (lastRealWorkout === "Push") nextWorkout = routine.find(r => r.name === "Pull");
@@ -471,35 +480,35 @@
         }
 
         // DATENBANK AKTIONEN
-        async function logSelectedWorkout(type) {
+        window.logSelectedWorkout = async function(type) {
             let workoutToLog = type === 'proposed' ? proposedWorkout : routine.find(r => r.name === type);
             if(!workoutToLog) return;
             await db.collection('workouts').add({
                 date: getLocalTodayDate(), type: workoutToLog.name, status: "done", timestamp: firebase.firestore.FieldValue.serverTimestamp()
             });
-        }
+        };
 
-        async function logRestDay() {
+        window.logRestDay = async function() {
             await db.collection('workouts').add({
                 date: getLocalTodayDate(), type: "Rest Day", status: "rest", timestamp: firebase.firestore.FieldValue.serverTimestamp()
             });
-        }
+        };
 
-        async function deleteEntry(docId) {
+        window.deleteEntry = async function(docId) {
             if(confirm("Eintrag löschen?")) {
                 await db.collection('workouts').doc(docId).delete();
             }
-        }
+        };
 
-        async function undoToday() {
+        window.undoToday = async function() {
             if(todayDocId) { 
                 await db.collection('workouts').doc(todayDocId).delete(); 
                 todayDocId = null; 
             }
-        }
+        };
 
-        async function convertRestToWorkout(dateKey, docId) {
-            const type = prompt("Welches Workout? (zz.B. Push, Pull, Beine...)");
+        window.convertRestToWorkout = async function(dateKey, docId) {
+            const type = prompt("Welches Workout? (z.B. Push, Pull, Beine...)");
             if (type) {
                 const found = routine.find(r => r.name.toLowerCase() === type.trim().toLowerCase());
                 if (found) {
@@ -514,16 +523,15 @@
                     alert("Ungültig! Bitte exakten Namen verwenden.");
                 }
             }
-        }
+        };
 
-        // KALENDER & PROTOKOLL RENDERN
+        // KALENDER & PROTOKOLL RENDERN (MIT NEUEN FARBEN)
         function renderCalendarAndLogs(workoutsList) {
             const grid = document.getElementById('calendarGrid');
             const logContainer = document.getElementById('logContainer');
             grid.innerHTML = '';
             logContainer.innerHTML = '';
 
-            const monthNames = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
             document.getElementById('monthYearDisplay').innerText = `${monthNames[displayMonth]} ${displayYear}`;
 
             const todayKey = getLocalTodayDate();
@@ -531,7 +539,6 @@
             workoutsList.forEach(w => { if (w.date && w.date < firstAppUseDate) firstAppUseDate = w.date; });
             if (firstAppUseDate === "9999-99-99") firstAppUseDate = todayKey;
 
-            // Füllt ein Dictionary für schnellen Zugriff
             let historyMap = {};
             workoutsList.forEach(w => { if(w.date) historyMap[w.date] = w; });
 
@@ -554,13 +561,16 @@
                     combinedLogData.push({ date: dateKey, type: data.type, status: data.status, id: data.id });
                     
                     if (data.status === 'done') {
-                        dayDiv.className += data.type === 'Cardio' ? "bg-cyan-500 text-white shadow-md" : "bg-purple-600 text-white shadow-md";
+                        // Cardio = Hellblau, Kraft = Grün
+                        dayDiv.className += data.type.includes('Cardio') ? "bg-sky-400 text-white shadow-md" : "bg-emerald-500 text-white shadow-md";
                     } else {
-                        dayDiv.className += "bg-slate-200 text-slate-500 shadow-inner";
+                        // Manueller Rest Day = Rot
+                        dayDiv.className += "bg-red-400 text-white shadow-md";
                     }
                 } else {
                     if(dateKey < todayKey && dateKey >= firstAppUseDate) {
-                        dayDiv.className += "bg-slate-200 text-slate-400 shadow-inner opacity-60";
+                        // Auto Rest Day = Rot (leicht blasser)
+                        dayDiv.className += "bg-red-300 text-white shadow-inner opacity-80";
                         combinedLogData.push({ date: dateKey, type: "Rest Day (Auto)", status: "rest", id: `auto-${dateKey}` });
                     } else {
                         dayDiv.className += "bg-white text-slate-400 border border-slate-200";
@@ -577,7 +587,7 @@
                     listItem.className = "bg-white p-4 rounded-xl flex justify-between items-center border border-slate-200 shadow-sm";
                     
                     const isRest = item.status === 'rest';
-                    let titleStyle = isRest ? "text-slate-400 italic" : (item.type === 'Cardio' ? "text-cyan-600 font-bold" : "text-slate-800 font-bold");
+                    let titleStyle = isRest ? "text-red-400 italic" : (item.type.includes('Cardio') ? "text-sky-500 font-bold" : "text-emerald-600 font-bold");
                     const formattedDate = item.date.split('-').reverse().join('.');
 
                     listItem.innerHTML = `
@@ -587,8 +597,8 @@
                         </div>
                         <div class="flex gap-2">
                             ${isRest ? `
-                                <button onclick="convertRestToWorkout('${item.date}', '${item.id}')" class="text-xs bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold px-3 py-2 rounded-lg border border-purple-200 cursor-pointer">
-                                    🏋️‍♂️ Ändern
+                                <button onclick="convertRestToWorkout('${item.date}', '${item.id}')" class="text-xs bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold px-3 py-2 rounded-lg border border-slate-200 cursor-pointer">
+                                    ✏️ Ändern
                                 </button>
                             ` : ''}
                             ${!item.id.startsWith('auto-') ? `
@@ -603,29 +613,36 @@
             }
         }
 
+        // STATS BERECHNUNG (Pusht die Daten basierend auf dem ausgewählten Monat)
         function calculateStats(workoutsList) {
-            const todayStr = getLocalTodayDate();
-            const currentMonthStr = todayStr.slice(0, 7); 
-            
+            // Label für Monat aktualisieren
+            document.getElementById('selectedMonthLabel').innerText = `(${monthNames[displayMonth]})`;
+
             const today = new Date();
             const dayOfWeek = today.getDay() === 0 ? 7 : today.getDay(); 
             const startOfWeek = new Date(today);
             startOfWeek.setDate(today.getDate() - dayOfWeek + 1);
             const startOfWeekStr = `${startOfWeek.getFullYear()}-${String(startOfWeek.getMonth() + 1).padStart(2, '0')}-${String(startOfWeek.getDate()).padStart(2, '0')}`;
 
+            // Ausgewählter Monat im Kalender
+            const selectedMonthStr = `${displayYear}-${String(displayMonth + 1).padStart(2, '0')}`;
+
             let weekStats = { total: 0, strength: 0, cardio: 0, muscles: {} };
             let monthStats = { total: 0, strength: 0, cardio: 0, muscles: {} };
 
             workoutsList.forEach(w => {
                 if(w.date && w.status === 'done') {
+                    // Wochen-Statistik (bleibt immer auf der echten, aktuellen Woche)
                     if(w.date >= startOfWeekStr) {
                         weekStats.total++;
-                        if(w.type === 'Cardio') weekStats.cardio++;
-                        else { weekStats.strength++; weekStats.muscles[w.type] = (weekStats.muscles[w.type] || 0) + 1; }
+                        if(w.type.includes('Cardio')) weekStats.cardio++;
+                        else { weekStats.strength++; }
                     }
-                    if(w.date.startsWith(currentMonthStr)) {
+                    
+                    // Monats-Statistik (Reagiert auf den Kalender!)
+                    if(w.date.startsWith(selectedMonthStr)) {
                         monthStats.total++;
-                        if(w.type === 'Cardio') monthStats.cardio++;
+                        if(w.type.includes('Cardio')) monthStats.cardio++;
                         else { monthStats.strength++; monthStats.muscles[w.type] = (monthStats.muscles[w.type] || 0) + 1; }
                     }
                 }
@@ -639,16 +656,11 @@
             document.getElementById('statMonthCardio').innerText = monthStats.cardio;
 
             document.getElementById('statMonthMuscles').innerHTML = Object.keys(monthStats.muscles).length > 0 
-                ? Object.entries(monthStats.muscles).map(([name, count]) => `<span class="bg-purple-100 text-purple-700 border border-purple-200 text-xs px-3 py-1.5 rounded-lg font-black">${name}: ${count}x</span>`).join('')
-                : `<span class="text-sm text-slate-400 font-medium">Keine Daten</span>`;
+                ? Object.entries(monthStats.muscles).map(([name, count]) => `<span class="bg-emerald-100 text-emerald-700 border border-emerald-200 text-xs px-3 py-1.5 rounded-lg font-black">${name}: ${count}x</span>`).join('')
+                : `<span class="text-sm text-slate-400 font-medium">Keine Daten in diesem Monat</span>`;
         }
 
-        // INIT & SYNC
-        function initApp() {
-            initHeader();
-            renderManualButtons();
-            renderLibrary();
-
+        function startFirestoreSync() {
             db.collection('workouts').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
                 globalWorkoutsList = [];
                 const todayStr = getLocalTodayDate();
@@ -672,6 +684,10 @@
                 if(isDoneToday) {
                     document.getElementById('pendingContainer').classList.add('hidden');
                     document.getElementById('doneContainer').classList.remove('hidden');
+                    
+                    // Berechne Vorschau für morgen
+                    let tomorrowWorkout = calculateProposal(globalWorkoutsList);
+                    document.getElementById('tomorrowWorkoutPreview').innerText = tomorrowWorkout.name;
                 } else {
                     document.getElementById('pendingContainer').classList.remove('hidden');
                     document.getElementById('doneContainer').classList.add('hidden');
@@ -681,13 +697,15 @@
                 calculateStats(globalWorkoutsList);
             }, (error) => {
                 console.error("Firestore Error:", error);
-                document.getElementById('proposedWorkoutName').innerText = "Verbindungsfehler";
-                document.getElementById('motivationQuote').innerText = "Lade die Seite bitte neu.";
             });
         }
 
-        // Start App
-        initApp();
+        document.addEventListener('DOMContentLoaded', () => {
+            initHeader();
+            renderManualButtons();
+            renderLibrary();
+            startFirestoreSync();
+        });
 
     </script>
 </body>
