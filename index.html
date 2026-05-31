@@ -94,10 +94,30 @@
 
         .badge-icon { font-size: 30px; margin-bottom: 5px; }
         .badge-locked { filter: grayscale(100%); opacity: 0.4; }
+
+        /* HUD STYLES (Fixed Top Right) */
+        .pts-hud {
+            position: fixed; top: 15px; right: 15px; background: rgba(2, 6, 23, 0.95);
+            border: 2px solid #6d28d9; color: white; padding: 10px 18px; border-radius: 12px;
+            z-index: 1000; font-weight: 900; font-size: 13px; display: flex; align-items: center; gap: 8px;
+            box-shadow: 0 0 15px rgba(109, 40, 217, 0.4); backdrop-filter: blur(5px);
+        }
+        .pts-hud .icon { font-size: 16px; margin-top: -2px; }
+        .pts-hud .lbl { color: #a78bfa; font-weight: 700; text-transform: uppercase; font-size: 10px; margin-left: -3px;}
+        /* Mobile adjust */
+        @media (max-width: 640px) {
+            .pts-hud { top: 10px; right: 10px; padding: 8px 14px; font-size: 11px;}
+        }
+
     </style>
 </head>
 <body> 
     <div id="app-root">
+
+        <div class="pts-hud" id="ptsHud">
+            <span class="icon">🏆</span> <span id="ptsHudPoints">0</span> <span class="lbl">Pts</span> | 
+            <span class="icon">🔥</span> <span id="ptsHudStreak">0</span> <span class="lbl">Days</span>
+        </div>
 
         <div class="kps-header">
             <div class="date-weather-pill">
@@ -210,27 +230,43 @@
                     
                     <div class="flex gap-4">
                         <div class="flex-1 bg-emerald-50 border border-emerald-100 rounded-xl p-3 text-center">
-                            <p class="text-[10px] text-emerald-600 font-bold uppercase tracking-wider mb-1">Am stärksten</p>
+                            <p class="text-[10px] text-emerald-600 font-bold uppercase tracking-wider mb-1">Status</p>
                             <p class="text-lg font-black text-emerald-700" id="statMuscleMax">-</p>
                         </div>
                         <div class="flex-1 bg-orange-50 border border-orange-100 rounded-xl p-3 text-center">
-                            <p class="text-[10px] text-orange-600 font-bold uppercase tracking-wider mb-1">Vernachlässigt</p>
+                            <p class="text-[10px] text-orange-600 font-bold uppercase tracking-wider mb-1">Abweichung</p>
                             <p class="text-lg font-black text-orange-700" id="statMuscleMin">-</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="kps-box">
-                    <h3>🏆 Disziplin & Trophäen</h3>
-                    <div class="flex justify-between items-center bg-slate-50 p-4 rounded-xl border border-slate-200 mb-6">
+                <div class="kps-box" style="border-top: 5px solid #6d28d9;">
+                    <h3>🏆 Trophäen & Karriere-Punkte (Lifetime)</h3>
+                    <div class="flex justify-between items-center bg-slate-50 p-4 rounded-xl border border-slate-200 mb-6 shadow-inner">
                         <div>
-                            <p class="text-sm font-black text-slate-800">Plan-Treue</p>
-                            <p class="text-xs text-slate-500 font-medium mt-1">Gehaltene Workouts vs. Skips</p>
+                            <p class="text-sm font-black text-slate-800">Lifetime Points</p>
+                            <p class="text-xs text-slate-500 font-medium mt-1">Nächster Rang: <span id="rewardNextRank">Lade...</span></p>
                         </div>
-                        <div class="text-3xl font-black text-slate-800" id="disciplineScore">100%</div>
+                        <div class="text-4xl font-black text-purple-600" id="rewardLifetimePoints">0</div>
                     </div>
 
-                    <div class="grid grid-cols-3 gap-2 text-center" id="badgesContainer"></div>
+                    <div class="grid grid-cols-4 gap-2 text-center mb-8" id="badgesProgressionContainer"></div>
+
+                    <hr class="border-slate-100 mb-8">
+
+                    <h4 class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4">Milestones & Fun Stats</h4>
+                    <div class="grid grid-cols-2 gap-4" id="badgesMilestonesContainer">
+                        <div class="bg-slate-50 p-4 rounded-lg text-center border border-slate-100">
+                            <div class="badge-icon">🔥</div>
+                            <p class="text-xl font-black text-slate-800" id="statMaxStreak">0</p>
+                            <p class="text-xs text-slate-500">Max. Streak (Tage)</p>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-lg text-center border border-slate-100">
+                            <div class="badge-icon">📅</div>
+                            <p class="text-xl font-black text-slate-800" id="statLoggingConsistency">100%</p>
+                            <p class="text-xs text-slate-500">Logging Treue (Lifetime)</p>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="kps-box">
@@ -463,14 +499,18 @@
             let lastRealWorkout = null;
             let foundRestOrCardioSinceLastReal = false;
 
+            // Finde das letzte echte Training (kein Cardio/Rest/Skip)
             for (let i = 0; i < workoutsList.length; i++) {
-                const t = workoutsList[i].type;
-                if (!t) continue;
-                if (t.includes("Cardio") || t.includes("Rest") || t.includes("Auto") || t.includes("Skip")) {
+                const w = workoutsList[i];
+                if (!w.type) continue;
+                
+                // Ignoriere Cardio/Rest/Skip Tage für die Kraft-Progression
+                if (w.type.includes("Cardio") || w.type.includes("Rest") || w.type.includes("Auto") || w.status === "skipped") {
+                    // Wenn der letzte Eintrag (i=0) Cardio/Rest war, merke es dir
                     if (i === 0) foundRestOrCardioSinceLastReal = true;
                     continue;
                 }
-                lastRealWorkout = t;
+                lastRealWorkout = w.type;
                 break;
             }
 
@@ -496,13 +536,15 @@
         };
 
         window.logRestDay = async function() {
+            // Wenn Cardio ansteht, ist Rest loggen ok ohne Grund (wird als Active Recovery Pause gewertet)
             if (proposedWorkout.name === "Cardio") {
                 await db.collection('workouts').add({
                     date: getLocalTodayDate(), type: "Rest Day", status: "rest", timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
             } else {
+                // Ein Krafttraining wird übersprungen -> Disziplin check!
                 let reason = prompt(`Du überspringst heute "${proposedWorkout.name}". Warum? (z.B. Krank, Muskelkater, Keine Zeit)`);
-                if (reason === null) return; 
+                if (reason === null) return; // Abbrechen gedrückt
                 await db.collection('workouts').add({
                     date: getLocalTodayDate(), type: "Skip: " + proposedWorkout.name, status: "skipped", reason: reason || "Ohne Grund", timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
@@ -559,6 +601,7 @@
                     if (data.status === 'done') {
                         dayDiv.className += data.type.includes('Cardio') ? "bg-sky-400 text-white shadow-md" : "bg-emerald-500 text-white shadow-md";
                     } else {
+                        // Rest / Skipped -> Sieht leer aus
                         dayDiv.className += "bg-slate-100 text-slate-400 border border-slate-200";
                     }
                 } else {
@@ -603,7 +646,7 @@
             }
         }
 
-        // STATS BERECHNUNG (Nur noch BEINE, keine Quads/Waden)
+        // STATS BERECHNUNG (Pusht die Daten basierend auf dem ausgewählten Monat)
         function calculateStats(workoutsList) {
             document.getElementById('selectedMonthLabel').innerText = `(${monthNames[displayMonth]})`;
             document.getElementById('selectedMonthMuscleLabel').innerText = `(${monthNames[displayMonth]})`;
@@ -620,12 +663,9 @@
             let monthStats = { total: 0, strength: 0, cardio: 0 };
             let muscleHits = { "Brust":0, "Rücken":0, "Schultern":0, "Trizeps":0, "Bizeps":0, "Beine":0 };
 
-            let totalDone = 0; let totalSkipped = 0;
+            let totalDoneInMonth = 0;
 
             workoutsList.forEach(w => {
-                if(w.status === 'done') totalDone++;
-                if(w.status === 'skipped') totalSkipped++;
-
                 if(w.status === 'done') {
                     if(w.date >= startOfWeekStr) {
                         weekStats.total++;
@@ -633,9 +673,11 @@
                     }
                     if(w.date.startsWith(selectedMonthStr)) {
                         monthStats.total++;
+                        totalDoneInMonth++;
                         if(w.type && w.type.includes('Cardio')) monthStats.cardio++;
                         else { 
                             monthStats.strength++; 
+                            // BEINE sind jetzt eine Gruppe (Quads/Hams/Waden zusammen)
                             if(w.type === "Oberkörper") { muscleHits["Brust"]++; muscleHits["Rücken"]++; muscleHits["Schultern"]++; muscleHits["Trizeps"]++; muscleHits["Bizeps"]++; }
                             if(w.type === "Unterkörper" || w.type === "Beine") { muscleHits["Beine"]++; }
                             if(w.type === "Push") { muscleHits["Brust"]++; muscleHits["Schultern"]++; muscleHits["Trizeps"]++; }
@@ -652,43 +694,195 @@
             document.getElementById('statMonthStrength').innerText = monthStats.strength;
             document.getElementById('statMonthCardio').innerText = monthStats.cardio;
 
-            let sortedMuscles = Object.entries(muscleHits).filter(([n,c]) => c > 0).sort((a,b) => b[1] - a[1]);
-            
-            if(sortedMuscles.length > 0) {
-                document.getElementById('statMonthMuscles').innerHTML = sortedMuscles.map(([name, count]) => `<span class="bg-emerald-100 text-emerald-700 border border-emerald-200 text-[11px] px-3 py-1.5 rounded-lg font-black shadow-sm">${name}: ${count}x</span>`).join('');
-                document.getElementById('statMuscleMax').innerText = sortedMuscles[0][0];
-                document.getElementById('statMuscleMin').innerText = sortedMuscles[sortedMuscles.length - 1][0];
+            // MUSKEL ANALYSE UI Rendering & NEUE LOGIK (Balanced/Fokus)
+            let sortedMuscles = Object.entries(muscleHits).sort((a,b) => b[1] - a[1]);
+            let presentMuscles = sortedMuscles.filter(([n,c]) => c > 0);
+
+            if(presentMuscles.length > 0) {
+                document.getElementById('statMonthMuscles').innerHTML = presentMuscles.map(([name, count]) => `<span class="bg-emerald-100 text-emerald-700 border border-emerald-200 text-[11px] px-3 py-1.5 rounded-lg font-black shadow-sm">${name}: ${count}x</span>`).join('');
+                
+                // Neue Logik für "Status" (Max) und "Abweichung" (Min)
+                
+                // Status: Ist eine Gruppe deutlich stärker oder alles gleich?
+                let maxHits = presentMuscles[0][1];
+                let secondMaxHits = presentMuscles.length > 1 ? presentMuscles[1][1] : 0;
+                let tieForMax = presentMuscles.length > 1 && maxHits === secondMaxHits;
+
+                if (tieForMax || totalDoneInMonth < 4) {
+                    // Entweder Gleichstand oder zu wenig Daten für einen klaren Fokus
+                    document.getElementById('statMuscleMax').innerText = totalDoneInMonth < 4 ? "Initialisierung..." : "Balanced Rhythmus ⚖️";
+                } else if ((maxHits - secondMaxHits) >= 2) {
+                    // Eine Gruppe hebt sich wirklich ab (mind. 2 Trainings Vorsprung zur zweitstärksten)
+                    document.getElementById('statMuscleMax').innerText = presentMuscles[0][0] + " im Fokus 💪";
+                } else {
+                    // Knapp, aber kein deutlicher Fokus
+                    document.getElementById('statMuscleMax').innerText = "Balanced Rhythmus ⚖️";
+                }
+
+                // Abweichung: Wird wirklich eine Gruppe deutlich VERNCHLÄSSIGT?
+                let totalStrengthHits = presentMuscles.reduce((sum, [n,count]) => sum + count, 0);
+                let avgStrengthHits = totalStrengthHits / presentMuscles.length;
+                
+                // Wir betrachten nur Gruppen, die WIRKLICH trainiert werden (lifetime), 
+                // aber im gewählten Monat < 50% des Durchschnitts haben (und totalDone >= 5)
+                let trulyNeglected = presentMuscles.filter(([name, count]) => count < (avgStrengthHits * 0.5) && avgStrengthHits > 1);
+
+                if(trulyNeglected.length > 0 && totalDoneInMonth >= 5) {
+                    // Wir zeigen die am stärksten vernachlässigte an
+                    document.getElementById('statMuscleMin').innerText = trulyNeglected[trulyNeglected.length - 1][0] + " 🤔";
+                } else if (totalDoneInMonth < 5) {
+                    document.getElementById('statMuscleMin').innerText = "Initialisierung...";
+                } else {
+                    document.getElementById('statMuscleMin').innerText = "Balanced 🤝";
+                }
+
             } else {
                 document.getElementById('statMonthMuscles').innerHTML = `<span class="text-sm text-slate-400 font-medium">Keine Daten in diesem Monat</span>`;
                 document.getElementById('statMuscleMax').innerText = "-";
                 document.getElementById('statMuscleMin').innerText = "-";
             }
+        }
 
-            let discScore = (totalDone + totalSkipped) > 0 ? Math.round((totalDone / (totalDone + totalSkipped)) * 100) : 100;
-            document.getElementById('disciplineScore').innerText = `${discScore}%`;
-            document.getElementById('disciplineScore').style.color = discScore >= 90 ? '#10b981' : (discScore >= 70 ? '#f59e0b' : '#ef4444');
+        // GAMIFICATION & POINTS SYSTEM (Punkte Lifetime berechnen & Streaks)
+        function calculateGamification(workoutsList) {
+            if (!workoutsList || workoutsList.length === 0) {
+                renderRewardsUI(0, 0, 0);
+                return;
+            }
 
-            let b10 = totalDone >= 10 ? "" : "badge-locked";
-            let b25 = totalDone >= 25 ? "" : "badge-locked";
-            let b50 = totalDone >= 50 ? "" : "badge-locked";
+            let lifetimePoints = 0;
+            let currentStreak = 0;
+            let maxStreak = 0;
+            let totalDoneLifetime = 0;
+            let totalSkippedLifetime = 0;
 
-            document.getElementById('badgesContainer').innerHTML = `
-                <div class="${b10}">
-                    <div class="badge-icon">🥉</div>
-                    <p class="text-[10px] font-bold text-slate-600">Starter</p>
-                    <p class="text-[9px] text-slate-400">10 Workouts</p>
-                </div>
-                <div class="${b25}">
-                    <div class="badge-icon">🥈</div>
-                    <p class="text-[10px] font-bold text-slate-600">Maschine</p>
-                    <p class="text-[9px] text-slate-400">25 Workouts</p>
-                </div>
-                <div class="${b50}">
-                    <div class="badge-icon">🥇</div>
-                    <p class="text-[10px] font-bold text-slate-600">Apex</p>
-                    <p class="text-[9px] text-slate-400">50 Workouts</p>
-                </div>
-            `;
+            // Sortiere Workouts aufsteigend für Streak Berechnung
+            let sortedLog = [...workoutsList].filter(w => w.status).sort((a,b) => a.timestamp - b.timestamp);
+            let lifetimeSet = new Set(sortedLog.map(w => w.date)); // Alle Tage, an denen geloggt wurde (done/skip/rest)
+            
+            let today = new Date();
+            let dateKeyToday = getLocalTodayDate();
+
+            // 1. LIFETIME POINTS BERECHNEN (aufsteigend)
+            sortedLog.forEach(w => {
+                if (w.status === "done") {
+                    lifetimePoints += 15; // Done Kraft/Cardio = 15 Pkt
+                    totalDoneLifetime++;
+                } else if (w.status === "skipped") {
+                    totalSkippedLifetime++; // Skip = 0 Pkt (Ehrlichkeit, aber keine Belohnung)
+                } else if (w.status === "rest") {
+                    // Manuell geloggte Rest Days bringen einen kleinen Konsistenz-Bonus fürs Loggen
+                    if (w.timestamp) lifetimePoints += 5; // Nur manuell geloggte Rest Days
+                }
+            });
+
+            // 2. STREAK BERECHNUNG (Done-Tage zählen)
+            // Wir suchen nur 'Done' Einträge für die Workout-Streak
+            let doneDates = new Set(sortedLog.filter(w => w.status === 'done').map(w => w.date));
+            let currentCheckingDate = new Date(); // Start Today
+
+            // Gestern checken (falls heute noch nicht trainiert wurde, aber gestern)
+            let dateKeyYesterday = new Date(currentCheckingDate);
+            dateKeyYesterday.setDate(currentCheckingDate.getDate() - 1);
+            let keyYest = dateKeyYesterday.toISOString().split('T')[0];
+
+            // Wir fangen beim gestrigen Tag an, falls heute noch nicht trainiert wurde.
+            // Falls heute trainiert wurde, fangen wir heute an.
+            let streakPointer = new Date(currentCheckingDate);
+            if (!doneDates.has(dateKeyToday)) {
+                streakPointer.setDate(currentCheckingDate.getDate() - 1);
+            }
+
+            while (true) {
+                let key = streakPointer.toISOString().split('T')[0];
+                if (doneDates.has(key)) {
+                    currentStreak++;
+                    streakPointer.setDate(streakPointer.getDate() - 1); // Ein Tag zurück
+                } else {
+                    break; // Streak gebrochen
+                }
+            }
+
+            // Max Streak Lifetime berechnen (alle Tage)
+            // Dies ist komplexer, wir scannen einfach die aufsteigende Liste der Done-Dates
+            let sortedDoneDates = [...doneDates].sort();
+            let tempMaxStreak = 0;
+            if (sortedDoneDates.length > 0) {
+                tempMaxStreak = 1; maxStreak = 1;
+                for (let i = 1; i < sortedDoneDates.length; i++) {
+                    let d1 = new Date(sortedDoneDates[i-1]);
+                    let d2 = new Date(sortedDoneDates[i]);
+                    // Check if d2 is d1 + 1 day
+                    d1.setDate(d1.getDate() + 1);
+                    if (d1.toISOString().split('T')[0] === sortedDoneDates[i]) {
+                        tempMaxStreak++;
+                        if (tempMaxStreak > maxStreak) maxStreak = tempMaxStreak;
+                    } else {
+                        tempMaxStreak = 1;
+                    }
+                }
+            } else {
+                maxStreak = 0;
+            }
+
+            // UI UPDATES
+            renderRewardsUI(lifetimePoints, currentStreak, maxStreak, totalDoneLifetime, totalSkippedLifetime);
+        }
+
+        // REWARDS UI RENDERING (HUD & Stats Tab)
+        function renderRewardsUI(points, currentStreak, maxStreak, totalDone, totalSkipped) {
+            // HUD Update (Top Right)
+            document.getElementById('ptsHudPoints').innerText = points.toLocaleString('de-DE');
+            document.getElementById('ptsHudStreak').innerText = currentStreak;
+
+            // Stats Tab Updates
+            if (document.getElementById('tab-calendar').classList.contains('active')) {
+                document.getElementById('rewardLifetimePoints').innerText = points.toLocaleString('de-DE');
+                document.getElementById('statMaxStreak').innerText = maxStreak;
+
+                // Logging Consistency
+                let discScore = (totalDone + totalSkipped) > 0 ? Math.round((totalDone / (totalDone + totalSkipped)) * 100) : 100;
+                document.getElementById('statLoggingConsistency').innerText = `${discScore}%`;
+
+                // Ränge Definition (Langfristig, 100 Krafttrainings = 1500 Pkt)
+                const ranks = [
+                    { name: "Starter", icon: "🥉", pts: 0 },
+                    { name: "Maschine V", icon: "🥈", pts: 150 },   // ca. 10 Workouts
+                    { name: "Maschine III", icon: "🥈", pts: 300 },
+                    { name: "Maschine I", icon: "🥇", pts: 500 },   // ca. 33 Workouts
+                    { name: "Apex Legend V", icon: "🏆", pts: 1000 }, // ca. 66 Workouts (2-3 Monate)
+                    { name: "Apex Legend I", icon: "👑", pts: 2000 }, // ca. 133 Workouts (4-5 Monate)
+                    { name: "Apex Immortal", icon: "💫", pts: 5000 } // Long term Goal
+                ];
+
+                // Aktuellen Rang finden
+                let currentRankIndex = 0;
+                for (let i = ranks.length - 1; i >= 0; i--) {
+                    if (points >= ranks[i].pts) {
+                        currentRankIndex = i;
+                        break;
+                    }
+                }
+                let nextRank = ranks[currentRankIndex + 1] ? ranks[currentRankIndex + 1].name + ` (${ranks[currentRankIndex + 1].pts.toLocaleString('de-DE')} Pts)` : "MAX";
+                document.getElementById('rewardNextRank').innerText = nextRank;
+
+                // Badges Progression Container Rendern (Grid of 4)
+                // Wir zeigen den aktuellen Rang und die nächsten 3
+                let bHTML = "";
+                for (let i = 0; i < ranks.length; i++) {
+                    let r = ranks[i];
+                    let locked = points < r.pts ? "badge-locked" : "";
+                    bHTML += `
+                        <div class="${locked}">
+                            <div class="badge-icon">${r.icon}</div>
+                            <p class="text-[10px] font-bold text-slate-800 leading-none truncate">${r.name}</p>
+                            <p class="text-[9px] text-slate-400 mt-0.5">${r.pts.toLocaleString('de-DE')} Pts</p>
+                        </div>
+                    `;
+                }
+                document.getElementById('badgesProgressionContainer').innerHTML = bHTML;
+
+            }
         }
 
         function startFirestoreSync() {
@@ -716,6 +910,7 @@
                     document.getElementById('pendingContainer').classList.add('hidden');
                     document.getElementById('doneContainer').classList.remove('hidden');
                     
+                    // Berechne Vorschau für morgen
                     let tomorrowWorkout = calculateProposal(globalWorkoutsList);
                     document.getElementById('tomorrowWorkoutPreview').innerText = tomorrowWorkout ? tomorrowWorkout.name : 'Lade...';
                 } else {
@@ -723,8 +918,10 @@
                     document.getElementById('doneContainer').classList.add('hidden');
                 }
 
+                // UI & Gamification aktualisieren
                 renderCalendarAndLogs(globalWorkoutsList);
                 calculateStats(globalWorkoutsList);
+                calculateGamification(globalWorkoutsList);
             }, (error) => {
                 console.error("Firestore Error:", error);
             });
