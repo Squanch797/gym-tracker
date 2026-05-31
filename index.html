@@ -12,53 +12,71 @@
             margin: 0; padding: 0; color: #0f172a;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             overflow-x: hidden;
+            padding-top: 130px; /* Platz für fixierten Header */
         }
 
         #app-root { max-width: 1050px; margin: 0 auto; padding: 20px; padding-bottom: 50px; }
 
-        /* ESPORTS HEADER */
-        .kps-header {
-            position: relative; text-align: center; margin-bottom: 35px; padding: 40px 20px; 
+        /* FIXIERTER ESPORTS HEADER & HUD */
+        .kps-fixed-header {
+            position: fixed; top: 0; left: 0; width: 100%; height: 110px;
             background: linear-gradient(135deg, #020617 0%, #111827 100%); 
-            color: white; border-radius: 24px; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.05);
-            border: none; overflow: hidden; z-index: 10;
+            color: white; z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.05);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 20px;
+            overflow: hidden;
         }
-        .kps-header::before {
+        .kps-fixed-header::before {
             content: ""; position: absolute; bottom: 0; left: 0; width: 100%; height: 5px;
             background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #f59e0b);
             z-index: 10;
         }
-        .kps-header::after {
+        .kps-fixed-header::after {
             content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
             background: radial-gradient(circle at 50% 100%, rgba(139, 92, 246, 0.15) 0%, transparent 60%),
                         radial-gradient(rgba(255,255,255,0.04) 1.5px, transparent 1.5px);
             background-size: 100% 100%, 20px 20px; pointer-events: none; z-index: 1;
         }
-        .kps-header * { position: relative; z-index: 2; }
+        .kps-fixed-header * { position: relative; z-index: 2; }
+
+        .kps-header-left { display: flex; flex-direction: column; gap: 5px; }
 
         .date-weather-pill {
-            display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-            background: rgba(255, 255, 255, 0.1); color: #f8fafc; 
-            padding: 6px 16px; border-radius: 30px; font-size: 11px; font-weight: 900; 
-            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; 
-            border: 1px solid rgba(255, 255, 255, 0.2); backdrop-filter: blur(4px);
+            display: inline-flex; align-items: center; justify-content: start; gap: 8px;
+            color: #f8fafc; font-size: 10px; font-weight: 900; 
+            text-transform: uppercase; letter-spacing: 1px;
+            opacity: 0.8;
         }
 
-        .kps-header h1 { 
-            font-size: 34px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; margin: 0;
+        .kps-header-left h1 { 
+            font-size: 26px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; margin: 0;
             background: linear-gradient(to bottom right, #ffffff, #94a3b8);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
 
-        /* TABS NAVIGATION */
-        .kps-tabs-container { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; position: relative; z-index: 50; }
+        /* PTS HUD (Fixiert im Header, Klickbar) */
+        .pts-hud-integrated {
+            background: rgba(2, 6, 23, 0.95);
+            border: 2px solid #6d28d9; color: white; padding: 10px 18px; border-radius: 12px;
+            font-weight: 900; font-size: 13px; display: flex; align-items: center; gap: 8px;
+            box-shadow: 0 0 15px rgba(109, 40, 217, 0.4); backdrop-filter: blur(5px);
+            cursor: pointer; transition: all 0.2s ease;
+        }
+        .pts-hud-integrated:hover { transform: scale(1.05); border-color: #a78bfa; }
+        .pts-hud-integrated:active { transform: scale(0.95); }
+        .pts-hud-integrated .icon { font-size: 16px; margin-top: -2px; }
+        .pts-hud-integrated .lbl { color: #a78bfa; font-weight: 700; text-transform: uppercase; font-size: 10px; margin-left: -3px;}
+
+        /* TABS NAVIGATION (Nicht mehr fixiert, aber angepasst) */
+        .kps-tabs-container { display: flex; justify-content: center; gap: 8px; margin-bottom: 30px; position: relative; z-index: 50; flex-wrap: wrap; }
         
         .main-tab-btn {
-            background: #ffffff; border: 1px solid #cbd5e1; color: #64748b; padding: 14px 20px; border-radius: 30px; 
-            font-weight: 800; font-size: 14px; cursor: pointer; transition: all 0.3s ease; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.02); display: flex; align-items: center; gap: 8px;
+            background: #ffffff; border: 1px solid #cbd5e1; color: #64748b; padding: 12px 18px; border-radius: 30px; 
+            font-weight: 800; font-size: 13px; cursor: pointer; transition: all 0.3s ease; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02); display: flex; align-items: center; gap: 6px;
+            white-space: nowrap;
         }
         .main-tab-btn:hover { color: #0f172a; border-color: #0f172a; transform: translateY(-2px); }
         .main-tab-btn.active { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #fff; border-color: #0f172a; box-shadow: 0 6px 15px rgba(15, 23, 42, 0.25); }
@@ -95,41 +113,38 @@
         .badge-icon { font-size: 30px; margin-bottom: 5px; }
         .badge-locked { filter: grayscale(100%); opacity: 0.4; }
 
-        /* HUD STYLES (Fixed Top Right) */
-        .pts-hud {
-            position: fixed; top: 15px; right: 15px; background: rgba(2, 6, 23, 0.95);
-            border: 2px solid #6d28d9; color: white; padding: 10px 18px; border-radius: 12px;
-            z-index: 1000; font-weight: 900; font-size: 13px; display: flex; align-items: center; gap: 8px;
-            box-shadow: 0 0 15px rgba(109, 40, 217, 0.4); backdrop-filter: blur(5px);
-        }
-        .pts-hud .icon { font-size: 16px; margin-top: -2px; }
-        .pts-hud .lbl { color: #a78bfa; font-weight: 700; text-transform: uppercase; font-size: 10px; margin-left: -3px;}
-        /* Mobile adjust */
+        /* Mobile adjust for Header */
         @media (max-width: 640px) {
-            .pts-hud { top: 10px; right: 10px; padding: 8px 14px; font-size: 11px;}
+            body { padding-top: 120px; }
+            .kps-fixed-header { height: 100px; padding: 0 15px; }
+            .kps-header-left h1 { font-size: 20px; }
+            .date-weather-pill { font-size: 9px; gap: 4px; }
+            .pts-hud-integrated { padding: 8px 12px; font-size: 11px; }
         }
-
     </style>
 </head>
 <body> 
     <div id="app-root">
 
-        <div class="pts-hud" id="ptsHud">
-            <span class="icon">🏆</span> <span id="ptsHudPoints">0</span> <span class="lbl">Pts</span> | 
-            <span class="icon">🔥</span> <span id="ptsHudStreak">0</span> <span class="lbl">Days</span>
-        </div>
-
-        <div class="kps-header">
-            <div class="date-weather-pill">
-                <span id="currentDate">📅 Lade...</span><span style="opacity: 0.3;">|</span><span id="currentWeather">🌡️ München</span>
+        <div class="kps-fixed-header">
+            <div class="kps-header-left">
+                <h1>Fitness Tracker</h1>
+                <div class="date-weather-pill">
+                    <span id="currentDate">📅 Lade...</span><span style="opacity: 0.3;">|</span><span id="currentWeather">🌡️ München</span>
+                </div>
             </div>
-            <h1>Fitness Tracker</h1>
+            
+            <div class="pts-hud-integrated" id="ptsHud" onclick="switchTab('karriere')">
+                <span class="icon">🏆</span> <span id="ptsHudPoints">0</span> <span class="lbl">Pts</span> | 
+                <span class="icon">🔥</span> <span id="ptsHudStreak">0</span> <span class="lbl">Days</span>
+            </div>
         </div>
 
         <div class="kps-tabs-container">
             <button class="main-tab-btn active" id="btn-tab-tracker" onclick="switchTab('tracker')">🏋️‍♂️ Loggen</button>
             <button class="main-tab-btn" id="btn-tab-calendar" onclick="switchTab('calendar')">📊 Stats</button>
             <button class="main-tab-btn" id="btn-tab-plan" onclick="switchTab('plan')">📋 Plan</button>
+            <button class="main-tab-btn" id="btn-tab-karriere" onclick="switchTab('karriere')">🏅 Apex Karriere</button>
         </div>
 
         <main>
@@ -240,35 +255,6 @@
                     </div>
                 </div>
 
-                <div class="kps-box" style="border-top: 5px solid #6d28d9;">
-                    <h3>🏆 Trophäen & Karriere-Punkte (Lifetime)</h3>
-                    <div class="flex justify-between items-center bg-slate-50 p-4 rounded-xl border border-slate-200 mb-6 shadow-inner">
-                        <div>
-                            <p class="text-sm font-black text-slate-800">Lifetime Points</p>
-                            <p class="text-xs text-slate-500 font-medium mt-1">Nächster Rang: <span id="rewardNextRank">Lade...</span></p>
-                        </div>
-                        <div class="text-4xl font-black text-purple-600" id="rewardLifetimePoints">0</div>
-                    </div>
-
-                    <div class="grid grid-cols-4 gap-2 text-center mb-8" id="badgesProgressionContainer"></div>
-
-                    <hr class="border-slate-100 mb-8">
-
-                    <h4 class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4">Milestones & Fun Stats</h4>
-                    <div class="grid grid-cols-2 gap-4" id="badgesMilestonesContainer">
-                        <div class="bg-slate-50 p-4 rounded-lg text-center border border-slate-100">
-                            <div class="badge-icon">🔥</div>
-                            <p class="text-xl font-black text-slate-800" id="statMaxStreak">0</p>
-                            <p class="text-xs text-slate-500">Max. Streak (Tage)</p>
-                        </div>
-                        <div class="bg-slate-50 p-4 rounded-lg text-center border border-slate-100">
-                            <div class="badge-icon">📅</div>
-                            <p class="text-xl font-black text-slate-800" id="statLoggingConsistency">100%</p>
-                            <p class="text-xs text-slate-500">Logging Treue (Lifetime)</p>
-                        </div>
-                    </div>
-                </div>
-                
                 <div class="kps-box">
                     <h3>Protokoll</h3>
                     <div id="logContainer" class="space-y-3"></div>
@@ -316,6 +302,67 @@
                 </div>
 
                 <div id="planLibraryContainer"></div>
+            </div>
+
+            <div id="tab-karriere" class="tab-section">
+                
+                <div class="kps-box" style="border-top: 5px solid #ec4899;">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <h3 style="border:none; padding:0; margin:0; font-size:24px;">Saison Progression</h3>
+                            <p class="text-xs text-slate-500 font-medium">Dein Weg zum Apex Predator.</p>
+                        </div>
+                        <div class="text-right">
+                            <span class="bg-pink-100 text-pink-700 font-black text-xs px-4 py-1.5 rounded-full" id="careerRankName">Initialisierung...</span>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center mb-2 text-sm font-black">
+                        <span class="text-slate-500">Nächster Rang in:</span>
+                        <span class="text-pink-600"><span id="careerNextRankPts">0</span> Pts</span>
+                    </div>
+
+                    <div class="w-full h-4 bg-pink-100 rounded-full overflow-hidden border border-pink-200">
+                        <div class="h-full bg-linear-to-r from-pink-500 to-red-500 rounded-full transition-all duration-500 shadow-inner" id="careerProgressFill" style="width: 0%"></div>
+                    </div>
+                    <p class="text-[10px] text-pink-400 font-bold uppercase mt-2">Punkte sind Lifetime.</p>
+                </div>
+
+                <div class="kps-box">
+                    <h3>🏆 Punkte verdienen (Regeln)</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed font-medium mb-6">Transparenz ist alles. So setzt sich dein Score zusammen:</p>
+                    
+                    <div class="grid grid-cols-2 gap-4" id="pointsBreakdownContainer">
+                        </div>
+                </div>
+
+                <div class="kps-box" style="border-top: 5px solid #f59e0b;">
+                    <h3>🏅 Meilensteine & Erfolge</h3>
+                    <p class="text-xs text-slate-500 mb-6">Spezielle Badges für besondere Leistungen.</p>
+                    
+                    <div class="grid grid-cols-4 gap-2 text-center" id="badgesMilestonesContainer">
+                        </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="kps-box" style="padding: 20px; margin: 0;">
+                        <div class="badge-icon">🔥</div>
+                        <p class="text-xl font-black text-slate-800" id="statMaxStreak">0</p>
+                        <p class="text-xs text-slate-500">Max. Workout Streak</p>
+                    </div>
+                    <div class="kps-box" style="padding: 20px; margin: 0;">
+                        <div class="badge-icon">📅</div>
+                        <p class="text-xl font-black text-slate-800" id="statLoggingConsistency">100%</p>
+                        <p class="text-xs text-slate-500">Logging Treue (done vs skip)</p>
+                    </div>
+                </div>
+
+                <div class="kps-box">
+                    <h3>Protokollierter Punktzuwachs</h3>
+                    <div id="pointsLogContainer" class="space-y-2">
+                        <p class="text-sm text-slate-400 italic text-center py-4">Noch keine Punkte verdient.</p>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
@@ -410,6 +457,16 @@
             }
         ];
 
+        // Ränge Definition (Langfristig, Apex eSports Style)
+        const ranks = [
+            { name: "Bronze v", pts: 0 }, { name: "Bronze i", pts: 100 },
+            { name: "Silber v", pts: 250 }, { name: "Silber i", pts: 500 },
+            { name: "Gold v", pts: 800 }, { name: "Gold i", pts: 1200 },
+            { name: "Platin v", pts: 1600 }, { name: "Platin i", pts: 2100 },
+            { name: "Diamant v", pts: 2700 }, { name: "Diamant i", pts: 3400 },
+            { name: "Meister", pts: 4200 }, { name: "Apex Predator", pts: 5000 }
+        ];
+
         let proposedWorkout = routine[0];
 
         function getLocalTodayDate() {
@@ -417,14 +474,18 @@
             return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
         }
 
-        // NAVIGATION
+        // NAVIGATION (Verbessert: HUD Click Handled)
         window.switchTab = function(tab) {
-            ['tracker', 'calendar', 'plan'].forEach(t => {
-                document.getElementById(`tab-${t}`).classList.remove('active');
-                document.getElementById(`btn-tab-${t}`).classList.remove('active');
+            ['tracker', 'calendar', 'plan', 'karriere'].forEach(t => {
+                const tabEl = document.getElementById(`tab-${t}`);
+                const btnEl = document.getElementById(`btn-tab-${t}`);
+                if (tabEl) tabEl.classList.remove('active');
+                if (btnEl) btnEl.classList.remove('active');
             });
-            document.getElementById(`tab-${tab}`).classList.add('active');
-            document.getElementById(`btn-tab-${tab}`).classList.add('active');
+            const activeTabEl = document.getElementById(`tab-${tab}`);
+            const activeBtnEl = document.getElementById(`btn-tab-${tab}`);
+            if (activeTabEl) activeTabEl.classList.add('active');
+            if (activeBtnEl) activeBtnEl.classList.add('active');
             window.scrollTo(0, 0);
         };
 
@@ -492,41 +553,31 @@
             `}).join('');
         }
 
-        // LOGIK MASTERPLAN (Crash-sicher)
         function calculateProposal(workoutsList) {
             if (!workoutsList || workoutsList.length === 0) return routine[0];
-
             let lastRealWorkout = null;
             let foundRestOrCardioSinceLastReal = false;
-
-            // Finde das letzte echte Training (kein Cardio/Rest/Skip)
             for (let i = 0; i < workoutsList.length; i++) {
                 const w = workoutsList[i];
                 if (!w.type) continue;
-                
-                // Ignoriere Cardio/Rest/Skip Tage für die Kraft-Progression
                 if (w.type.includes("Cardio") || w.type.includes("Rest") || w.type.includes("Auto") || w.status === "skipped") {
-                    // Wenn der letzte Eintrag (i=0) Cardio/Rest war, merke es dir
                     if (i === 0) foundRestOrCardioSinceLastReal = true;
                     continue;
                 }
                 lastRealWorkout = w.type;
                 break;
             }
-
             if (!lastRealWorkout) return routine[0];
-
             let nextWorkout = routine[0]; 
             if (lastRealWorkout === "Oberkörper") nextWorkout = routine.find(r => r.name === "Unterkörper");
             else if (lastRealWorkout === "Unterkörper") nextWorkout = foundRestOrCardioSinceLastReal ? routine.find(r => r.name === "Push") : routine.find(r => r.name === "Cardio");
             else if (lastRealWorkout === "Push") nextWorkout = routine.find(r => r.name === "Pull");
             else if (lastRealWorkout === "Pull") nextWorkout = routine.find(r => r.name === "Beine");
             else if (lastRealWorkout === "Beine") nextWorkout = foundRestOrCardioSinceLastReal ? routine.find(r => r.name === "Oberkörper") : routine.find(r => r.name === "Cardio");
-
             return nextWorkout || routine[0];
         }
 
-        // DATENBANK AKTIONEN (mit Skip-Reason Logik)
+        // DATENBANK AKTIONEN
         window.logSelectedWorkout = async function(type) {
             let workoutToLog = type === 'proposed' ? proposedWorkout : routine.find(r => r.name === type);
             if(!workoutToLog) return;
@@ -536,15 +587,13 @@
         };
 
         window.logRestDay = async function() {
-            // Wenn Cardio ansteht, ist Rest loggen ok ohne Grund (wird als Active Recovery Pause gewertet)
             if (proposedWorkout.name === "Cardio") {
                 await db.collection('workouts').add({
-                    date: getLocalTodayDate(), type: "Rest Day", status: "rest", timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    date: getLocalTodayDate(), type: "Active Restgeloggt", status: "rest", timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
             } else {
-                // Ein Krafttraining wird übersprungen -> Disziplin check!
                 let reason = prompt(`Du überspringst heute "${proposedWorkout.name}". Warum? (z.B. Krank, Muskelkater, Keine Zeit)`);
-                if (reason === null) return; // Abbrechen gedrückt
+                if (reason === null) return; 
                 await db.collection('workouts').add({
                     date: getLocalTodayDate(), type: "Skip: " + proposedWorkout.name, status: "skipped", reason: reason || "Ohne Grund", timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
@@ -564,44 +613,34 @@
             }
         };
 
-        // KALENDER & PROTOKOLL (Rest/Skip = Grau/Leer)
+        // KALENDER & PROTOKOLL
         function renderCalendarAndLogs(workoutsList) {
             const grid = document.getElementById('calendarGrid');
             const logContainer = document.getElementById('logContainer');
             grid.innerHTML = ''; logContainer.innerHTML = '';
-
             document.getElementById('monthYearDisplay').innerText = `${monthNames[displayMonth]} ${displayYear}`;
-
             const todayKey = getLocalTodayDate();
             let firstAppUseDate = "9999-99-99";
             workoutsList.forEach(w => { if (w.date && w.date < firstAppUseDate) firstAppUseDate = w.date; });
             if (firstAppUseDate === "9999-99-99") firstAppUseDate = todayKey;
-
             let historyMap = {};
             workoutsList.forEach(w => { if(w.date) historyMap[w.date] = w; });
-
             const firstDayIndex = new Date(displayYear, displayMonth, 1).getDay();
             const totalDays = new Date(displayYear, displayMonth + 1, 0).getDate();
             let startOffset = firstDayIndex === 0 ? 6 : firstDayIndex - 1;
-
             for (let i = 0; i < startOffset; i++) grid.appendChild(document.createElement('div'));
-
             let combinedLogData = [];
-
             for (let day = 1; day <= totalDays; day++) {
                 const dateKey = `${displayYear}-${String(displayMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                 const dayDiv = document.createElement('div');
                 dayDiv.className = "h-10 w-10 mx-auto rounded-lg flex items-center justify-center text-xs font-bold ";
                 dayDiv.innerText = day;
-
                 if (historyMap[dateKey]) {
                     const data = historyMap[dateKey];
                     combinedLogData.push({ date: dateKey, type: data.type, status: data.status, reason: data.reason, id: data.id });
-                    
                     if (data.status === 'done') {
                         dayDiv.className += data.type.includes('Cardio') ? "bg-sky-400 text-white shadow-md" : "bg-emerald-500 text-white shadow-md";
                     } else {
-                        // Rest / Skipped -> Sieht leer aus
                         dayDiv.className += "bg-slate-100 text-slate-400 border border-slate-200";
                     }
                 } else {
@@ -614,170 +653,123 @@
                 }
                 grid.appendChild(dayDiv);
             }
-
             if(combinedLogData.length === 0) {
                 logContainer.innerHTML = `<p class="text-sm text-slate-400 italic text-center py-4">Keine Einträge in diesem Monat.</p>`;
             } else {
                 combinedLogData.sort((a,b) => b.date.localeCompare(a.date)).forEach(item => {
                     const listItem = document.createElement('div');
                     listItem.className = "bg-white p-4 rounded-xl flex justify-between items-center border border-slate-200 shadow-sm";
-                    
                     const isRestOrSkip = (item.status === 'rest' || item.status === 'skipped');
                     let titleStyle = isRestOrSkip ? "text-slate-500 font-medium" : (item.type.includes('Cardio') ? "text-sky-500 font-bold" : "text-emerald-600 font-bold");
                     const formattedDate = item.date.split('-').reverse().join('.');
-                    
                     let subText = item.reason ? `GRUND: ${item.reason}` : formattedDate;
-
-                    listItem.innerHTML = `
-                        <div>
-                            <p class="${titleStyle} text-base">${item.type}</p>
-                            <p class="text-[10px] text-slate-400 mt-1 font-bold uppercase">${subText}</p>
-                        </div>
-                        <div class="flex gap-2">
-                            ${!item.id.startsWith('auto-') ? `
-                                <button onclick="deleteEntry('${item.id}')" class="text-slate-400 hover:text-red-500 transition-colors p-2 rounded-lg bg-slate-50 border border-slate-200 cursor-pointer">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                </button>
-                            ` : ''}
-                        </div>
-                    `;
+                    listItem.innerHTML = `<div><p class="${titleStyle} text-base">${item.type}</p><p class="text-[10px] text-slate-400 mt-1 font-bold uppercase">${subText}</p></div><div class="flex gap-2">${!item.id.startsWith('auto-') ? `<button onclick="deleteEntry('${item.id}')" class="text-slate-400 hover:text-red-500 transition-colors p-2 rounded-lg bg-slate-50 border border-slate-200 cursor-pointer"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>` : ''}</div>`;
                     logContainer.appendChild(listItem);
                 });
             }
         }
 
-        // STATS BERECHNUNG (Pusht die Daten basierend auf dem ausgewählten Monat)
         function calculateStats(workoutsList) {
-            document.getElementById('selectedMonthLabel').innerText = `(${monthNames[displayMonth]})`;
-            document.getElementById('selectedMonthMuscleLabel').innerText = `(${monthNames[displayMonth]})`;
-
-            const today = new Date();
-            const dayOfWeek = today.getDay() === 0 ? 7 : today.getDay(); 
-            const startOfWeek = new Date(today);
-            startOfWeek.setDate(today.getDate() - dayOfWeek + 1);
-            const startOfWeekStr = `${startOfWeek.getFullYear()}-${String(startOfWeek.getMonth() + 1).padStart(2, '0')}-${String(startOfWeek.getDate()).padStart(2, '0')}`;
-
             const selectedMonthStr = `${displayYear}-${String(displayMonth + 1).padStart(2, '0')}`;
-
-            let weekStats = { total: 0, strength: 0, cardio: 0 };
-            let monthStats = { total: 0, strength: 0, cardio: 0 };
             let muscleHits = { "Brust":0, "Rücken":0, "Schultern":0, "Trizeps":0, "Bizeps":0, "Beine":0 };
-
             let totalDoneInMonth = 0;
-
             workoutsList.forEach(w => {
-                if(w.status === 'done') {
-                    if(w.date >= startOfWeekStr) {
-                        weekStats.total++;
-                        if(w.type && w.type.includes('Cardio')) weekStats.cardio++; else weekStats.strength++;
-                    }
-                    if(w.date.startsWith(selectedMonthStr)) {
-                        monthStats.total++;
-                        totalDoneInMonth++;
-                        if(w.type && w.type.includes('Cardio')) monthStats.cardio++;
-                        else { 
-                            monthStats.strength++; 
-                            // BEINE sind jetzt eine Gruppe (Quads/Hams/Waden zusammen)
-                            if(w.type === "Oberkörper") { muscleHits["Brust"]++; muscleHits["Rücken"]++; muscleHits["Schultern"]++; muscleHits["Trizeps"]++; muscleHits["Bizeps"]++; }
-                            if(w.type === "Unterkörper" || w.type === "Beine") { muscleHits["Beine"]++; }
-                            if(w.type === "Push") { muscleHits["Brust"]++; muscleHits["Schultern"]++; muscleHits["Trizeps"]++; }
-                            if(w.type === "Pull") { muscleHits["Rücken"]++; muscleHits["Bizeps"]++; }
-                        }
+                if(w.status === 'done' && w.date.startsWith(selectedMonthStr)) {
+                    totalDoneInMonth++;
+                    if(!w.type.includes('Cardio')) { 
+                        if(w.type === "Oberkörper") { muscleHits["Brust"]++; muscleHits["Rücken"]++; muscleHits["Schultern"]++; muscleHits["Trizeps"]++; muscleHits["Bizeps"]++; }
+                        if(w.type === "Unterkörper" || w.type === "Beine") { muscleHits["Beine"]++; }
+                        if(w.type === "Push") { muscleHits["Brust"]++; muscleHits["Schultern"]++; muscleHits["Trizeps"]++; }
+                        if(w.type === "Pull") { muscleHits["Rücken"]++; muscleHits["Bizeps"]++; }
                     }
                 }
             });
-
-            document.getElementById('statWeekTotal').innerText = weekStats.total;
-            document.getElementById('statWeekStrength').innerText = weekStats.strength;
-            document.getElementById('statWeekCardio').innerText = weekStats.cardio;
-            document.getElementById('statMonthTotal').innerText = monthStats.total;
-            document.getElementById('statMonthStrength').innerText = monthStats.strength;
-            document.getElementById('statMonthCardio').innerText = monthStats.cardio;
-
-            // MUSKEL ANALYSE UI Rendering & NEUE LOGIK (Balanced/Fokus)
-            let sortedMuscles = Object.entries(muscleHits).sort((a,b) => b[1] - a[1]);
-            let presentMuscles = sortedMuscles.filter(([n,c]) => c > 0);
-
-            if(presentMuscles.length > 0) {
-                document.getElementById('statMonthMuscles').innerHTML = presentMuscles.map(([name, count]) => `<span class="bg-emerald-100 text-emerald-700 border border-emerald-200 text-[11px] px-3 py-1.5 rounded-lg font-black shadow-sm">${name}: ${count}x</span>`).join('');
-                
-                // Neue Logik für "Status" (Max) und "Abweichung" (Min)
-                
-                // Status: Ist eine Gruppe deutlich stärker oder alles gleich?
-                let maxHits = presentMuscles[0][1];
-                let secondMaxHits = presentMuscles.length > 1 ? presentMuscles[1][1] : 0;
-                let tieForMax = presentMuscles.length > 1 && maxHits === secondMaxHits;
-
-                if (tieForMax || totalDoneInMonth < 4) {
-                    // Entweder Gleichstand oder zu wenig Daten für einen klaren Fokus
-                    document.getElementById('statMuscleMax').innerText = totalDoneInMonth < 4 ? "Initialisierung..." : "Balanced Rhythmus ⚖️";
-                } else if ((maxHits - secondMaxHits) >= 2) {
-                    // Eine Gruppe hebt sich wirklich ab (mind. 2 Trainings Vorsprung zur zweitstärksten)
-                    document.getElementById('statMuscleMax').innerText = presentMuscles[0][0] + " im Fokus 💪";
+            let presentMuscles = Object.entries(muscleHits).filter(([n,c]) => c > 0).sort((a,b) => b[1] - a[1]);
+            const muscleStatsEl = document.getElementById('statMonthMuscles');
+            if (muscleStatsEl) {
+                if(presentMuscles.length > 0) {
+                    muscleStatsEl.innerHTML = presentMuscles.map(([name, count]) => `<span class="bg-emerald-100 text-emerald-700 border border-emerald-200 text-[11px] px-3 py-1.5 rounded-lg font-black shadow-sm">${name}: ${count}x</span>`).join('');
                 } else {
-                    // Knapp, aber kein deutlicher Fokus
-                    document.getElementById('statMuscleMax').innerText = "Balanced Rhythmus ⚖️";
+                    muscleStatsEl.innerHTML = `<span class="text-sm text-slate-400 font-medium">Keine Daten in diesem Monat</span>`;
                 }
-
-                // Abweichung: Wird wirklich eine Gruppe deutlich VERNCHLÄSSIGT?
-                let totalStrengthHits = presentMuscles.reduce((sum, [n,count]) => sum + count, 0);
-                let avgStrengthHits = totalStrengthHits / presentMuscles.length;
-                
-                // Wir betrachten nur Gruppen, die WIRKLICH trainiert werden (lifetime), 
-                // aber im gewählten Monat < 50% des Durchschnitts haben (und totalDone >= 5)
-                let trulyNeglected = presentMuscles.filter(([name, count]) => count < (avgStrengthHits * 0.5) && avgStrengthHits > 1);
-
-                if(trulyNeglected.length > 0 && totalDoneInMonth >= 5) {
-                    // Wir zeigen die am stärksten vernachlässigte an
-                    document.getElementById('statMuscleMin').innerText = trulyNeglected[trulyNeglected.length - 1][0] + " 🤔";
-                } else if (totalDoneInMonth < 5) {
-                    document.getElementById('statMuscleMin').innerText = "Initialisierung...";
-                } else {
-                    document.getElementById('statMuscleMin').innerText = "Balanced 🤝";
-                }
-
-            } else {
-                document.getElementById('statMonthMuscles').innerHTML = `<span class="text-sm text-slate-400 font-medium">Keine Daten in diesem Monat</span>`;
-                document.getElementById('statMuscleMax').innerText = "-";
-                document.getElementById('statMuscleMin').innerText = "-";
             }
+            const monthTotalEl = document.getElementById('statMonthTotal');
+            if (monthTotalEl) monthTotalEl.innerText = totalDoneInMonth;
         }
 
-        // GAMIFICATION & POINTS SYSTEM (Punkte Lifetime berechnen & Streaks)
-        function calculateGamification(workoutsList) {
-            if (!workoutsList || workoutsList.length === 0) {
-                renderRewardsUI(0, 0, 0);
-                return;
-            }
+        // ================= GAMIFICATION LOGIC (NEU) =================
 
+        // 1. Definition der Punkte-Regeln (Transparenz)
+        const pointRules = [
+            { desc: "✅ Krafttraining absolviert", pts: "+15", id: "kraft" },
+            { desc: "🏃 Zone-2 Cardio geloggt", pts: "+15", id: "cardio" },
+            { desc: "⏭ Ehrlicher Rest Day geloggt", pts: "+5", id: "rest" },
+            { desc: "🔥 Tägliche Workout-Streak", pts: "🔥 Day x2", id: "streak" },
+            { desc: "🏆 Saison Meilenstein erreicht", pts: "+100", id: "milestone" }
+        ];
+
+        // 2. Definition der Meilenstein Badges (Motivation)
+        const milestoneBadges = [
+            { name: "Starter", desc: "1. Workout absolviert", icon: "🥉", rule: (totalDone) => totalDone >= 1 },
+            { name: "Maschine V", desc: "10 Workouts absolviert", icon: "🥈", rule: (totalDone) => totalDone >= 10 },
+            { name: "Maschine III", desc: "25 Workouts absolviert", icon: "🥈", rule: (totalDone) => totalDone >= 25 },
+            { name: "Maschine I", desc: "50 Workouts absolviert", icon: "🥈", rule: (totalDone) => totalDone >= 50 },
+            { name: "Legende V", desc: "100 Workouts absolviert", icon: "🏆", rule: (totalDone) => totalDone >= 100 },
+            { name: "Apex Predator", desc: "Niveau Predator erreicht", icon: "👑", rule: (totalDone, points) => points >= 5000 },
+            { name: "Streak Meister", desc: "30-Tage Workout Streak", icon: "🔥", rule: (totalDone, points, bestStreak) => bestStreak >= 30 }
+        ];
+
+        function renderKarriereInitial() {
+            // Punkte-Breakdown Container füllen
+            document.getElementById('pointsBreakdownContainer').innerHTML = pointRules.map(r => `
+                <div class="bg-slate-50 border border-slate-100 rounded-lg p-3 text-center">
+                    <p class="text-sm font-black text-slate-700">${r.desc}</p>
+                    <p class="text-2xl font-black text-purple-600 mt-1">${r.pts}</p>
+                </div>
+            `).join('');
+        }
+
+        function calculateGamification(workoutsList) {
+            if (!workoutsList) { renderRewardsUI(0, 0, 0, []); return; }
             let lifetimePoints = 0;
             let currentStreak = 0;
-            let maxStreak = 0;
+            let maxStreakLifetime = 0;
             let totalDoneLifetime = 0;
             let totalSkippedLifetime = 0;
+            let pointsHistory = []; // Protokoll für den Verlauf
 
-            // Sortiere Workouts aufsteigend für Streak Berechnung
+            // Sortiere Workouts aufsteigend für die Lifetime-Berechnung
             let sortedLog = [...workoutsList].filter(w => w.status).sort((a,b) => a.timestamp - b.timestamp);
-            let lifetimeSet = new Set(sortedLog.map(w => w.date)); // Alle Tage, an denen geloggt wurde (done/skip/rest)
-            
             let today = new Date();
             let dateKeyToday = getLocalTodayDate();
 
-            // 1. LIFETIME POINTS BERECHNEN (aufsteigend)
+            // 1. Lifetime Points, Total Done, Skip Count berechnen
             sortedLog.forEach(w => {
+                let formattedDate = w.date.split('-').reverse().slice(0,2).join('.'); // z.B. 25.05.
                 if (w.status === "done") {
-                    lifetimePoints += 15; // Done Kraft/Cardio = 15 Pkt
+                    let ptsBase = 15;
+                    lifetimePoints += ptsBase;
                     totalDoneLifetime++;
+                    pointsHistory.push({ date: formattedDate, action: w.type, pts: `+${ptsBase}` });
                 } else if (w.status === "skipped") {
-                    totalSkippedLifetime++; // Skip = 0 Pkt (Ehrlichkeit, aber keine Belohnung)
+                    totalSkippedLifetime++;
+                    // Keine Punkte für Skip, aber Streak bricht nicht, wenn geloggt
                 } else if (w.status === "rest") {
-                    // Manuell geloggte Rest Days bringen einen kleinen Konsistenz-Bonus fürs Loggen
-                    if (w.timestamp) lifetimePoints += 5; // Nur manuell geloggte Rest Days
+                    // Manuell geloggter Rest Day bringt Konsistenz-Bonus fürs Loggen
+                    if (w.timestamp && !w.type.includes("Auto")) {
+                        let ptsRest = 5;
+                        lifetimePoints += ptsRest;
+                        pointsHistory.push({ date: formattedDate, action: "Rest Day geloggt", pts: `+${ptsRest}` });
+                    }
                 }
             });
 
+            // Meilensteine Punkte hinzufügen
+            // Wir prüfen nur 'totalDoneLifetime' für die Punktemeilensteine (nicht Ränge Predator)
+            if (totalDoneLifetime >= 10) { lifetimePoints += 100; pointsHistory.push({date: "", action: "Meilenstein: Maschine V", pts: "+100"}); }
+            if (totalDoneLifetime >= 50) { lifetimePoints += 100; pointsHistory.push({date: "", action: "Meilenstein: Maschine I", pts: "+100"}); }
+
             // 2. STREAK BERECHNUNG (Done-Tage zählen)
-            // Wir suchen nur 'Done' Einträge für die Workout-Streak
             let doneDates = new Set(sortedLog.filter(w => w.status === 'done').map(w => w.date));
             let currentCheckingDate = new Date(); // Start Today
 
@@ -786,102 +778,107 @@
             dateKeyYesterday.setDate(currentCheckingDate.getDate() - 1);
             let keyYest = dateKeyYesterday.toISOString().split('T')[0];
 
-            // Wir fangen beim gestrigen Tag an, falls heute noch nicht trainiert wurde.
-            // Falls heute trainiert wurde, fangen wir heute an.
             let streakPointer = new Date(currentCheckingDate);
-            if (!doneDates.has(dateKeyToday)) {
-                streakPointer.setDate(currentCheckingDate.getDate() - 1);
-            }
+            if (!doneDates.has(dateKeyToday)) { streakPointer.setDate(currentCheckingDate.getDate() - 1); }
 
             while (true) {
                 let key = streakPointer.toISOString().split('T')[0];
-                if (doneDates.has(key)) {
-                    currentStreak++;
-                    streakPointer.setDate(streakPointer.getDate() - 1); // Ein Tag zurück
-                } else {
-                    break; // Streak gebrochen
-                }
+                if (doneDates.has(key)) { currentStreak++; streakPointer.setDate(streakPointer.getDate() - 1); } 
+                else { break; }
             }
 
-            // Max Streak Lifetime berechnen (alle Tage)
-            // Dies ist komplexer, wir scannen einfach die aufsteigende Liste der Done-Dates
+            // Max Streak Lifetime berechnen (Done Tage)
             let sortedDoneDates = [...doneDates].sort();
             let tempMaxStreak = 0;
             if (sortedDoneDates.length > 0) {
-                tempMaxStreak = 1; maxStreak = 1;
+                tempMaxStreak = 1; maxStreakLifetime = 1;
                 for (let i = 1; i < sortedDoneDates.length; i++) {
-                    let d1 = new Date(sortedDoneDates[i-1]);
-                    let d2 = new Date(sortedDoneDates[i]);
-                    // Check if d2 is d1 + 1 day
-                    d1.setDate(d1.getDate() + 1);
+                    let d1 = new Date(sortedDoneDates[i-1]); d1.setDate(d1.getDate() + 1);
                     if (d1.toISOString().split('T')[0] === sortedDoneDates[i]) {
-                        tempMaxStreak++;
-                        if (tempMaxStreak > maxStreak) maxStreak = tempMaxStreak;
-                    } else {
-                        tempMaxStreak = 1;
-                    }
+                        tempMaxStreak++; if (tempMaxStreak > maxStreakLifetime) maxStreakLifetime = tempMaxStreak;
+                    } else { tempMaxStreak = 1; }
                 }
-            } else {
-                maxStreak = 0;
-            }
+            } else { maxStreakLifetime = 0; }
 
             // UI UPDATES
-            renderRewardsUI(lifetimePoints, currentStreak, maxStreak, totalDoneLifetime, totalSkippedLifetime);
+            renderRewardsUI(lifetimePoints, currentStreak, maxStreakLifetime, totalDoneLifetime, totalSkippedLifetime, pointsHistory);
         }
 
-        // REWARDS UI RENDERING (HUD & Stats Tab)
-        function renderRewardsUI(points, currentStreak, maxStreak, totalDone, totalSkipped) {
-            // HUD Update (Top Right)
+        function renderRewardsUI(points, currentStreak, bestStreak, totalDone, totalSkipped, pointsHistory) {
+            // HUD Update (InHeader)
             document.getElementById('ptsHudPoints').innerText = points.toLocaleString('de-DE');
             document.getElementById('ptsHudStreak').innerText = currentStreak;
 
-            // Stats Tab Updates
+            // Stats Tab (falls aktiv)
             if (document.getElementById('tab-calendar').classList.contains('active')) {
                 document.getElementById('rewardLifetimePoints').innerText = points.toLocaleString('de-DE');
-                document.getElementById('statMaxStreak').innerText = maxStreak;
+                document.getElementById('rewardLifetimePointsHeader').innerText = points.toLocaleString('de-DE');
+            }
 
-                // Logging Consistency
-                let discScore = (totalDone + totalSkipped) > 0 ? Math.round((totalDone / (totalDone + totalSkipped)) * 100) : 100;
-                document.getElementById('statLoggingConsistency').innerText = `${discScore}%`;
+            // NEUER KARRIERE TAB UPDATES (Wird immer gerendert, wenn Daten kommen)
+            
+            // Progression (Ränge & Progress Bar)
+            // Aktuellen Rang finden
+            let currentRankIndex = 0;
+            for (let i = ranks.length - 1; i >= 0; i--) {
+                if (points >= ranks[i].pts) { currentRankIndex = i; break; }
+            }
+            let currentRank = ranks[currentRankIndex];
+            document.getElementById('careerRankName').innerText = currentRank.name;
 
-                // Ränge Definition (Langfristig, 100 Krafttrainings = 1500 Pkt)
-                const ranks = [
-                    { name: "Starter", icon: "🥉", pts: 0 },
-                    { name: "Maschine V", icon: "🥈", pts: 150 },   // ca. 10 Workouts
-                    { name: "Maschine III", icon: "🥈", pts: 300 },
-                    { name: "Maschine I", icon: "🥇", pts: 500 },   // ca. 33 Workouts
-                    { name: "Apex Legend V", icon: "🏆", pts: 1000 }, // ca. 66 Workouts (2-3 Monate)
-                    { name: "Apex Legend I", icon: "👑", pts: 2000 }, // ca. 133 Workouts (4-5 Monate)
-                    { name: "Apex Immortal", icon: "💫", pts: 5000 } // Long term Goal
-                ];
+            let nextRank = ranks[currentRankIndex + 1];
+            let progressPtsEl = document.getElementById('careerNextRankPts');
+            let progressFillEl = document.getElementById('careerProgressFill');
 
-                // Aktuellen Rang finden
-                let currentRankIndex = 0;
-                for (let i = ranks.length - 1; i >= 0; i--) {
-                    if (points >= ranks[i].pts) {
-                        currentRankIndex = i;
-                        break;
-                    }
-                }
-                let nextRank = ranks[currentRankIndex + 1] ? ranks[currentRankIndex + 1].name + ` (${ranks[currentRankIndex + 1].pts.toLocaleString('de-DE')} Pts)` : "MAX";
-                document.getElementById('rewardNextRank').innerText = nextRank;
+            if (nextRank) {
+                let ptsNeededTotal = nextRank.pts - currentRank.pts;
+                let ptsEarnedInLevel = points - currentRank.pts;
+                let percentage = Math.min(100, Math.round((ptsEarnedInLevel / ptsNeededTotal) * 100));
+                
+                progressPtsEl.innerText = (nextRank.pts - points).toLocaleString('de-DE');
+                progressFillEl.style.width = `${percentage}%`;
+            } else {
+                progressPtsEl.innerText = "MAX";
+                progressFillEl.style.width = "100%";
+            }
 
-                // Badges Progression Container Rendern (Grid of 4)
-                // Wir zeigen den aktuellen Rang und die nächsten 3
-                let bHTML = "";
-                for (let i = 0; i < ranks.length; i++) {
-                    let r = ranks[i];
-                    let locked = points < r.pts ? "badge-locked" : "";
-                    bHTML += `
-                        <div class="${locked}">
-                            <div class="badge-icon">${r.icon}</div>
-                            <p class="text-[10px] font-bold text-slate-800 leading-none truncate">${r.name}</p>
-                            <p class="text-[9px] text-slate-400 mt-0.5">${r.pts.toLocaleString('de-DE')} Pts</p>
+            // Badges Milestones Grid Rendern
+            document.getElementById('badgesMilestonesContainer').innerHTML = milestoneBadges.map(b => {
+                let unlocked = b.rule(totalDone, points, bestStreak);
+                let lockedClass = unlocked ? "" : "badge-locked";
+                let statusText = unlocked ? "FREIGESCHALTET" : "GESPERRT";
+                return `
+                    <div class="${lockedClass}">
+                        <div class="badge-icon">${b.icon}</div>
+                        <p class="text-[10px] font-bold text-slate-800 leading-none truncate">${b.name}</p>
+                        <p class="text-[9px] text-slate-400 mt-0.5">${b.desc}</p>
+                    </div>
+                `;
+            }).join('');
+
+            // Consistency Stats
+            document.getElementById('statMaxStreak').innerText = bestStreak;
+            let logConsistency = (totalDone + totalSkipped) > 0 ? Math.round((totalDone / (totalDone + totalSkipped)) * 100) : 100;
+            document.getElementById('statLoggingConsistency').innerText = `${logConsistency}%`;
+
+            // Punktverlauf (History) Protokoll
+            const pointsLogContainer = document.getElementById('pointsLogContainer');
+            if (pointsHistory.length === 0) {
+                pointsLogContainer.innerHTML = `<p class="text-sm text-slate-400 italic text-center py-4">Noch keine Punkte verdient.</p>`;
+            } else {
+                pointsLogContainer.innerHTML = pointsHistory.sort((a,b) => b.id - a.id).reverse().slice(0,10).map(item => {
+                    let ptsStyle = item.pts.startsWith('+') ? "text-emerald-600 font-bold" : "text-slate-600";
+                    let datePart = item.date ? `<span class="text-[10px] font-black text-slate-400 uppercase tracking-wider mr-2">${item.date}</span>` : "";
+                    return `
+                        <div class="bg-slate-50 border border-slate-100 rounded-xl p-3 flex justify-between items-center shadow-inner">
+                            <div class="flex items-center">
+                                ${datePart}
+                                <p class="text-sm font-black text-slate-700">${item.action}</p>
+                            </div>
+                            <p class="${ptsStyle} text-lg font-black">${item.pts}</p>
                         </div>
                     `;
-                }
-                document.getElementById('badgesProgressionContainer').innerHTML = bHTML;
-
+                }).join('');
             }
         }
 
@@ -909,8 +906,6 @@
                 if(isDoneToday) {
                     document.getElementById('pendingContainer').classList.add('hidden');
                     document.getElementById('doneContainer').classList.remove('hidden');
-                    
-                    // Berechne Vorschau für morgen
                     let tomorrowWorkout = calculateProposal(globalWorkoutsList);
                     document.getElementById('tomorrowWorkoutPreview').innerText = tomorrowWorkout ? tomorrowWorkout.name : 'Lade...';
                 } else {
@@ -922,15 +917,14 @@
                 renderCalendarAndLogs(globalWorkoutsList);
                 calculateStats(globalWorkoutsList);
                 calculateGamification(globalWorkoutsList);
-            }, (error) => {
-                console.error("Firestore Error:", error);
-            });
+            }, (error) => { console.error("Firestore Error:", error); });
         }
 
         document.addEventListener('DOMContentLoaded', () => {
             initHeader();
             renderManualButtons();
             renderLibrary();
+            renderKarriereInitial(); // Statische Teile des Karriere Tabs füllen
             startFirestoreSync();
         });
 
