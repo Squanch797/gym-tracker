@@ -6,71 +6,61 @@
     <title>Fitness Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* === PREMIUM DARK NAVY / CLEAN THEME === */
+        /* === PREMIUM CLEAN DARK THEME === */
         body {
             background-color: #fafbfc;
             margin: 0; padding: 0; color: #0f172a;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             overflow-x: hidden;
-            padding-top: 130px; /* Platz für fixierten Header */
+            /* Wichtig: Genug Platz für den neuen fixierten Header */
+            padding-top: 100px; 
+            padding-bottom: 50px;
         }
 
-        #app-root { max-width: 1050px; margin: 0 auto; padding: 20px; padding-bottom: 50px; }
+        #app-root { max-width: 1050px; margin: 0 auto; padding: 0 20px; }
 
-        /* FIXIERTER HEADER & HUD */
-        .kps-fixed-header {
-            position: fixed; top: 0; left: 0; width: 100%; height: 110px;
-            background: linear-gradient(135deg, #020617 0%, #111827 100%); 
-            color: white; z-index: 1000;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.05);
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 20px;
-            overflow: hidden;
-        }
-        .kps-fixed-header::before {
-            content: ""; position: absolute; bottom: 0; left: 0; width: 100%; height: 5px;
-            background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #f59e0b);
-            z-index: 10;
-        }
-        .kps-fixed-header::after {
-            content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: radial-gradient(circle at 50% 100%, rgba(139, 92, 246, 0.15) 0%, transparent 60%),
-                        radial-gradient(rgba(255,255,255,0.04) 1.5px, transparent 1.5px);
-            background-size: 100% 100%, 20px 20px; pointer-events: none; z-index: 1;
-        }
-        .kps-fixed-header * { position: relative; z-index: 2; }
-
-        .kps-header-left { display: flex; flex-direction: column; gap: 5px; }
-
-        .date-weather-pill {
-            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-            color: #f8fafc; font-size: 10px; font-weight: 900; 
-            text-transform: uppercase; letter-spacing: 1px;
-            opacity: 0.8;
+        /* NEUER, SCHLANKER HEADER (iOS App Style) */
+        .kps-topbar {
+            position: fixed; top: 0; left: 0; right: 0;
+            background: rgba(15, 23, 42, 0.95); /* Deep Slate */
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            z-index: 1000;
+            padding: calc(env(safe-area-inset-top) + 15px) 20px 15px 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1), 0 1px 0 rgba(255,255,255,0.05);
+            border-bottom: 2px solid #6d28d9; /* Subtiler lila Akzent unten */
         }
 
-        .kps-header-left h1 { 
-            font-size: 26px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; margin: 0;
-            background: linear-gradient(to bottom right, #ffffff, #94a3b8);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            text-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        .topbar-left { display: flex; flex-direction: column; gap: 4px; }
+        
+        .topbar-title { 
+            font-size: 22px; font-weight: 900; color: #ffffff; margin: 0; 
+            letter-spacing: 0.5px; text-transform: uppercase;
+        }
+        
+        .topbar-subtitle { 
+            font-size: 10px; color: #94a3b8; font-weight: 800; 
+            text-transform: uppercase; letter-spacing: 0.5px; 
+            display: flex; gap: 6px; align-items: center;
         }
 
-        /* PTS HUD (Fixiert im Header, Klickbar) */
-        .pts-hud-integrated {
-            background: rgba(2, 6, 23, 0.95);
-            border: 2px solid #6d28d9; color: white; padding: 10px 18px; border-radius: 12px;
-            font-weight: 900; font-size: 13px; display: flex; align-items: center; gap: 8px;
-            box-shadow: 0 0 15px rgba(109, 40, 217, 0.4); backdrop-filter: blur(5px);
+        /* INTEGRIERTES HUD IM HEADER */
+        .hud-pill {
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 6px 14px; border-radius: 20px;
             cursor: pointer; transition: all 0.2s ease;
         }
-        .pts-hud-integrated:hover { transform: scale(1.05); border-color: #a78bfa; }
-        .pts-hud-integrated:active { transform: scale(0.95); }
-        .pts-hud-integrated .icon { font-size: 16px; margin-top: -2px; }
-        .pts-hud-integrated .lbl { color: #a78bfa; font-weight: 700; text-transform: uppercase; font-size: 10px; margin-left: -3px;}
+        .hud-pill:hover { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.2); }
+        .hud-pill:active { transform: scale(0.95); }
+        
+        .hud-item { display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 900; color: #ffffff; }
+        .hud-icon { font-size: 14px; margin-top: -2px; }
+        .hud-divider { width: 1px; height: 14px; background: rgba(255, 255, 255, 0.15); }
 
         /* TABS NAVIGATION */
-        .kps-tabs-container { display: flex; justify-content: center; gap: 8px; margin-bottom: 30px; position: relative; z-index: 50; flex-wrap: wrap; }
+        .kps-tabs-container { display: flex; justify-content: center; gap: 8px; margin-top: 15px; margin-bottom: 30px; position: relative; z-index: 50; flex-wrap: wrap; }
         
         .main-tab-btn {
             background: #ffffff; border: 1px solid #cbd5e1; color: #64748b; padding: 12px 18px; border-radius: 30px; 
@@ -113,33 +103,27 @@
         .badge-icon { font-size: 30px; margin-bottom: 5px; }
         .badge-locked { filter: grayscale(100%); opacity: 0.4; }
 
-        /* Mobile adjust for Header */
-        @media (max-width: 640px) {
-            body { padding-top: 120px; }
-            .kps-fixed-header { height: 100px; padding: 0 15px; }
-            .kps-header-left h1 { font-size: 20px; }
-            .date-weather-pill { font-size: 9px; gap: 4px; }
-            .pts-hud-integrated { padding: 8px 12px; font-size: 11px; }
-        }
     </style>
 </head>
 <body> 
-    <div id="app-root">
 
-        <div class="kps-fixed-header">
-            <div class="kps-header-left">
-                <h1>Fitness Tracker</h1>
-                <div class="date-weather-pill">
-                    <span id="currentDate">📅 Lade...</span><span style="opacity: 0.3;">|</span><span id="currentWeather">🌡️ München</span>
-                </div>
-            </div>
-            
-            <div class="pts-hud-integrated" id="ptsHud" onclick="switchTab('karriere')">
-                <span class="icon">🏆</span> <span id="ptsHudPoints">0</span> <span class="lbl">Pts</span> | 
-                <span class="icon">🔥</span> <span id="ptsHudStreak">0</span> <span class="lbl">Days</span>
+    <div class="kps-topbar">
+        <div class="topbar-left">
+            <h1 class="topbar-title">Tracker</h1>
+            <div class="topbar-subtitle">
+                <span id="currentDate">Lade...</span> 
+                <span style="opacity: 0.5;">•</span> 
+                <span id="currentWeather">München</span>
             </div>
         </div>
+        <div class="hud-pill" onclick="switchTab('karriere')">
+            <div class="hud-item"><span class="hud-icon">🏆</span> <span id="ptsHudPoints">0</span></div>
+            <div class="hud-divider"></div>
+            <div class="hud-item"><span class="hud-icon">🔥</span> <span id="ptsHudStreak">0</span></div>
+        </div>
+    </div>
 
+    <div id="app-root">
         <div class="kps-tabs-container">
             <button class="main-tab-btn active" id="btn-tab-tracker" onclick="switchTab('tracker')">🏋️‍♂️ Loggen</button>
             <button class="main-tab-btn" id="btn-tab-calendar" onclick="switchTab('calendar')">📊 Stats</button>
@@ -306,26 +290,26 @@
 
             <div id="tab-karriere" class="tab-section">
                 
-                <div class="kps-box" style="border-top: 5px solid #ec4899;">
+                <div class="kps-box" style="border-top: 5px solid #8b5cf6;">
                     <div class="flex justify-between items-start mb-6">
                         <div>
                             <h3 style="border:none; padding:0; margin:0; font-size:24px;">Karriere-Fortschritt</h3>
-                            <p class="text-xs text-slate-500 font-medium">Dein kontinuierliches Leistungsniveau im Überblick.</p>
+                            <p class="text-xs text-slate-500 font-medium">Dein kontinuierliches Leistungsniveau.</p>
                         </div>
                         <div class="text-right">
-                            <span class="bg-pink-100 text-pink-700 font-black text-xs px-4 py-1.5 rounded-full" id="careerRankName">Initialisierung...</span>
+                            <span class="bg-purple-100 text-purple-700 font-black text-xs px-4 py-1.5 rounded-full" id="careerRankName">Initialisierung...</span>
                         </div>
                     </div>
 
                     <div class="flex justify-between items-center mb-2 text-sm font-black">
                         <span class="text-slate-500">Nächste Stufe in:</span>
-                        <span class="text-pink-600"><span id="careerNextRankPts">0</span> Pts</span>
+                        <span class="text-purple-600"><span id="careerNextRankPts">0</span> Pts</span>
                     </div>
 
-                    <div class="w-full h-4 bg-pink-100 rounded-full overflow-hidden border border-pink-200">
-                        <div class="h-full bg-linear-to-r from-pink-500 to-red-500 rounded-full transition-all duration-500 shadow-inner" id="careerProgressFill" style="width: 0%"></div>
+                    <div class="w-full h-4 bg-purple-100 rounded-full overflow-hidden border border-purple-200">
+                        <div class="h-full bg-linear-to-r from-purple-500 to-indigo-500 rounded-full transition-all duration-500 shadow-inner" id="careerProgressFill" style="width: 0%"></div>
                     </div>
-                    <p class="text-[10px] text-pink-400 font-bold uppercase mt-2">Die Punkte werden dauerhaft addiert.</p>
+                    <p class="text-[10px] text-purple-400 font-bold uppercase mt-2">Die Punkte werden dauerhaft addiert.</p>
                 </div>
 
                 <div class="kps-box">
@@ -455,19 +439,24 @@
             }
         ];
 
-        // Leistungsstufen (Klingt professioneller und erwachsener)
+        // Leistungsstufen 
         const ranks = [
             { name: "Basis-Status V", pts: 0 }, { name: "Basis-Status I", pts: 100 },
             { name: "Athleten-Stufe V", pts: 250 }, { name: "Athleten-Stufe I", pts: 500 },
             { name: "Profi-Klasse V", pts: 800 }, { name: "Profi-Klasse I", pts: 1200 },
             { name: "Elite-Niveau V", pts: 1600 }, { name: "Elite-Niveau I", pts: 2100 },
-            { name: "Master-Rang v", pts: 2700 }, { name: "Master-Rang I", pts: 3400 },
+            { name: "Master-Rang V", pts: 2700 }, { name: "Master-Rang I", pts: 3400 },
             { name: "High Performance", pts: 4200 }, { name: "Peak Condition", pts: 5000 }
         ];
 
         let proposedWorkout = routine[0];
 
-        // TABS NAVIGATION
+        function getLocalTodayDate() {
+            const d = new Date();
+            return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        }
+
+        // NAVIGATION
         window.switchTab = function(tab) {
             ['tracker', 'calendar', 'plan', 'karriere'].forEach(t => {
                 const tabEl = document.getElementById(`tab-${t}`);
@@ -493,10 +482,7 @@
         // UI RENDER
         function initHeader() {
             const options = { weekday: 'short', day: '2-digit', month: 'short' };
-            document.getElementById('currentDate').innerHTML = `📅 ${new Date().toLocaleDateString('de-DE', options)}`;
-            fetch('https://api.open-meteo.com/v1/forecast?latitude=48.1374&longitude=11.5755&current_weather=true')
-                .then(r => r.json()).then(d => { document.getElementById('currentWeather').innerText = `🌡️ ${Math.round(d.current_weather.temperature)}°C`; })
-                .catch(() => { document.getElementById('currentWeather').innerText = `🌡️ München`; });
+            document.getElementById('currentDate').innerHTML = `${new Date().toLocaleDateString('de-DE', options)}`;
         }
 
         function renderManualButtons() {
@@ -546,6 +532,67 @@
             `}).join('');
         }
 
+        function calculateProposal(workoutsList) {
+            if (!workoutsList || workoutsList.length === 0) return routine[0];
+            let lastRealWorkout = null;
+            let foundRestOrCardioSinceLastReal = false;
+            for (let i = 0; i < workoutsList.length; i++) {
+                const w = workoutsList[i];
+                if (!w.type) continue;
+                if (w.type.includes("Cardio") || w.type.includes("Rest") || w.type.includes("Auto") || w.status === "skipped") {
+                    if (i === 0) foundRestOrCardioSinceLastReal = true;
+                    continue;
+                }
+                lastRealWorkout = w.type;
+                break;
+            }
+            if (!lastRealWorkout) return routine[0];
+            let nextWorkout = routine[0]; 
+            if (lastRealWorkout === "Oberkörper") nextWorkout = routine.find(r => r.name === "Unterkörper");
+            else if (lastRealWorkout === "Unterkörper") nextWorkout = foundRestOrCardioSinceLastReal ? routine.find(r => r.name === "Push") : routine.find(r => r.name === "Cardio");
+            else if (lastRealWorkout === "Push") nextWorkout = routine.find(r => r.name === "Pull");
+            else if (lastRealWorkout === "Pull") nextWorkout = routine.find(r => r.name === "Beine");
+            else if (lastRealWorkout === "Beine") nextWorkout = foundRestOrCardioSinceLastReal ? routine.find(r => r.name === "Oberkörper") : routine.find(r => r.name === "Cardio");
+            return nextWorkout || routine[0];
+        }
+
+        // DATENBANK AKTIONEN
+        window.logSelectedWorkout = async function(type) {
+            let workoutToLog = type === 'proposed' ? proposedWorkout : routine.find(r => r.name === type);
+            if(!workoutToLog) return;
+            await db.collection('workouts').add({
+                date: getLocalTodayDate(), type: workoutToLog.name, status: "done", timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+        };
+
+        window.logRestDay = async function() {
+            if (proposedWorkout.name === "Cardio") {
+                await db.collection('workouts').add({
+                    date: getLocalTodayDate(), type: "Active Rest geloggt", status: "rest", timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            } else {
+                let reason = prompt(`Du überspringst heute "${proposedWorkout.name}". Warum? (z.B. Krank, Zeitmangel)`);
+                if (reason === null) return; 
+                await db.collection('workouts').add({
+                    date: getLocalTodayDate(), type: "Skip: " + proposedWorkout.name, status: "skipped", reason: reason || "Ohne Grund", timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            }
+        };
+
+        window.deleteEntry = async function(docId) {
+            if(confirm("Eintrag löschen?")) {
+                await db.collection('workouts').doc(docId).delete();
+            }
+        };
+
+        window.undoToday = async function() {
+            if(todayDocId) { 
+                await db.collection('workouts').doc(todayDocId).delete(); 
+                todayDocId = null; 
+            }
+        };
+
+        // KALENDER & PROTOKOLL
         function renderCalendarAndLogs(workoutsList) {
             const grid = document.getElementById('calendarGrid');
             const logContainer = document.getElementById('logContainer');
@@ -601,71 +648,48 @@
             }
         }
 
-        // STATS & MUSKELGRUPPEN
         function calculateStats(workoutsList) {
-            document.getElementById('selectedMonthLabel').innerText = `(${monthNames[displayMonth]})`;
-            document.getElementById('selectedMonthMuscleLabel').innerText = `(${monthNames[displayMonth]})`;
-            const today = new Date();
-            const dayOfWeek = today.getDay() === 0 ? 7 : today.getDay(); 
-            const startOfWeek = new Date(today);
-            startOfWeek.setDate(today.getDate() - dayOfWeek + 1);
-            const startOfWeekStr = `${startOfWeek.getFullYear()}-${String(startOfWeek.getMonth() + 1).padStart(2, '0')}-${String(startOfWeek.getDate()).padStart(2, '0')}`;
             const selectedMonthStr = `${displayYear}-${String(displayMonth + 1).padStart(2, '0')}`;
-
-            let weekStats = { total: 0, strength: 0, cardio: 0 };
-            let monthStats = { total: 0, strength: 0, cardio: 0 };
             let muscleHits = { "Brust":0, "Rücken":0, "Schultern":0, "Trizeps":0, "Bizeps":0, "Beine":0 };
             let totalDoneInMonth = 0;
-
             workoutsList.forEach(w => {
-                if(w.status === 'done') {
-                    if(w.date >= startOfWeekStr) {
-                        weekStats.total++;
-                        if(w.type && w.type.includes('Cardio')) weekStats.cardio++; else weekStats.strength++;
-                    }
-                    if(w.date.startsWith(selectedMonthStr)) {
-                        monthStats.total++;
-                        totalDoneInMonth++;
-                        if(w.type && w.type.includes('Cardio')) monthStats.cardio++;
-                        else { 
-                            monthStats.strength++; 
-                            if(w.type === "Oberkörper") { muscleHits["Brust"]++; muscleHits["Rücken"]++; muscleHits["Schultern"]++; muscleHits["Trizeps"]++; muscleHits["Bizeps"]++; }
-                            if(w.type === "Unterkörper" || w.type === "Beine") { muscleHits["Beine"]++; }
-                            if(w.type === "Push") { muscleHits["Brust"]++; muscleHits["Schultern"]++; muscleHits["Trizeps"]++; }
-                            if(w.type === "Pull") { muscleHits["Rücken"]++; muscleHits["Bizeps"]++; }
-                        }
+                if(w.status === 'done' && w.date.startsWith(selectedMonthStr)) {
+                    totalDoneInMonth++;
+                    if(!w.type.includes('Cardio')) { 
+                        if(w.type === "Oberkörper") { muscleHits["Brust"]++; muscleHits["Rücken"]++; muscleHits["Schultern"]++; muscleHits["Trizeps"]++; muscleHits["Bizeps"]++; }
+                        if(w.type === "Unterkörper" || w.type === "Beine") { muscleHits["Beine"]++; }
+                        if(w.type === "Push") { muscleHits["Brust"]++; muscleHits["Schultern"]++; muscleHits["Trizeps"]++; }
+                        if(w.type === "Pull") { muscleHits["Rücken"]++; muscleHits["Bizeps"]++; }
                     }
                 }
             });
-
-            document.getElementById('statWeekTotal').innerText = weekStats.total;
-            document.getElementById('statWeekStrength').innerText = weekStats.strength;
-            document.getElementById('statWeekCardio').innerText = weekStats.cardio;
-            document.getElementById('statMonthTotal').innerText = monthStats.total;
-            document.getElementById('statMonthStrength').innerText = monthStats.strength;
-            document.getElementById('statMonthCardio').innerText = monthStats.cardio;
-
-            let presentMuscles = Object.entries(muscleHits).sort((a,b) => b[1] - a[1]);
-            let activeMuscles = presentMuscles.filter(([n,c]) => c > 0);
-
-            if(activeMuscles.length > 0) {
-                document.getElementById('statMonthMuscles').innerHTML = activeMuscles.map(([name, count]) => `<span class="bg-emerald-100 text-emerald-700 border border-emerald-200 text-[11px] px-3 py-1.5 rounded-lg font-black shadow-sm">${name}: ${count}x</span>`).join('');
-                
-                let maxHits = activeMuscles[0][1];
-                let secondMaxHits = activeMuscles.length > 1 ? activeMuscles[1][1] : 0;
-                let tieForMax = activeMuscles.length > 1 && maxHits === secondMaxHits;
+            let presentMuscles = Object.entries(muscleHits).filter(([n,c]) => c > 0).sort((a,b) => b[1] - a[1]);
+            const muscleStatsEl = document.getElementById('statMonthMuscles');
+            if (muscleStatsEl) {
+                if(presentMuscles.length > 0) {
+                    muscleStatsEl.innerHTML = presentMuscles.map(([name, count]) => `<span class="bg-emerald-100 text-emerald-700 border border-emerald-200 text-[11px] px-3 py-1.5 rounded-lg font-black shadow-sm">${name}: ${count}x</span>`).join('');
+                } else {
+                    muscleStatsEl.innerHTML = `<span class="text-sm text-slate-400 font-medium">Keine Daten in diesem Monat</span>`;
+                }
+            }
+            
+            // Fokus / Balance Logik
+            if(presentMuscles.length > 0) {
+                let maxHits = presentMuscles[0][1];
+                let secondMaxHits = presentMuscles.length > 1 ? presentMuscles[1][1] : 0;
+                let tieForMax = presentMuscles.length > 1 && maxHits === secondMaxHits;
 
                 if (tieForMax || totalDoneInMonth < 4) {
-                    document.getElementById('statMuscleMax').innerText = totalDoneInMonth < 4 ? "Initialisierung..." : "Balanced Rhythmus ⚖ß";
+                    document.getElementById('statMuscleMax').innerText = totalDoneInMonth < 4 ? "Initialisierung..." : "Balanced Rhythmus ⚖️";
                 } else if ((maxHits - secondMaxHits) >= 2) {
-                    document.getElementById('statMuscleMax').innerText = activeMuscles[0][0] + "-Fokus 💪";
+                    document.getElementById('statMuscleMax').innerText = presentMuscles[0][0] + " Fokus 💪";
                 } else {
-                    document.getElementById('statMuscleMax').innerText = "Balanced Rhythmus ⚖ß";
+                    document.getElementById('statMuscleMax').innerText = "Balanced Rhythmus ⚖️";
                 }
 
-                let totalStrengthHits = activeMuscles.reduce((sum, [n,count]) => sum + count, 0);
-                let avgStrengthHits = totalStrengthHits / activeMuscles.length;
-                let trulyNeglected = activeMuscles.filter(([name, count]) => count < (avgStrengthHits * 0.5) && avgStrengthHits > 1);
+                let totalStrengthHits = presentMuscles.reduce((sum, [n,count]) => sum + count, 0);
+                let avgStrengthHits = totalStrengthHits / presentMuscles.length;
+                let trulyNeglected = presentMuscles.filter(([name, count]) => count < (avgStrengthHits * 0.5) && avgStrengthHits > 1);
 
                 if(trulyNeglected.length > 0 && totalDoneInMonth >= 5) {
                     document.getElementById('statMuscleMin').innerText = trulyNeglected[trulyNeglected.length - 1][0] + " 🤔";
@@ -675,18 +699,38 @@
                     document.getElementById('statMuscleMin').innerText = "Ausgeglichen 🤝";
                 }
             } else {
-                document.getElementById('statMonthMuscles').innerHTML = `<span class="text-sm text-slate-400 font-medium">Keine Daten in diesem Monat</span>`;
                 document.getElementById('statMuscleMax').innerText = "-";
                 document.getElementById('statMuscleMin').innerText = "-";
             }
+            
+            const monthTotalEl = document.getElementById('statMonthTotal');
+            if (monthTotalEl) monthTotalEl.innerText = totalDoneInMonth;
+            
+            // Week Stats calculation
+            const today = new Date();
+            const dayOfWeek = today.getDay() === 0 ? 7 : today.getDay(); 
+            const startOfWeek = new Date(today);
+            startOfWeek.setDate(today.getDate() - dayOfWeek + 1);
+            const startOfWeekStr = `${startOfWeek.getFullYear()}-${String(startOfWeek.getMonth() + 1).padStart(2, '0')}-${String(startOfWeek.getDate()).padStart(2, '0')}`;
+            
+            let weekStats = { total: 0, strength: 0, cardio: 0 };
+            workoutsList.forEach(w => {
+                if(w.status === 'done' && w.date >= startOfWeekStr) {
+                    weekStats.total++;
+                    if(w.type && w.type.includes('Cardio')) weekStats.cardio++; else weekStats.strength++;
+                }
+            });
+            document.getElementById('statWeekTotal').innerText = weekStats.total;
+            document.getElementById('statWeekStrength').innerText = weekStats.strength;
+            document.getElementById('statWeekCardio').innerText = weekStats.cardio;
         }
 
         // ================= LEISTUNGS- UND PUNKTESYSTEM =================
         const pointRules = [
             { desc: "✅ Krafttraining absolviert", pts: "+15 Pkt" },
             { desc: "🏃 Ausdauereinheit absolviert", pts: "+15 Pkt" },
-            { desc: "⏭ Ruhetag aktiv dokumentiert", pts: "+5 Pkt" },
-            { desc: "🔥 Kontinuierliche Trainings-Serie", pts: "Serie x2", id: "streak" },
+            { desc: "⏭ Ruhetag dokumentiert", pts: "+5 Pkt" },
+            { desc: "🔥 Kontinuierliche Trainings-Serie", pts: "Tage x2", id: "streak" },
             { desc: "🏅 Meilenstein erreicht", pts: "+100 Pkt" }
         ];
 
@@ -695,8 +739,7 @@
             { name: "Routine V", desc: "10 Trainings absolviert", icon: "🥈", rule: (totalDone) => totalDone >= 10 },
             { name: "Routine III", desc: "25 Trainings absolviert", icon: "🥈", rule: (totalDone) => totalDone >= 25 },
             { name: "Routine I", desc: "50 Trainings absolviert", icon: "🥈", rule: (totalDone) => totalDone >= 50 },
-            { name: "Kontinuität V", desc: "100 Trainings absolviert", icon: "🏆", rule: (totalDone) => totalDone >= 100 },
-            { name: "Peak Condition", desc: "Stufe Peak erreicht", icon: "👑", rule: (totalDone, points) => points >= 5000 },
+            { name: "Kontinuität", desc: "100 Trainings absolviert", icon: "🏆", rule: (totalDone) => totalDone >= 100 },
             { name: "Ausdauer-Spezialist", desc: "30 Tage Trainings-Serie", icon: "🔥", rule: (totalDone, points, bestStreak) => bestStreak >= 30 }
         ];
 
@@ -762,59 +805,65 @@
             document.getElementById('ptsHudPoints').innerText = points.toLocaleString('de-DE');
             document.getElementById('ptsHudStreak').innerText = currentStreak;
 
-            if (document.getElementById('tab-calendar').classList.contains('active')) {
-                document.getElementById('rewardLifetimePoints').innerText = points.toLocaleString('de-DE');
-            }
-
             let currentRankIndex = 0;
             for (let i = ranks.length - 1; i >= 0; i--) {
                 if (points >= ranks[i].pts) { currentRankIndex = i; break; }
             }
             let currentRank = ranks[currentRankIndex];
-            document.getElementById('careerRankName').innerText = currentRank.name;
+            
+            const rankNameEl = document.getElementById('careerRankName');
+            if(rankNameEl) rankNameEl.innerText = currentRank.name;
 
             let nextRank = ranks[currentRankIndex + 1];
             let progressPtsEl = document.getElementById('careerNextRankPts');
             let progressFillEl = document.getElementById('careerProgressFill');
 
-            if (nextRank) {
+            if (nextRank && progressPtsEl && progressFillEl) {
                 let ptsNeededTotal = nextRank.pts - currentRank.pts;
                 let ptsEarnedInLevel = points - currentRank.pts;
                 let percentage = Math.min(100, Math.round((ptsEarnedInLevel / ptsNeededTotal) * 100));
                 progressPtsEl.innerText = (nextRank.pts - points).toLocaleString('de-DE');
                 progressFillEl.style.width = `${percentage}%`;
-            } else {
+            } else if (progressPtsEl && progressFillEl) {
                 progressPtsEl.innerText = "MAX"; progressFillEl.style.width = "100%";
             }
 
-            document.getElementById('badgesMilestonesContainer').innerHTML = milestoneBadges.map(b => {
-                let unlocked = b.rule(totalDone, points, bestStreak);
-                return `
-                    <div class="${unlocked ? '' : 'badge-locked'}">
-                        <div class="badge-icon">${b.icon}</div>
-                        <p class="text-[10px] font-bold text-slate-800 leading-none truncate">${b.name}</p>
-                        <p class="text-[9px] text-slate-400 mt-0.5">${b.desc}</p>
-                    </div>
-                `;
-            }).join('');
+            const badgesContainer = document.getElementById('badgesMilestonesContainer');
+            if(badgesContainer) {
+                badgesContainer.innerHTML = milestoneBadges.map(b => {
+                    let unlocked = b.rule(totalDone, points, bestStreak);
+                    return `
+                        <div class="${unlocked ? '' : 'badge-locked'}">
+                            <div class="badge-icon">${b.icon}</div>
+                            <p class="text-[10px] font-bold text-slate-800 leading-none truncate">${b.name}</p>
+                            <p class="text-[9px] text-slate-400 mt-0.5">${b.desc}</p>
+                        </div>
+                    `;
+                }).join('');
+            }
 
-            document.getElementById('statMaxStreak').innerText = bestStreak;
+            const maxStreakEl = document.getElementById('statMaxStreak');
+            if (maxStreakEl) maxStreakEl.innerText = bestStreak;
+            
             let logConsistency = (totalDone + totalSkipped) > 0 ? Math.round((totalDone / (totalDone + totalSkipped)) * 100) : 100;
-            document.getElementById('statLoggingConsistency').innerText = `${logConsistency}%`;
+            const logConsEl = document.getElementById('statLoggingConsistency');
+            if (logConsEl) logConsEl.innerText = `${logConsistency}%`;
 
             const pointsLogContainer = document.getElementById('pointsLogContainer');
-            if (pointsHistory.length === 0) {
-                pointsLogContainer.innerHTML = `<p class="text-sm text-slate-400 italic text-center py-4">Noch keine Punkte vorhanden.</p>`;
-            } else {
-                pointsLogContainer.innerHTML = pointsHistory.reverse().slice(0,10).map(item => `
-                    <div class="bg-slate-50 border border-slate-100 rounded-xl p-3 flex justify-between items-center shadow-inner">
-                        <div class="flex items-center">
-                            ${item.date ? `<span class="text-[10px] font-black text-slate-400 uppercase tracking-wider mr-2">${item.date}</span>` : ""}
-                            <p class="text-sm font-black text-slate-700">${item.action}</p>
+            if (pointsLogContainer) {
+                if (pointsHistory.length === 0) {
+                    pointsLogContainer.innerHTML = `<p class="text-sm text-slate-400 italic text-center py-4">Noch keine Punkte vorhanden.</p>`;
+                } else {
+                    pointsLogContainer.innerHTML = pointsHistory.reverse().slice(0,10).map(item => `
+                        <div class="bg-slate-50 border border-slate-100 rounded-xl p-3 flex justify-between items-center shadow-inner">
+                            <div class="flex items-center">
+                                ${item.date ? `<span class="text-[10px] font-black text-slate-400 uppercase tracking-wider mr-2">${item.date}</span>` : ""}
+                                <p class="text-sm font-black text-slate-700">${item.action}</p>
+                            </div>
+                            <p class="text-emerald-600 font-black text-lg">${item.pts}</p>
                         </div>
-                        <p class="text-emerald-600 font-black text-lg">${item.pts}</p>
-                    </div>
-                `).join('');
+                    `).join('');
+                }
             }
         }
 
