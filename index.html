@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -22,90 +21,91 @@
             background-color: var(--ios-bg); 
             margin: 0; padding: 0; color: var(--ios-text);
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            overflow-x: hidden; padding-top: 110px; padding-bottom: 50px;
+            overflow-x: hidden; padding-top: 130px; padding-bottom: 60px;
             -webkit-font-smoothing: antialiased;
+            font-size: 16px; /* Größere Basis-Schriftart für besseres Mobile-Feeling */
         }
         #app-root { max-width: 1050px; margin: 0 auto; padding: 0 16px; }
 
         /* Topbar in Apple Frosted Glass Optik */
         .kps-topbar {
             position: fixed; top: 0; left: 0; right: 0;
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: saturate(180%) blur(20px);
-            -webkit-backdrop-filter: saturate(180%) blur(20px);
-            z-index: 1000; padding: calc(env(safe-area-inset-top) + 12px) 20px 12px 20px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: saturate(180%) blur(24px);
+            -webkit-backdrop-filter: saturate(180%) blur(24px);
+            z-index: 1000; padding: calc(env(safe-area-inset-top) + 16px) 20px 16px 20px;
             display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 0.5px solid rgba(0, 0, 0, 0.1);
+            border-bottom: 0.5px solid rgba(0, 0, 0, 0.08);
         }
-        .topbar-left { display: flex; flex-direction: column; gap: 2px; }
+        .topbar-left { display: flex; flex-direction: column; gap: 4px; }
         .topbar-title { 
-            font-size: 22px; font-weight: 700; color: var(--ios-text); margin: 0; 
-            letter-spacing: -0.5px; display: flex; align-items: center; gap: 6px;
+            font-size: 26px; font-weight: 800; color: var(--ios-text); margin: 0; 
+            letter-spacing: -0.8px; display: flex; align-items: center; gap: 8px;
         }
-        .topbar-title svg { color: var(--ios-blue); width: 22px; height: 22px; }
-        .date-weather-pill { font-size: 13px; color: var(--ios-gray-text); font-weight: 500; display: flex; gap: 6px; align-items: center; }
+        .topbar-title svg { color: var(--ios-blue); width: 26px; height: 26px; }
+        .date-weather-pill { font-size: 15px; color: var(--ios-gray-text); font-weight: 500; display: flex; gap: 6px; align-items: center; }
 
         .hud-pill {
-            display: flex; align-items: center; gap: 8px; background: rgba(0, 0, 0, 0.05);
-            padding: 6px 12px; border-radius: 12px;
+            display: flex; align-items: center; gap: 10px; background: rgba(0, 0, 0, 0.05);
+            padding: 8px 16px; border-radius: 999px; /* Stark abgerundet (Pillenform) */
             cursor: pointer; transition: all 0.2s ease;
         }
         .hud-pill:hover { background: rgba(0, 0, 0, 0.08); }
-        .hud-item { display: flex; align-items: center; gap: 4px; font-size: 14px; font-weight: 600; color: var(--ios-text); }
-        .hud-divider { width: 1px; height: 14px; background: rgba(0, 0, 0, 0.1); }
+        .hud-item { display: flex; align-items: center; gap: 4px; font-size: 16px; font-weight: 700; color: var(--ios-text); }
+        .hud-divider { width: 1.5px; height: 16px; background: rgba(0, 0, 0, 0.1); border-radius: 2px; }
 
-        /* Segmented Control im iOS Style */
+        /* Segmented Control im iOS Style - Vergrößert und abgerundet */
         .kps-tabs-container { 
-            display: flex; background: var(--ios-gray-bg); padding: 3px; 
-            border-radius: 10px; margin: 10px auto 25px auto; max-width: 600px;
+            display: flex; background: var(--ios-gray-bg); padding: 4px; 
+            border-radius: 99px; margin: 10px auto 30px auto; max-width: 600px;
         }
         .main-tab-btn {
-            flex: 1; text-align: center; background: transparent; border: none; color: var(--ios-text); padding: 8px 4px; 
-            border-radius: 8px; font-weight: 500; font-size: 13px; cursor: pointer; transition: all 0.2s ease; 
+            flex: 1; text-align: center; background: transparent; border: none; color: var(--ios-text); padding: 10px 4px; 
+            border-radius: 99px; font-weight: 500; font-size: 14px; cursor: pointer; transition: all 0.2s ease; 
             display: flex; justify-content: center; align-items: center; gap: 4px; white-space: nowrap; opacity: 0.7;
         }
         .main-tab-btn.active { 
             background: var(--ios-card); color: var(--ios-text); opacity: 1; font-weight: 600;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.12), 0 3px 1px rgba(0,0,0,0.04); 
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06); 
         }
         
         .tab-section { display: none; animation: fadeIn 0.3s ease; }
         .tab-section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Cleane Cards im iOS Style */
+        /* Cleane Cards im iOS Style - Größer und weichere Ecken */
         .kps-box {
-            background: var(--ios-card); padding: 20px; margin-bottom: 16px; border-radius: 20px; 
-            box-shadow: 0 4px 20px rgba(0,0,0,0.03); position: relative; overflow: hidden;
+            background: var(--ios-card); padding: 24px; margin-bottom: 20px; border-radius: 28px; 
+            box-shadow: 0 4px 24px rgba(0,0,0,0.04); position: relative; overflow: hidden;
         }
-        .kps-box h3 { margin-top: 0; color: var(--ios-text); font-size: 20px; font-weight: 700; margin-bottom: 16px; letter-spacing: -0.3px; }
+        .kps-box h3 { margin-top: 0; color: var(--ios-text); font-size: 22px; font-weight: 800; margin-bottom: 20px; letter-spacing: -0.5px; }
 
-        /* Buttons im iOS Style */
+        /* Buttons im iOS Style - Größere Touch-Targets */
         .kps-btn-main {
             background: var(--ios-blue); color: #ffffff;
-            border: none; padding: 16px 20px; border-radius: 14px; font-size: 17px; font-weight: 600; 
+            border: none; padding: 18px 24px; border-radius: 20px; font-size: 18px; font-weight: 700; 
             cursor: pointer; transition: all 0.2s ease; width: 100%; display: block; text-align: center;
         }
-        .kps-btn-main:active { transform: scale(0.97); opacity: 0.9; }
+        .kps-btn-main:active { transform: scale(0.96); opacity: 0.85; }
         
         .kps-btn-action { 
-            background: var(--ios-bg); color: var(--ios-blue); padding: 16px 15px; 
-            border-radius: 14px; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 15px; width: 100%; text-align: center; border: none;
+            background: var(--ios-bg); color: var(--ios-blue); padding: 18px 20px; 
+            border-radius: 20px; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 16px; width: 100%; text-align: center; border: none;
         }
-        .kps-btn-action:active { background: #e5e5ea; transform: scale(0.97); }
+        .kps-btn-action:active { background: #e5e5ea; transform: scale(0.96); }
 
         .kps-btn-loadmore {
-            background: transparent; color: var(--ios-blue); padding: 12px; 
-            border-radius: 14px; font-weight: 500; cursor: pointer; transition: 0.2s; font-size: 14px; width: 100%; text-align: center; margin-top: 10px; border: none;
+            background: transparent; color: var(--ios-blue); padding: 14px; 
+            border-radius: 20px; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 16px; width: 100%; text-align: center; margin-top: 12px; border: none;
         }
         .kps-btn-loadmore:active { background: var(--ios-bg); }
         
         .accordion-content { transition: max-height 0.3s ease-out, opacity 0.2s ease-out; max-height: 0; opacity: 0; overflow: hidden; }
         .accordion-content.open { max-height: 1000px; opacity: 1; }
-        .badge-icon { font-size: 30px; margin-bottom: 5px; }
-        .badge-locked { filter: grayscale(100%); opacity: 0.3; }
+        .badge-icon { font-size: 34px; margin-bottom: 8px; }
+        .badge-locked { filter: grayscale(100%); opacity: 0.25; }
 
-        /* Apple spezifische Farbanpassungen für Kalender & co */
+        /* Apple spezifische Farbanpassungen */
         .text-emerald-600 { color: var(--ios-green) !important; }
         .bg-emerald-500 { background-color: var(--ios-green) !important; }
         .text-teal-600 { color: var(--ios-teal) !important; }
@@ -114,11 +114,12 @@
         .bg-blue-600 { background-color: var(--ios-blue) !important; }
 
         @media (max-width: 640px) {
-            .kps-topbar { padding: calc(env(safe-area-inset-top) + 10px) 15px 10px 15px; }
-            .topbar-title { font-size: 18px; }
-            .hud-pill { padding: 6px 10px; }
-            .hud-item { font-size: 13px; }
-            .main-tab-btn { font-size: 11px; padding: 6px 2px; }
+            .kps-topbar { padding: calc(env(safe-area-inset-top) + 12px) 16px 12px 16px; }
+            .topbar-title { font-size: 22px; }
+            .hud-pill { padding: 6px 14px; }
+            .hud-item { font-size: 15px; }
+            .main-tab-btn { font-size: 12px; padding: 8px 4px; }
+            .kps-box { padding: 20px; border-radius: 24px; }
         }
     </style>
 </head>
@@ -152,36 +153,36 @@
             <div id="tab-tracker" class="tab-section active">
                 <div id="pendingContainer">
                     <div class="kps-box">
-                        <div style="display: inline-block; background: #e5f0ff; color: #007aff; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 12px; text-transform: uppercase; margin-bottom: 8px;">
+                        <div style="display: inline-block; background: #e5f0ff; color: #007aff; font-size: 13px; font-weight: 800; padding: 6px 14px; border-radius: 99px; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.5px;">
                             Heutiger Fokus
                         </div>
-                        <h2 class="text-3xl font-bold text-slate-900 mb-1" id="proposedWorkoutName">Lade...</h2>
-                        <p class="text-sm text-slate-500 mb-6 font-medium" id="motivationQuote">"Daten werden synchronisiert..."</p>
-                        <div style="background: var(--ios-bg); border-radius: 16px; padding: 16px; margin-bottom: 24px;">
-                            <ul id="proposedWorkoutDetails" class="space-y-3 text-sm text-slate-800 font-medium"></ul>
+                        <h2 class="text-4xl font-extrabold text-slate-900 mb-2" id="proposedWorkoutName">Lade...</h2>
+                        <p class="text-base text-slate-500 mb-8 font-medium" id="motivationQuote">"Daten werden synchronisiert..."</p>
+                        <div style="background: var(--ios-bg); border-radius: 20px; padding: 20px; margin-bottom: 28px;">
+                            <ul id="proposedWorkoutDetails" class="space-y-4 text-base text-slate-800 font-medium"></ul>
                         </div>
-                        <div class="flex gap-3">
+                        <div class="flex gap-4">
                             <button onclick="window.logSelectedWorkout('proposed')" class="kps-btn-main" style="flex: 2;">Erledigt</button>
                             <button onclick="window.logRestDay()" class="kps-btn-action" style="flex: 1;">Rest Day</button>
                         </div>
                     </div>
                     <div class="kps-box">
-                        <h3>Alternatives Workout</h3>
+                        <h3 class="mb-4">Alternatives Workout</h3>
                         <div class="grid grid-cols-2 gap-3" id="manualButtons"></div>
                     </div>
                 </div>
 
                 <div id="doneContainer" class="hidden">
-                    <div class="kps-box" style="text-align: center;">
-                        <div style="width: 80px; height: 80px; background: #e4f8eb; color: var(--ios-green); font-size: 40px; line-height: 80px; border-radius: 50%; margin: 0 auto 20px auto;">✓</div>
-                        <h2 class="text-2xl font-bold text-slate-900 mb-2">Stark abgeliefert!</h2>
-                        <p class="text-slate-500 text-sm mb-6 font-medium">Erhole dich gut und genieß den restlichen Tag.</p>
-                        <button onclick="window.undoToday()" class="text-sm text-slate-400 hover:text-red-500 font-medium bg-transparent border-none p-0 m-0">Eintrag rückgängig machen</button>
+                    <div class="kps-box" style="text-align: center; padding-top: 40px; padding-bottom: 40px;">
+                        <div style="width: 100px; height: 100px; background: #e4f8eb; color: var(--ios-green); font-size: 50px; line-height: 100px; border-radius: 50%; margin: 0 auto 24px auto;">✓</div>
+                        <h2 class="text-3xl font-extrabold text-slate-900 mb-3">Stark abgeliefert!</h2>
+                        <p class="text-slate-500 text-base mb-8 font-medium">Erhole dich gut und genieß den restlichen Tag.</p>
+                        <button onclick="window.undoToday()" class="text-base text-slate-400 hover:text-red-500 font-semibold bg-transparent border-none p-0 m-0">Eintrag rückgängig machen</button>
                         
-                        <div class="mt-8 pt-6 border-t border-slate-100 text-left">
-                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3 text-center">Morgen anstehend</p>
-                            <div class="bg-slate-50 rounded-xl p-4 flex items-center justify-center">
-                                <h3 class="text-lg font-bold text-slate-900 m-0 p-0 border-none" id="tomorrowWorkoutPreview">Lade...</h3>
+                        <div class="mt-10 pt-8 border-t border-slate-100 text-left">
+                            <p class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 text-center">Morgen anstehend</p>
+                            <div class="bg-slate-50 rounded-2xl p-6 flex items-center justify-center">
+                                <h3 class="text-xl font-bold text-slate-900 m-0 p-0 border-none" id="tomorrowWorkoutPreview">Lade...</h3>
                             </div>
                         </div>
                     </div>
@@ -190,58 +191,59 @@
 
             <div id="tab-calendar" class="tab-section">
                 <div class="kps-box">
-                    <div class="flex justify-between items-center mb-6">
-                        <button onclick="window.changeMonth(-1)" class="kps-btn-action" style="width: auto; padding: 8px 16px;">❮</button>
-                        <h3 style="margin: 0; font-size: 18px;" id="monthYearDisplay">Lade Monat...</h3>
-                        <button onclick="window.changeMonth(1)" class="kps-btn-action" style="width: auto; padding: 8px 16px;">❯</button>
+                    <div class="flex justify-between items-center mb-8">
+                        <button onclick="window.changeMonth(-1)" class="kps-btn-action" style="width: auto; padding: 10px 20px; border-radius: 99px;">❮</button>
+                        <h3 style="margin: 0; font-size: 20px;" id="monthYearDisplay">Lade Monat...</h3>
+                        <button onclick="window.changeMonth(1)" class="kps-btn-action" style="width: auto; padding: 10px 20px; border-radius: 99px;">❯</button>
                     </div>
-                    <div class="grid grid-cols-7 gap-1 text-center text-[11px] font-semibold text-slate-400 mb-2">
+                    <div class="grid grid-cols-7 gap-1 text-center text-xs font-bold text-slate-400 mb-3 uppercase tracking-wide">
                         <div>MO</div><div>DI</div><div>MI</div><div>DO</div><div>FR</div><div>SA</div><div>SO</div>
                     </div>
-                    <div class="grid grid-cols-7 gap-2" id="calendarGrid"></div>
-                    <div class="flex justify-center gap-4 mt-5 text-[11px] font-semibold text-slate-500">
-                        <span class="flex items-center gap-1"><div class="w-2.5 h-2.5 bg-emerald-500 rounded-full"></div> Kraft</span>
-                        <span class="flex items-center gap-1"><div class="w-2.5 h-2.5 bg-teal-400 rounded-full"></div> Cardio</span>
-                        <span class="flex items-center gap-1"><div class="w-2.5 h-2.5 bg-slate-200 rounded-full"></div> Rest</span>
+                    <!-- Vergrößerte Touch-Targets im Kalender (h-11 w-11 statt h-9 w-9) -->
+                    <div class="grid grid-cols-7 gap-y-3 gap-x-2" id="calendarGrid"></div>
+                    <div class="flex justify-center gap-5 mt-8 text-xs font-bold text-slate-500 uppercase tracking-wide">
+                        <span class="flex items-center gap-1.5"><div class="w-3 h-3 bg-emerald-500 rounded-full"></div> Kraft</span>
+                        <span class="flex items-center gap-1.5"><div class="w-3 h-3 bg-teal-400 rounded-full"></div> Cardio</span>
+                        <span class="flex items-center gap-1.5"><div class="w-3 h-3 bg-slate-200 rounded-full"></div> Rest</span>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4 mb-4">
-                    <div class="kps-box" style="padding: 16px; margin: 0;">
-                        <h4 class="text-[11px] font-semibold text-slate-500 uppercase tracking-wide mb-2">Woche</h4>
-                        <div class="text-3xl font-bold text-slate-900 mb-3" id="statWeekTotal">0</div>
-                        <div class="space-y-1.5">
-                            <div class="flex justify-between text-sm font-medium"><span class="text-slate-500">Kraft</span><span class="text-emerald-600 font-bold" id="statWeekStrength">0</span></div>
-                            <div class="flex justify-between text-sm font-medium"><span class="text-slate-500">Cardio</span><span class="text-teal-600 font-bold" id="statWeekCardio">0</span></div>
+                    <div class="kps-box" style="padding: 20px; margin: 0;">
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Woche</h4>
+                        <div class="text-4xl font-extrabold text-slate-900 mb-4" id="statWeekTotal">0</div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-base font-semibold"><span class="text-slate-500">Kraft</span><span class="text-emerald-600 font-bold" id="statWeekStrength">0</span></div>
+                            <div class="flex justify-between text-base font-semibold"><span class="text-slate-500">Cardio</span><span class="text-teal-600 font-bold" id="statWeekCardio">0</span></div>
                         </div>
                     </div>
-                    <div class="kps-box" style="padding: 16px; margin: 0;">
-                        <h4 class="text-[11px] font-semibold text-slate-500 uppercase tracking-wide mb-2">Monat <span class="text-slate-400 font-normal" id="selectedMonthLabel"></span></h4>
-                        <div class="text-3xl font-bold text-slate-900 mb-3" id="statMonthTotal">0</div>
-                        <div class="space-y-1.5">
-                            <div class="flex justify-between text-sm font-medium"><span class="text-slate-500">Kraft</span><span class="text-emerald-600 font-bold" id="statMonthStrength">0</span></div>
-                            <div class="flex justify-between text-sm font-medium"><span class="text-slate-500">Cardio</span><span class="text-teal-600 font-bold" id="statMonthCardio">0</span></div>
+                    <div class="kps-box" style="padding: 20px; margin: 0;">
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Monat <span class="text-slate-400 font-medium normal-case" id="selectedMonthLabel"></span></h4>
+                        <div class="text-4xl font-extrabold text-slate-900 mb-4" id="statMonthTotal">0</div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-base font-semibold"><span class="text-slate-500">Kraft</span><span class="text-emerald-600 font-bold" id="statMonthStrength">0</span></div>
+                            <div class="flex justify-between text-base font-semibold"><span class="text-slate-500">Cardio</span><span class="text-teal-600 font-bold" id="statMonthCardio">0</span></div>
                         </div>
                     </div>
                 </div>
 
                 <div class="kps-box">
-                    <h3>Muskel-Fokus</h3>
-                    <div id="statMonthMuscles" class="flex flex-wrap gap-2 mb-6"></div>
-                    <div class="flex gap-3">
-                        <div class="flex-1 bg-slate-50 rounded-xl p-3 text-center">
-                            <p class="text-[11px] text-slate-500 font-semibold uppercase tracking-wide mb-1">Status</p>
-                            <p class="text-sm font-bold text-blue-600" id="statMuscleMax">-</p>
+                    <h3 class="mb-5">Muskel-Fokus</h3>
+                    <div id="statMonthMuscles" class="flex flex-wrap gap-2.5 mb-8"></div>
+                    <div class="flex gap-4">
+                        <div class="flex-1 bg-slate-50 rounded-2xl p-4 text-center">
+                            <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mb-2">Status</p>
+                            <p class="text-base font-extrabold text-blue-600" id="statMuscleMax">-</p>
                         </div>
-                        <div class="flex-1 bg-slate-50 rounded-xl p-3 text-center">
-                            <p class="text-[11px] text-slate-500 font-semibold uppercase tracking-wide mb-1">Abweichung</p>
-                            <p class="text-sm font-bold text-orange-500" id="statMuscleMin">-</p>
+                        <div class="flex-1 bg-slate-50 rounded-2xl p-4 text-center">
+                            <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mb-2">Abweichung</p>
+                            <p class="text-base font-extrabold text-orange-500" id="statMuscleMin">-</p>
                         </div>
                     </div>
                 </div>
                 
                 <div class="kps-box">
-                    <h3>Protokoll</h3>
+                    <h3 class="mb-5">Protokoll</h3>
                     <div id="logContainer" class="space-y-3"></div>
                     <button id="loadMoreLogsBtn" onclick="window.loadMoreLogs()" class="kps-btn-loadmore hidden">Mehr laden...</button>
                 </div>
@@ -249,22 +251,22 @@
 
             <div id="tab-plan" class="tab-section">
                 <div class="kps-box">
-                    <h3>Dein Rhythmus</h3>
-                    <p class="text-sm text-slate-500 mb-5 font-medium">Optimal ausgelegt für Wachstum und Regeneration.</p>
+                    <h3 class="mb-3">Dein Rhythmus</h3>
+                    <p class="text-base text-slate-500 mb-6 font-medium">Optimal ausgelegt für Wachstum und Regeneration.</p>
                     
                     <div class="grid grid-cols-7 gap-2 text-center mb-2">
-                        <div class="bg-white rounded-xl p-1 shadow-sm border border-slate-100 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-400 font-semibold">MO</p><p class="text-xs font-bold text-slate-800">OK</p></div>
-                        <div class="bg-white rounded-xl p-1 shadow-sm border border-slate-100 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-400 font-semibold">DI</p><p class="text-xs font-bold text-slate-800">UK</p></div>
-                        <div class="bg-teal-50 rounded-xl p-1 flex flex-col items-center justify-center h-16 w-full overflow-hidden">
-                            <p class="text-[10px] text-teal-500 font-semibold">MI</p>
-                            <div class="flex flex-col items-center w-full"><p class="text-[8px] font-bold text-teal-600 leading-none">CARDIO</p></div>
+                        <div class="bg-white rounded-[20px] p-1 shadow-sm border border-slate-100 flex flex-col items-center justify-center h-20"><p class="text-xs text-slate-400 font-semibold mb-1">MO</p><p class="text-sm font-bold text-slate-800">OK</p></div>
+                        <div class="bg-white rounded-[20px] p-1 shadow-sm border border-slate-100 flex flex-col items-center justify-center h-20"><p class="text-xs text-slate-400 font-semibold mb-1">DI</p><p class="text-sm font-bold text-slate-800">UK</p></div>
+                        <div class="bg-teal-50 rounded-[20px] p-1 flex flex-col items-center justify-center h-20 w-full overflow-hidden">
+                            <p class="text-xs text-teal-500 font-semibold mb-1">MI</p>
+                            <div class="flex flex-col items-center w-full"><p class="text-[9px] font-extrabold text-teal-600 leading-none">CARDIO</p></div>
                         </div>
-                        <div class="bg-white rounded-xl p-1 shadow-sm border border-slate-100 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-400 font-semibold">DO</p><p class="text-xs font-bold text-slate-800">Push</p></div>
-                        <div class="bg-white rounded-xl p-1 shadow-sm border border-slate-100 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-400 font-semibold">FR</p><p class="text-xs font-bold text-slate-800">Pull</p></div>
-                        <div class="bg-white rounded-xl p-1 shadow-sm border border-slate-100 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-400 font-semibold">SA</p><p class="text-xs font-bold text-slate-800">Beine</p></div>
-                        <div class="bg-slate-100 rounded-xl p-1 flex flex-col items-center justify-center h-16 w-full overflow-hidden">
-                            <p class="text-[10px] text-slate-500 font-semibold">SO</p>
-                            <div class="flex flex-col items-center w-full"><p class="text-[8px] font-bold text-slate-600 leading-none">REST</p></div>
+                        <div class="bg-white rounded-[20px] p-1 shadow-sm border border-slate-100 flex flex-col items-center justify-center h-20"><p class="text-xs text-slate-400 font-semibold mb-1">DO</p><p class="text-sm font-bold text-slate-800">Push</p></div>
+                        <div class="bg-white rounded-[20px] p-1 shadow-sm border border-slate-100 flex flex-col items-center justify-center h-20"><p class="text-xs text-slate-400 font-semibold mb-1">FR</p><p class="text-sm font-bold text-slate-800">Pull</p></div>
+                        <div class="bg-white rounded-[20px] p-1 shadow-sm border border-slate-100 flex flex-col items-center justify-center h-20"><p class="text-xs text-slate-400 font-semibold mb-1">SA</p><p class="text-sm font-bold text-slate-800">Beine</p></div>
+                        <div class="bg-slate-100 rounded-[20px] p-1 flex flex-col items-center justify-center h-20 w-full overflow-hidden">
+                            <p class="text-xs text-slate-500 font-semibold mb-1">SO</p>
+                            <div class="flex flex-col items-center w-full"><p class="text-[9px] font-extrabold text-slate-600 leading-none">REST</p></div>
                         </div>
                     </div>
                 </div>
@@ -273,50 +275,50 @@
 
             <div id="tab-karriere" class="tab-section">
                 <div class="kps-box">
-                    <h3>🏆 Erreichte Meilensteine</h3>
-                    <p class="text-sm text-slate-500 mb-5 font-medium">Auszeichnungen für langfristige Kontinuität.</p>
-                    <div class="grid grid-cols-4 gap-3 text-center" id="badgesMilestonesContainer"></div>
+                    <h3 class="mb-3">🏆 Erreichte Meilensteine</h3>
+                    <p class="text-base text-slate-500 mb-8 font-medium">Auszeichnungen für langfristige Kontinuität.</p>
+                    <div class="grid grid-cols-3 gap-y-8 gap-x-4 text-center" id="badgesMilestonesContainer"></div>
                 </div>
                 
                 <div class="kps-box">
-                    <div class="flex justify-between items-start mb-5 flex-wrap gap-2">
+                    <div class="flex justify-between items-start mb-6 flex-wrap gap-2">
                         <div>
-                            <h3 style="border:none; padding:0; margin:0; font-size:20px;">Karriere-Fortschritt</h3>
+                            <h3 style="border:none; padding:0; margin:0; font-size:22px;">Karriere-Fortschritt</h3>
                         </div>
                         <div class="text-right">
-                            <span class="bg-blue-50 text-blue-600 font-bold text-[11px] px-3 py-1.5 rounded-full whitespace-nowrap" id="careerRankName">Lade...</span>
+                            <span class="bg-blue-50 text-blue-600 font-bold text-xs px-4 py-2 rounded-full whitespace-nowrap" id="careerRankName">Lade...</span>
                         </div>
                     </div>
-                    <div class="flex justify-between items-center mb-3 text-sm font-semibold">
+                    <div class="flex justify-between items-center mb-4 text-base font-semibold">
                         <span class="text-slate-500">Nächste Stufe in:</span>
                         <span class="text-blue-600"><span id="careerNextRankPts">0</span> Pts</span>
                     </div>
-                    <div class="w-full h-4 bg-slate-100 rounded-full overflow-hidden">
+                    <div class="w-full h-5 bg-slate-100 rounded-full overflow-hidden">
                         <div class="h-full bg-blue-500 rounded-full transition-all duration-500" id="careerProgressFill" style="width: 0%"></div>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4 mb-4">
-                    <div class="kps-box" style="padding: 16px; margin: 0; text-align: center;">
-                        <div class="badge-icon" style="font-size:24px;">🔥</div>
-                        <p class="text-2xl font-bold text-slate-900" id="statMaxStreak">0</p>
-                        <p class="text-[11px] text-slate-500 font-semibold uppercase mt-1">Max. Streak</p>
+                    <div class="kps-box" style="padding: 24px; margin: 0; text-align: center;">
+                        <div class="badge-icon" style="font-size:32px;">🔥</div>
+                        <p class="text-3xl font-extrabold text-slate-900" id="statMaxStreak">0</p>
+                        <p class="text-xs text-slate-500 font-bold uppercase mt-2 tracking-wider">Max. Streak</p>
                     </div>
-                    <div class="kps-box" style="padding: 16px; margin: 0; text-align: center;">
-                        <div class="badge-icon" style="font-size:24px;">📅</div>
-                        <p class="text-2xl font-bold text-slate-900" id="statLoggingConsistency">100%</p>
-                        <p class="text-[11px] text-slate-500 font-semibold uppercase mt-1">Disziplin-Score</p>
+                    <div class="kps-box" style="padding: 24px; margin: 0; text-align: center;">
+                        <div class="badge-icon" style="font-size:32px;">📅</div>
+                        <p class="text-3xl font-extrabold text-slate-900" id="statLoggingConsistency">100%</p>
+                        <p class="text-xs text-slate-500 font-bold uppercase mt-2 tracking-wider">Disziplin-Score</p>
                     </div>
                 </div>
 
                 <div class="kps-box">
-                    <h3>📊 Punktevergabe</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="pointsBreakdownContainer"></div>
+                    <h3 class="mb-5">📊 Punktevergabe</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="pointsBreakdownContainer"></div>
                 </div>
 
                 <div class="kps-box">
-                    <h3>Historie</h3>
-                    <div id="pointsLogContainer" class="space-y-3"></div>
+                    <h3 class="mb-5">Historie</h3>
+                    <div id="pointsLogContainer" class="space-y-4"></div>
                     <button id="loadMorePointsBtn" onclick="window.loadMorePoints()" class="kps-btn-loadmore hidden">Mehr laden...</button>
                 </div>
             </div>
@@ -454,7 +456,7 @@
 
         function renderManualButtons() {
             document.getElementById('manualButtons').innerHTML = routine.map(r => `
-                <button onclick="window.logSelectedWorkout('${r.name}')" class="kps-btn-action" style="font-size: 14px;">${r.name}</button>
+                <button onclick="window.logSelectedWorkout('${r.name}')" class="kps-btn-action">${r.name}</button>
             `).join('');
         }
 
@@ -463,22 +465,22 @@
                 let badgeColor = r.color === "blue" ? "bg-blue-100 text-blue-700" : (r.color === "teal" ? "bg-teal-100 text-teal-700" : "bg-cyan-100 text-cyan-700");
                 return `
                 <div class="kps-box" style="padding:0;">
-                    <div onclick="window.toggleAccordion(${idx})" class="p-4 flex justify-between items-center cursor-pointer hover:bg-slate-50 transition-colors">
+                    <div onclick="window.toggleAccordion(${idx})" class="p-5 flex justify-between items-center cursor-pointer hover:bg-slate-50 transition-colors">
                         <div>
-                            <h3 style="border:none; padding:0; margin:0; font-size:18px;">${r.name}</h3>
-                            <span class="inline-block mt-2 text-[10px] font-bold px-2 py-1 rounded-full ${badgeColor} uppercase tracking-wide">${r.library.length} Übungen</span>
+                            <h3 style="border:none; padding:0; margin:0; font-size:20px;">${r.name}</h3>
+                            <span class="inline-block mt-2 text-xs font-bold px-3 py-1.5 rounded-full ${badgeColor} uppercase tracking-wide">${r.library.length} Übungen</span>
                         </div>
-                        <svg id="chevron-${idx}" class="w-5 h-5 text-slate-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+                        <svg id="chevron-${idx}" class="w-6 h-6 text-slate-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
                     </div>
-                    <div id="accordion-${idx}" class="accordion-content px-4 pb-4 space-y-3 border-t border-slate-100 bg-slate-50">
-                        <p class="text-[12px] font-medium italic mb-3 mt-3 text-slate-500">"${r.motto}"</p>
+                    <div id="accordion-${idx}" class="accordion-content px-5 pb-5 space-y-4 border-t border-slate-100 bg-slate-50">
+                        <p class="text-sm font-medium italic mb-4 mt-4 text-slate-500">"${r.motto}"</p>
                         ${r.library.map(ex => `
-                            <div style="background:#fff; border-radius:12px; padding:14px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
-                                <div class="flex justify-between items-start mb-1">
-                                    <p class="text-sm font-bold text-slate-900">${ex.name}</p>
-                                    <span class="text-[10px] font-bold px-2 py-1 rounded-full uppercase bg-slate-100 text-slate-600">${ex.sets}</span>
+                            <div style="background:#fff; border-radius:16px; padding:18px; box-shadow: 0 1px 4px rgba(0,0,0,0.02);">
+                                <div class="flex justify-between items-start mb-2">
+                                    <p class="text-base font-bold text-slate-900">${ex.name}</p>
+                                    <span class="text-[11px] font-bold px-2.5 py-1 rounded-full uppercase bg-slate-100 text-slate-600">${ex.sets}</span>
                                 </div>
-                                <p class="text-[12px] text-slate-500 leading-relaxed">${ex.desc}</p>
+                                <p class="text-sm text-slate-500 leading-relaxed">${ex.desc}</p>
                             </div>
                         `).join('')}
                     </div>
@@ -559,7 +561,8 @@
             for (let day = 1; day <= totalDays; day++) {
                 const dateKey = `${displayYear}-${String(displayMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                 const dayDiv = document.createElement('div');
-                dayDiv.className = "h-9 w-9 mx-auto rounded-full flex items-center justify-center text-[12px] font-semibold transition-all ";
+                // Größere Kalender-Pillen für leichteres Antippen
+                dayDiv.className = "h-11 w-11 mx-auto rounded-full flex items-center justify-center text-sm font-bold transition-all ";
                 dayDiv.innerText = day;
 
                 if (historyMap[dateKey]) {
@@ -577,7 +580,7 @@
             }
 
             if(combinedLogData.length === 0) {
-                logContainer.innerHTML = `<p class="text-sm text-slate-400 py-2">Noch keine Einträge vorhanden.</p>`;
+                logContainer.innerHTML = `<p class="text-base text-slate-400 py-3">Noch keine Einträge vorhanden.</p>`;
                 document.getElementById('loadMoreLogsBtn').classList.add('hidden');
             } else {
                 let sorted = combinedLogData.sort((a,b) => b.date.localeCompare(a.date));
@@ -588,9 +591,9 @@
                     let titleStyle = isRestOrSkip ? "text-slate-500 font-medium" : (item.type.includes('Cardio') ? "text-teal-600 font-bold" : "text-emerald-600 font-bold");
                     let subText = item.reason ? `Grund: ${item.reason}` : item.date.split('-').reverse().join('.');
                     return `
-                        <div class="bg-slate-50 p-4 rounded-xl flex justify-between items-center border border-slate-100">
-                            <div><p class="${titleStyle} text-[15px] mb-1">${item.type}</p><p class="text-[11px] text-slate-400 font-medium uppercase">${subText}</p></div>
-                            ${!item.id.startsWith('auto-') ? `<button onclick="window.deleteEntry('${item.id}')" class="text-slate-300 hover:text-red-500 transition-colors p-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>` : ''}
+                        <div class="bg-slate-50 p-5 rounded-2xl flex justify-between items-center border border-slate-100">
+                            <div><p class="${titleStyle} text-[17px] mb-1.5">${item.type}</p><p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">${subText}</p></div>
+                            ${!item.id.startsWith('auto-') ? `<button onclick="window.deleteEntry('${item.id}')" class="text-slate-300 hover:text-red-500 transition-colors p-2"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>` : ''}
                         </div>`;
                 }).join('');
 
@@ -604,7 +607,6 @@
             const selectedMonthStr = `${displayYear}-${String(displayMonth + 1).padStart(2, '0')}`;
             let muscleHits = { "Brust":0, "Rücken":0, "Schultern":0, "Trizeps":0, "Bizeps":0, "Beine":0 };
             
-            // BUGFIX: Zähler für den Monat hinzugefügt
             let totalDoneInMonth = 0;
             let monthStats = { strength: 0, cardio: 0 };
             let weekStats = { total: 0, strength: 0, cardio: 0 };
@@ -614,7 +616,6 @@
             const startOfWeekStr = `${startOfWeek.getFullYear()}-${String(startOfWeek.getMonth() + 1).padStart(2, '0')}-${String(startOfWeek.getDate()).padStart(2, '0')}`;
 
             workoutsList.forEach(w => {
-                // Monats-Stats
                 if(w.status === 'done' && w.date.startsWith(selectedMonthStr)) {
                     totalDoneInMonth++;
                     if(w.type.includes('Cardio')) monthStats.cardio++; else monthStats.strength++;
@@ -626,19 +627,16 @@
                         if(w.type === "Pull") { muscleHits["Rücken"]++; muscleHits["Bizeps"]++; }
                     }
                 }
-                // Wochen-Stats
                 if(w.status === 'done' && w.date >= startOfWeekStr) {
                     weekStats.total++;
                     if(w.type && w.type.includes('Cardio')) weekStats.cardio++; else weekStats.strength++;
                 }
             });
             
-            // DOM Update für Woche
             document.getElementById('statWeekTotal').innerText = weekStats.total;
             document.getElementById('statWeekStrength').innerText = weekStats.strength;
             document.getElementById('statWeekCardio').innerText = weekStats.cardio;
             
-            // DOM Update für Monat (Bugfix angewandt)
             document.getElementById('statMonthTotal').innerText = totalDoneInMonth;
             document.getElementById('statMonthStrength').innerText = monthStats.strength;
             document.getElementById('statMonthCardio').innerText = monthStats.cardio;
@@ -646,7 +644,7 @@
             let activeMuscles = Object.entries(muscleHits).filter(([n,c]) => c > 0).sort((a,b) => b[1] - a[1]);
             const muscleStatsEl = document.getElementById('statMonthMuscles');
             if (activeMuscles.length > 0) {
-                muscleStatsEl.innerHTML = activeMuscles.map(([name, count]) => `<span class="bg-blue-50 text-blue-700 text-[11px] px-2.5 py-1 rounded-full font-semibold">${name}: ${count}x</span>`).join('');
+                muscleStatsEl.innerHTML = activeMuscles.map(([name, count]) => `<span class="bg-blue-50 text-blue-700 text-sm px-3.5 py-1.5 rounded-full font-bold">${name}: ${count}x</span>`).join('');
                 let maxHits = activeMuscles[0][1]; let secondMaxHits = activeMuscles.length > 1 ? activeMuscles[1][1] : 0;
                 if ((maxHits - secondMaxHits) >= 2) document.getElementById('statMuscleMax').innerText = activeMuscles[0][0] + " Fokus";
                 else document.getElementById('statMuscleMax').innerText = "Ausgeglichen";
@@ -656,7 +654,7 @@
                 if(neglected.length > 0 && totalDoneInMonth >= 5) document.getElementById('statMuscleMin').innerText = neglected[neglected.length - 1][0];
                 else document.getElementById('statMuscleMin').innerText = "Optimal";
             } else {
-                muscleStatsEl.innerHTML = `<span class="text-sm text-slate-400">Keine Daten in diesem Monat</span>`;
+                muscleStatsEl.innerHTML = `<span class="text-base text-slate-400">Keine Daten in diesem Monat</span>`;
                 document.getElementById('statMuscleMax').innerText = "-"; document.getElementById('statMuscleMin').innerText = "-";
             }
         }
@@ -677,9 +675,9 @@
 
         function renderKarriereInitial() {
             document.getElementById('pointsBreakdownContainer').innerHTML = pointRules.map(r => `
-                <div class="bg-slate-50 rounded-xl p-3 text-center">
-                    <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wide">${r.desc}</p>
-                    <p class="text-lg font-bold text-blue-600 mt-1">${r.pts}</p>
+                <div class="bg-slate-50 rounded-2xl p-4 text-center">
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">${r.desc}</p>
+                    <p class="text-xl font-extrabold text-blue-600 mt-1.5">${r.pts}</p>
                 </div>
             `).join('');
         }
@@ -730,8 +728,8 @@
             if(badges) {
                 badges.innerHTML = milestoneBadges.map(b => `
                     <div class="${b.rule(tDone, pts, bestStreak) ? '' : 'badge-locked'}">
-                        <div class="badge-icon text-3xl mb-1">${b.icon}</div>
-                        <p class="text-[10px] font-semibold text-slate-700 leading-tight">${b.name}</p>
+                        <div class="badge-icon text-4xl mb-2">${b.icon}</div>
+                        <p class="text-xs font-bold text-slate-700 leading-tight">${b.name}</p>
                     </div>`).join('');
             }
 
@@ -741,17 +739,17 @@
             const pLog = document.getElementById('pointsLogContainer');
             if (pLog) {
                 if (history.length === 0) {
-                    pLog.innerHTML = `<p class="text-sm text-slate-400 py-2">Noch keine Punkte gesammelt.</p>`;
+                    pLog.innerHTML = `<p class="text-base text-slate-400 py-3">Noch keine Punkte gesammelt.</p>`;
                     document.getElementById('loadMorePointsBtn').classList.add('hidden');
                 } else {
                     let rev = history.reverse(); let vis = rev.slice(0, visiblePoints);
                     pLog.innerHTML = vis.map(item => `
-                        <div class="bg-slate-50 rounded-xl p-3 flex justify-between items-center">
-                            <div class="flex items-center gap-3">
-                                ${item.date ? `<span class="text-[11px] font-bold text-slate-400 w-10">${item.date}</span>` : ""}
-                                <p class="text-[14px] font-semibold text-slate-800">${item.action}</p>
+                        <div class="bg-slate-50 rounded-2xl p-4 flex justify-between items-center">
+                            <div class="flex items-center gap-4">
+                                ${item.date ? `<span class="text-sm font-bold text-slate-400 w-12">${item.date}</span>` : ""}
+                                <p class="text-[17px] font-bold text-slate-800">${item.action}</p>
                             </div>
-                            <p class="text-blue-600 font-bold text-[15px]">${item.pts}</p>
+                            <p class="text-blue-600 font-extrabold text-[18px]">${item.pts}</p>
                         </div>`).join('');
                     if(rev.length > visiblePoints) document.getElementById('loadMorePointsBtn').classList.remove('hidden');
                     else document.getElementById('loadMorePointsBtn').classList.add('hidden');
@@ -771,7 +769,7 @@
                 if (proposedWorkout) {
                     document.getElementById('proposedWorkoutName').innerText = proposedWorkout.name;
                     document.getElementById('motivationQuote').innerText = isDoneToday ? `"Muskeln wachsen in der Ruhephase."` : `"${proposedWorkout.motto}"`;
-                    document.getElementById('proposedWorkoutDetails').innerHTML = proposedWorkout.exercises.map(ex => `<li class="flex items-center gap-3"><div class="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>${ex}</li>`).join('');
+                    document.getElementById('proposedWorkoutDetails').innerHTML = proposedWorkout.exercises.map(ex => `<li class="flex items-center gap-4"><div class="w-2 h-2 bg-blue-500 rounded-full"></div>${ex}</li>`).join('');
                 }
 
                 if(isDoneToday) {
@@ -794,5 +792,3 @@
     </script>
 </body>
 </html>
-
-```
