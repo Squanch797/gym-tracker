@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -6,92 +7,118 @@
     <title>Fitness Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body {
-            background-color: #f1f5f9; margin: 0; padding: 0; color: #0f172a;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            overflow-x: hidden; padding-top: 100px; padding-bottom: 50px;
+        :root {
+            --ios-bg: #f2f2f7;
+            --ios-card: #ffffff;
+            --ios-blue: #007aff;
+            --ios-green: #34c759;
+            --ios-teal: #5ac8fa;
+            --ios-gray-text: #8e8e93;
+            --ios-gray-bg: #e3e3e8;
+            --ios-text: #000000;
         }
-        #app-root { max-width: 1050px; margin: 0 auto; padding: 0 20px; }
 
+        body {
+            background-color: var(--ios-bg); 
+            margin: 0; padding: 0; color: var(--ios-text);
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            overflow-x: hidden; padding-top: 110px; padding-bottom: 50px;
+            -webkit-font-smoothing: antialiased;
+        }
+        #app-root { max-width: 1050px; margin: 0 auto; padding: 0 16px; }
+
+        /* Topbar in Apple Frosted Glass Optik */
         .kps-topbar {
             position: fixed; top: 0; left: 0; right: 0;
-            background: linear-gradient(to right, #020617, #0f172a);
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            z-index: 1000; padding: calc(env(safe-area-inset-top) + 15px) 20px 15px 20px;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            z-index: 1000; padding: calc(env(safe-area-inset-top) + 12px) 20px 12px 20px;
             display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3); border-bottom: 2px solid #2563eb;
+            border-bottom: 0.5px solid rgba(0, 0, 0, 0.1);
         }
-        .kps-topbar::after {
-            content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
-            background-size: 15px 15px; pointer-events: none; z-index: 0; opacity: 0.5;
-        }
-        .topbar-left { display: flex; flex-direction: column; gap: 4px; z-index: 2; }
+        .topbar-left { display: flex; flex-direction: column; gap: 2px; }
         .topbar-title { 
-            font-size: 20px; font-weight: 900; color: #ffffff; margin: 0; 
-            letter-spacing: 1px; text-transform: uppercase; display: flex; align-items: center; gap: 6px;
+            font-size: 22px; font-weight: 700; color: var(--ios-text); margin: 0; 
+            letter-spacing: -0.5px; display: flex; align-items: center; gap: 6px;
         }
-        .topbar-title svg { color: #3b82f6; width: 20px; height: 20px; }
-        .date-weather-pill { font-size: 10px; color: #94a3b8; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; display: flex; gap: 6px; align-items: center; }
+        .topbar-title svg { color: var(--ios-blue); width: 22px; height: 22px; }
+        .date-weather-pill { font-size: 13px; color: var(--ios-gray-text); font-weight: 500; display: flex; gap: 6px; align-items: center; }
 
         .hud-pill {
-            display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(59, 130, 246, 0.3); padding: 6px 12px; border-radius: 8px;
-            cursor: pointer; transition: all 0.2s ease; z-index: 2;
+            display: flex; align-items: center; gap: 8px; background: rgba(0, 0, 0, 0.05);
+            padding: 6px 12px; border-radius: 12px;
+            cursor: pointer; transition: all 0.2s ease;
         }
-        .hud-pill:hover { background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.6); }
-        .hud-item { display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 900; color: #ffffff; }
-        .hud-divider { width: 1px; height: 14px; background: rgba(255, 255, 255, 0.2); }
+        .hud-pill:hover { background: rgba(0, 0, 0, 0.08); }
+        .hud-item { display: flex; align-items: center; gap: 4px; font-size: 14px; font-weight: 600; color: var(--ios-text); }
+        .hud-divider { width: 1px; height: 14px; background: rgba(0, 0, 0, 0.1); }
 
-        .kps-tabs-container { display: flex; justify-content: center; gap: 8px; margin-top: 15px; margin-bottom: 25px; position: relative; z-index: 50; flex-wrap: wrap; }
+        /* Segmented Control im iOS Style */
+        .kps-tabs-container { 
+            display: flex; background: var(--ios-gray-bg); padding: 3px; 
+            border-radius: 10px; margin: 10px auto 25px auto; max-width: 600px;
+        }
         .main-tab-btn {
-            background: #ffffff; border: 1px solid #cbd5e1; color: #64748b; padding: 12px 18px; border-radius: 12px; 
-            font-weight: 800; font-size: 13px; cursor: pointer; transition: all 0.2s ease; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.02); display: flex; align-items: center; gap: 6px; white-space: nowrap;
+            flex: 1; text-align: center; background: transparent; border: none; color: var(--ios-text); padding: 8px 4px; 
+            border-radius: 8px; font-weight: 500; font-size: 13px; cursor: pointer; transition: all 0.2s ease; 
+            display: flex; justify-content: center; align-items: center; gap: 4px; white-space: nowrap; opacity: 0.7;
         }
-        .main-tab-btn:hover { color: #0f172a; border-color: #0f172a; transform: translateY(-2px); }
-        .main-tab-btn.active { background: #0f172a; color: #fff; border-color: #0f172a; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.25); }
+        .main-tab-btn.active { 
+            background: var(--ios-card); color: var(--ios-text); opacity: 1; font-weight: 600;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.12), 0 3px 1px rgba(0,0,0,0.04); 
+        }
         
-        .tab-section { display: none; animation: fadeIn 0.3s ease; position: relative; z-index: 20; }
+        .tab-section { display: none; animation: fadeIn 0.3s ease; }
         .tab-section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* Cleane Cards im iOS Style */
         .kps-box {
-            background: #ffffff; padding: 20px; margin-bottom: 20px; border-radius: 16px; border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-top: 4px solid #0f172a; position: relative; overflow: hidden;
+            background: var(--ios-card); padding: 20px; margin-bottom: 16px; border-radius: 20px; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03); position: relative; overflow: hidden;
         }
-        .kps-box h3 { margin-top: 0; color: #0f172a; font-size: 18px; font-weight: 900; margin-bottom: 20px; border-left: 4px solid #3b82f6; padding-left: 10px; }
+        .kps-box h3 { margin-top: 0; color: var(--ios-text); font-size: 20px; font-weight: 700; margin-bottom: 16px; letter-spacing: -0.3px; }
 
+        /* Buttons im iOS Style */
         .kps-btn-main {
-            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); color: #ffffff;
-            border: none; padding: 16px 20px; border-radius: 12px; font-size: 15px; font-weight: 900; 
-            cursor: pointer; box-shadow: 0 4px 15px rgba(15, 23, 42, 0.25);
-            transition: all 0.2s ease; text-transform: uppercase; letter-spacing: 1px; width: 100%; display: block; text-align: center;
+            background: var(--ios-blue); color: #ffffff;
+            border: none; padding: 16px 20px; border-radius: 14px; font-size: 17px; font-weight: 600; 
+            cursor: pointer; transition: all 0.2s ease; width: 100%; display: block; text-align: center;
         }
-        .kps-btn-main:active { transform: scale(0.97); }
+        .kps-btn-main:active { transform: scale(0.97); opacity: 0.9; }
         
         .kps-btn-action { 
-            background: #f8fafc; border: 1px solid #cbd5e1; color: #334155; padding: 16px 15px; 
-            border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.2s; font-size: 13px; width: 100%; text-align: center;
+            background: var(--ios-bg); color: var(--ios-blue); padding: 16px 15px; 
+            border-radius: 14px; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 15px; width: 100%; text-align: center; border: none;
         }
-        .kps-btn-action:active { background: #e2e8f0; transform: scale(0.97); }
+        .kps-btn-action:active { background: #e5e5ea; transform: scale(0.97); }
 
         .kps-btn-loadmore {
-            background: transparent; border: 1px dashed #cbd5e1; color: #64748b; padding: 12px; 
-            border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.2s; font-size: 12px; width: 100%; text-align: center; margin-top: 10px;
+            background: transparent; color: var(--ios-blue); padding: 12px; 
+            border-radius: 14px; font-weight: 500; cursor: pointer; transition: 0.2s; font-size: 14px; width: 100%; text-align: center; margin-top: 10px; border: none;
         }
-        .kps-btn-loadmore:active { background: #f1f5f9; }
+        .kps-btn-loadmore:active { background: var(--ios-bg); }
         
         .accordion-content { transition: max-height 0.3s ease-out, opacity 0.2s ease-out; max-height: 0; opacity: 0; overflow: hidden; }
         .accordion-content.open { max-height: 1000px; opacity: 1; }
         .badge-icon { font-size: 30px; margin-bottom: 5px; }
         .badge-locked { filter: grayscale(100%); opacity: 0.3; }
 
+        /* Apple spezifische Farbanpassungen für Kalender & co */
+        .text-emerald-600 { color: var(--ios-green) !important; }
+        .bg-emerald-500 { background-color: var(--ios-green) !important; }
+        .text-teal-600 { color: var(--ios-teal) !important; }
+        .bg-teal-400 { background-color: var(--ios-teal) !important; }
+        .text-blue-600 { color: var(--ios-blue) !important; }
+        .bg-blue-600 { background-color: var(--ios-blue) !important; }
+
         @media (max-width: 640px) {
             .kps-topbar { padding: calc(env(safe-area-inset-top) + 10px) 15px 10px 15px; }
             .topbar-title { font-size: 18px; }
             .hud-pill { padding: 6px 10px; }
-            .hud-item { font-size: 12px; }
+            .hud-item { font-size: 13px; }
+            .main-tab-btn { font-size: 11px; padding: 6px 2px; }
         }
     </style>
 </head>
@@ -99,8 +126,8 @@
     <div class="kps-topbar">
         <div class="topbar-left">
             <h1 class="topbar-title">
-                <svg fill="currentColor" viewBox="0 0 24 24"><path d="M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22l1.43-1.43L16.29 22l2.14-2.14 1.43 1.43 1.43-1.43-1.43-1.43L22 16.29z"/></svg>
-                APEX TRACKER
+                <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg>
+                Fitness Tracker
             </h1>
             <div class="date-weather-pill">
                 <span id="currentDate">Lade...</span> <span>•</span> <span id="currentWeather">München</span>
@@ -118,42 +145,43 @@
             <button class="main-tab-btn active" id="btn-tab-tracker" onclick="window.switchTab('tracker')">🏋️‍♂️ Loggen</button>
             <button class="main-tab-btn" id="btn-tab-calendar" onclick="window.switchTab('calendar')">📊 Stats</button>
             <button class="main-tab-btn" id="btn-tab-plan" onclick="window.switchTab('plan')">📋 Plan</button>
-            <button class="main-tab-btn" id="btn-tab-karriere" onclick="window.switchTab('karriere')">🏅 Punkte & Erfolge</button>
+            <button class="main-tab-btn" id="btn-tab-karriere" onclick="window.switchTab('karriere')">🏅 Karriere</button>
         </div>
 
         <main>
             <div id="tab-tracker" class="tab-section active">
                 <div id="pendingContainer">
-                    <div class="kps-box" style="border-top-color: #3b82f6;">
-                        <div style="position: absolute; top: 0; right: 0; background: #eff6ff; color: #1e3a8a; font-size: 10px; font-weight: 900; padding: 4px 10px; border-bottom-left-radius: 8px; text-transform: uppercase;">
+                    <div class="kps-box">
+                        <div style="display: inline-block; background: #e5f0ff; color: #007aff; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 12px; text-transform: uppercase; margin-bottom: 8px;">
                             Heutiger Fokus
                         </div>
-                        <h2 class="text-3xl font-black text-slate-800 mt-2 mb-1" id="proposedWorkoutName">Lade...</h2>
-                        <p class="text-sm text-blue-600 mb-5 italic font-bold" id="motivationQuote">"Daten werden synchronisiert..."</p>
-                        <div style="background: #f8fafc; border-radius: 12px; padding: 15px; margin-bottom: 20px; border: 1px solid #e2e8f0;">
-                            <ul id="proposedWorkoutDetails" class="space-y-2 text-sm text-slate-700 font-semibold"></ul>
+                        <h2 class="text-3xl font-bold text-slate-900 mb-1" id="proposedWorkoutName">Lade...</h2>
+                        <p class="text-sm text-slate-500 mb-6 font-medium" id="motivationQuote">"Daten werden synchronisiert..."</p>
+                        <div style="background: var(--ios-bg); border-radius: 16px; padding: 16px; margin-bottom: 24px;">
+                            <ul id="proposedWorkoutDetails" class="space-y-3 text-sm text-slate-800 font-medium"></ul>
                         </div>
-                        <div class="flex gap-2">
-                            <button onclick="window.logSelectedWorkout('proposed')" class="kps-btn-main" style="flex: 2;">✓ ERLEDIGT</button>
-                            <button onclick="window.logRestDay()" class="kps-btn-action" style="flex: 1;">⏭ REST</button>
+                        <div class="flex gap-3">
+                            <button onclick="window.logSelectedWorkout('proposed')" class="kps-btn-main" style="flex: 2;">Erledigt</button>
+                            <button onclick="window.logRestDay()" class="kps-btn-action" style="flex: 1;">Rest Day</button>
                         </div>
                     </div>
                     <div class="kps-box">
-                        <h3 style="border-left-color: #94a3b8;">Alternatives Workout</h3>
-                        <div class="grid grid-cols-2 gap-2" id="manualButtons"></div>
+                        <h3>Alternatives Workout</h3>
+                        <div class="grid grid-cols-2 gap-3" id="manualButtons"></div>
                     </div>
                 </div>
 
                 <div id="doneContainer" class="hidden">
-                    <div class="kps-box" style="text-align: center; border-top-color: #10b981;">
-                        <div style="width: 70px; height: 70px; background: #dcfce7; color: #16a34a; font-size: 35px; line-height: 70px; border-radius: 50%; margin: 0 auto 15px auto;">✓</div>
-                        <h2 class="text-2xl font-black text-slate-800 mb-2">Stark abgeliefert!</h2>
+                    <div class="kps-box" style="text-align: center;">
+                        <div style="width: 80px; height: 80px; background: #e4f8eb; color: var(--ios-green); font-size: 40px; line-height: 80px; border-radius: 50%; margin: 0 auto 20px auto;">✓</div>
+                        <h2 class="text-2xl font-bold text-slate-900 mb-2">Stark abgeliefert!</h2>
                         <p class="text-slate-500 text-sm mb-6 font-medium">Erhole dich gut und genieß den restlichen Tag.</p>
-                        <button onclick="window.undoToday()" class="text-xs text-slate-400 hover:text-red-500 underline font-bold bg-transparent border-none p-0 m-0">Oh, vertippt (Eintrag löschen)</button>
-                        <div class="mt-8 pt-5 border-t border-slate-100 text-left">
-                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 text-center">Morgen anstehend</p>
-                            <div class="bg-slate-50 border border-slate-200 rounded-lg p-3 flex items-center justify-center">
-                                <h3 class="text-lg font-black text-slate-800 m-0 p-0 border-none" id="tomorrowWorkoutPreview">Lade...</h3>
+                        <button onclick="window.undoToday()" class="text-sm text-slate-400 hover:text-red-500 font-medium bg-transparent border-none p-0 m-0">Eintrag rückgängig machen</button>
+                        
+                        <div class="mt-8 pt-6 border-t border-slate-100 text-left">
+                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3 text-center">Morgen anstehend</p>
+                            <div class="bg-slate-50 rounded-xl p-4 flex items-center justify-center">
+                                <h3 class="text-lg font-bold text-slate-900 m-0 p-0 border-none" id="tomorrowWorkoutPreview">Lade...</h3>
                             </div>
                         </div>
                     </div>
@@ -162,122 +190,122 @@
 
             <div id="tab-calendar" class="tab-section">
                 <div class="kps-box">
-                    <div class="flex justify-between items-center mb-5">
-                        <button onclick="window.changeMonth(-1)" class="kps-btn-action" style="width: auto; padding: 8px 12px;">❮</button>
-                        <h3 style="margin: 0; border: none; padding: 0;" id="monthYearDisplay">Lade Monat...</h3>
-                        <button onclick="window.changeMonth(1)" class="kps-btn-action" style="width: auto; padding: 8px 12px;">❯</button>
+                    <div class="flex justify-between items-center mb-6">
+                        <button onclick="window.changeMonth(-1)" class="kps-btn-action" style="width: auto; padding: 8px 16px;">❮</button>
+                        <h3 style="margin: 0; font-size: 18px;" id="monthYearDisplay">Lade Monat...</h3>
+                        <button onclick="window.changeMonth(1)" class="kps-btn-action" style="width: auto; padding: 8px 16px;">❯</button>
                     </div>
-                    <div class="grid grid-cols-7 gap-1 text-center text-[10px] font-black text-slate-400 mb-2">
+                    <div class="grid grid-cols-7 gap-1 text-center text-[11px] font-semibold text-slate-400 mb-2">
                         <div>MO</div><div>DI</div><div>MI</div><div>DO</div><div>FR</div><div>SA</div><div>SO</div>
                     </div>
-                    <div class="grid grid-cols-7 gap-1" id="calendarGrid"></div>
-                    <div class="flex justify-center gap-4 mt-4 text-[10px] font-bold text-slate-500 uppercase">
-                        <span class="flex items-center gap-1"><div class="w-2.5 h-2.5 bg-emerald-500 rounded-sm"></div> Kraft</span>
-                        <span class="flex items-center gap-1"><div class="w-2.5 h-2.5 bg-teal-400 rounded-sm"></div> Cardio</span>
-                        <span class="flex items-center gap-1"><div class="w-2.5 h-2.5 bg-slate-100 border border-slate-200 rounded-sm"></div> Leer / Rest</span>
+                    <div class="grid grid-cols-7 gap-2" id="calendarGrid"></div>
+                    <div class="flex justify-center gap-4 mt-5 text-[11px] font-semibold text-slate-500">
+                        <span class="flex items-center gap-1"><div class="w-2.5 h-2.5 bg-emerald-500 rounded-full"></div> Kraft</span>
+                        <span class="flex items-center gap-1"><div class="w-2.5 h-2.5 bg-teal-400 rounded-full"></div> Cardio</span>
+                        <span class="flex items-center gap-1"><div class="w-2.5 h-2.5 bg-slate-200 rounded-full"></div> Rest</span>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4 mb-5">
-                    <div class="kps-box" style="padding: 15px; margin: 0;">
-                        <h4 class="text-[10px] font-black text-slate-800 uppercase tracking-widest mb-2">Woche <span class="text-slate-400">(Aktuell)</span></h4>
-                        <div class="text-3xl font-black text-slate-800 mb-2" id="statWeekTotal">0</div>
-                        <div class="space-y-1">
-                            <div class="flex justify-between text-xs font-bold"><span class="text-slate-500">Kraft:</span><span class="text-emerald-600" id="statWeekStrength">0</span></div>
-                            <div class="flex justify-between text-xs font-bold"><span class="text-slate-500">Cardio:</span><span class="text-teal-600" id="statWeekCardio">0</span></div>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div class="kps-box" style="padding: 16px; margin: 0;">
+                        <h4 class="text-[11px] font-semibold text-slate-500 uppercase tracking-wide mb-2">Woche</h4>
+                        <div class="text-3xl font-bold text-slate-900 mb-3" id="statWeekTotal">0</div>
+                        <div class="space-y-1.5">
+                            <div class="flex justify-between text-sm font-medium"><span class="text-slate-500">Kraft</span><span class="text-emerald-600 font-bold" id="statWeekStrength">0</span></div>
+                            <div class="flex justify-between text-sm font-medium"><span class="text-slate-500">Cardio</span><span class="text-teal-600 font-bold" id="statWeekCardio">0</span></div>
                         </div>
                     </div>
-                    <div class="kps-box" style="padding: 15px; margin: 0;">
-                        <h4 class="text-[10px] font-black text-slate-800 uppercase tracking-widest mb-2">Monat <span class="text-slate-400" id="selectedMonthLabel"></span></h4>
-                        <div class="text-3xl font-black text-slate-800 mb-2" id="statMonthTotal">0</div>
-                        <div class="space-y-1">
-                            <div class="flex justify-between text-xs font-bold"><span class="text-slate-500">Kraft:</span><span class="text-emerald-600" id="statMonthStrength">0</span></div>
-                            <div class="flex justify-between text-xs font-bold"><span class="text-slate-500">Cardio:</span><span class="text-teal-600" id="statMonthCardio">0</span></div>
+                    <div class="kps-box" style="padding: 16px; margin: 0;">
+                        <h4 class="text-[11px] font-semibold text-slate-500 uppercase tracking-wide mb-2">Monat <span class="text-slate-400 font-normal" id="selectedMonthLabel"></span></h4>
+                        <div class="text-3xl font-bold text-slate-900 mb-3" id="statMonthTotal">0</div>
+                        <div class="space-y-1.5">
+                            <div class="flex justify-between text-sm font-medium"><span class="text-slate-500">Kraft</span><span class="text-emerald-600 font-bold" id="statMonthStrength">0</span></div>
+                            <div class="flex justify-between text-sm font-medium"><span class="text-slate-500">Cardio</span><span class="text-teal-600 font-bold" id="statMonthCardio">0</span></div>
                         </div>
                     </div>
                 </div>
 
                 <div class="kps-box">
-                    <h3>Muskel-Analyse</h3>
-                    <div id="statMonthMuscles" class="flex flex-wrap gap-2 mb-5"></div>
+                    <h3>Muskel-Fokus</h3>
+                    <div id="statMonthMuscles" class="flex flex-wrap gap-2 mb-6"></div>
                     <div class="flex gap-3">
-                        <div class="flex-1 bg-slate-50 border border-slate-100 rounded-xl p-2 text-center">
-                            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-1">Status</p>
-                            <p class="text-sm font-black text-blue-600" id="statMuscleMax">-</p>
+                        <div class="flex-1 bg-slate-50 rounded-xl p-3 text-center">
+                            <p class="text-[11px] text-slate-500 font-semibold uppercase tracking-wide mb-1">Status</p>
+                            <p class="text-sm font-bold text-blue-600" id="statMuscleMax">-</p>
                         </div>
-                        <div class="flex-1 bg-slate-50 border border-slate-100 rounded-xl p-2 text-center">
-                            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-1">Abweichung</p>
-                            <p class="text-sm font-black text-orange-600" id="statMuscleMin">-</p>
+                        <div class="flex-1 bg-slate-50 rounded-xl p-3 text-center">
+                            <p class="text-[11px] text-slate-500 font-semibold uppercase tracking-wide mb-1">Abweichung</p>
+                            <p class="text-sm font-bold text-orange-500" id="statMuscleMin">-</p>
                         </div>
                     </div>
                 </div>
                 
                 <div class="kps-box">
                     <h3>Protokoll</h3>
-                    <div id="logContainer" class="space-y-2"></div>
+                    <div id="logContainer" class="space-y-3"></div>
                     <button id="loadMoreLogsBtn" onclick="window.loadMoreLogs()" class="kps-btn-loadmore hidden">Mehr laden...</button>
                 </div>
             </div>
 
             <div id="tab-plan" class="tab-section">
                 <div class="kps-box">
-                    <h3>Der Masterplan</h3>
-                    <p class="text-sm text-slate-500 mb-5 font-medium">Dein Rhythmus für maximales Wachstum und Regeneration.</p>
+                    <h3>Dein Rhythmus</h3>
+                    <p class="text-sm text-slate-500 mb-5 font-medium">Optimal ausgelegt für Wachstum und Regeneration.</p>
                     
-                    <div class="grid grid-cols-7 gap-1 text-center mb-5">
-                        <div class="bg-white rounded-lg p-1 shadow-sm border border-slate-200 flex flex-col items-center justify-center h-14"><p class="text-[9px] text-slate-400 font-bold">MO</p><p class="text-xs font-black text-slate-800">OK</p></div>
-                        <div class="bg-white rounded-lg p-1 shadow-sm border border-slate-200 flex flex-col items-center justify-center h-14"><p class="text-[9px] text-slate-400 font-bold">DI</p><p class="text-xs font-black text-slate-800">UK</p></div>
-                        <div class="bg-teal-50 rounded-lg p-1 border border-teal-100 flex flex-col items-center justify-center h-14 w-full overflow-hidden">
-                            <p class="text-[9px] text-teal-600 font-bold">MI</p>
-                            <div class="flex flex-col items-center w-full"><p class="text-[7px] font-black text-teal-700 leading-none">CARDIO</p></div>
+                    <div class="grid grid-cols-7 gap-2 text-center mb-2">
+                        <div class="bg-white rounded-xl p-1 shadow-sm border border-slate-100 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-400 font-semibold">MO</p><p class="text-xs font-bold text-slate-800">OK</p></div>
+                        <div class="bg-white rounded-xl p-1 shadow-sm border border-slate-100 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-400 font-semibold">DI</p><p class="text-xs font-bold text-slate-800">UK</p></div>
+                        <div class="bg-teal-50 rounded-xl p-1 flex flex-col items-center justify-center h-16 w-full overflow-hidden">
+                            <p class="text-[10px] text-teal-500 font-semibold">MI</p>
+                            <div class="flex flex-col items-center w-full"><p class="text-[8px] font-bold text-teal-600 leading-none">CARDIO</p></div>
                         </div>
-                        <div class="bg-white rounded-lg p-1 shadow-sm border border-slate-200 flex flex-col items-center justify-center h-14"><p class="text-[9px] text-slate-400 font-bold">DO</p><p class="text-xs font-black text-slate-800">Push</p></div>
-                        <div class="bg-white rounded-lg p-1 shadow-sm border border-slate-200 flex flex-col items-center justify-center h-14"><p class="text-[9px] text-slate-400 font-bold">FR</p><p class="text-xs font-black text-slate-800">Pull</p></div>
-                        <div class="bg-white rounded-lg p-1 shadow-sm border border-slate-200 flex flex-col items-center justify-center h-14"><p class="text-[9px] text-slate-400 font-bold">SA</p><p class="text-xs font-black text-slate-800">Beine</p></div>
-                        <div class="bg-slate-100 rounded-lg p-1 border border-slate-200 flex flex-col items-center justify-center h-14 w-full overflow-hidden">
-                            <p class="text-[9px] text-slate-500 font-bold">SO</p>
-                            <div class="flex flex-col items-center w-full"><p class="text-[7px] font-black text-slate-700 leading-none">REST</p></div>
+                        <div class="bg-white rounded-xl p-1 shadow-sm border border-slate-100 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-400 font-semibold">DO</p><p class="text-xs font-bold text-slate-800">Push</p></div>
+                        <div class="bg-white rounded-xl p-1 shadow-sm border border-slate-100 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-400 font-semibold">FR</p><p class="text-xs font-bold text-slate-800">Pull</p></div>
+                        <div class="bg-white rounded-xl p-1 shadow-sm border border-slate-100 flex flex-col items-center justify-center h-16"><p class="text-[10px] text-slate-400 font-semibold">SA</p><p class="text-xs font-bold text-slate-800">Beine</p></div>
+                        <div class="bg-slate-100 rounded-xl p-1 flex flex-col items-center justify-center h-16 w-full overflow-hidden">
+                            <p class="text-[10px] text-slate-500 font-semibold">SO</p>
+                            <div class="flex flex-col items-center w-full"><p class="text-[8px] font-bold text-slate-600 leading-none">REST</p></div>
                         </div>
                     </div>
                 </div>
-                <div id="planLibraryContainer"></div>
+                <div id="planLibraryContainer" class="space-y-4"></div>
             </div>
 
             <div id="tab-karriere" class="tab-section">
-                <div class="kps-box" style="border-top-color: #f59e0b;">
-                    <h3>🏅 Erreichte Meilensteine</h3>
-                    <p class="text-xs text-slate-500 mb-5">Auszeichnungen für langfristige Kontinuität.</p>
-                    <div class="grid grid-cols-4 gap-2 text-center" id="badgesMilestonesContainer"></div>
+                <div class="kps-box">
+                    <h3>🏆 Erreichte Meilensteine</h3>
+                    <p class="text-sm text-slate-500 mb-5 font-medium">Auszeichnungen für langfristige Kontinuität.</p>
+                    <div class="grid grid-cols-4 gap-3 text-center" id="badgesMilestonesContainer"></div>
                 </div>
                 
-                <div class="kps-box" style="border-top-color: #3b82f6;">
+                <div class="kps-box">
                     <div class="flex justify-between items-start mb-5 flex-wrap gap-2">
                         <div>
                             <h3 style="border:none; padding:0; margin:0; font-size:20px;">Karriere-Fortschritt</h3>
                         </div>
                         <div class="text-right">
-                            <span class="bg-blue-100 text-blue-700 font-black text-[10px] px-3 py-1 rounded-full whitespace-nowrap" id="careerRankName">Lade...</span>
+                            <span class="bg-blue-50 text-blue-600 font-bold text-[11px] px-3 py-1.5 rounded-full whitespace-nowrap" id="careerRankName">Lade...</span>
                         </div>
                     </div>
-                    <div class="flex justify-between items-center mb-2 text-xs font-black">
+                    <div class="flex justify-between items-center mb-3 text-sm font-semibold">
                         <span class="text-slate-500">Nächste Stufe in:</span>
                         <span class="text-blue-600"><span id="careerNextRankPts">0</span> Pts</span>
                     </div>
-                    <div class="w-full h-3 bg-slate-200 rounded-full overflow-hidden">
-                        <div class="h-full bg-blue-600 rounded-full transition-all duration-500" id="careerProgressFill" style="width: 0%"></div>
+                    <div class="w-full h-4 bg-slate-100 rounded-full overflow-hidden">
+                        <div class="h-full bg-blue-500 rounded-full transition-all duration-500" id="careerProgressFill" style="width: 0%"></div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-3 mb-5">
-                    <div class="kps-box" style="padding: 15px; margin: 0;">
-                        <div class="badge-icon" style="font-size:20px;">🔥</div>
-                        <p class="text-xl font-black text-slate-800" id="statMaxStreak">0</p>
-                        <p class="text-[10px] text-slate-500 font-bold uppercase">Max. Streak</p>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div class="kps-box" style="padding: 16px; margin: 0; text-align: center;">
+                        <div class="badge-icon" style="font-size:24px;">🔥</div>
+                        <p class="text-2xl font-bold text-slate-900" id="statMaxStreak">0</p>
+                        <p class="text-[11px] text-slate-500 font-semibold uppercase mt-1">Max. Streak</p>
                     </div>
-                    <div class="kps-box" style="padding: 15px; margin: 0;">
-                        <div class="badge-icon" style="font-size:20px;">📅</div>
-                        <p class="text-xl font-black text-slate-800" id="statLoggingConsistency">100%</p>
-                        <p class="text-[10px] text-slate-500 font-bold uppercase">Disziplin-Score</p>
+                    <div class="kps-box" style="padding: 16px; margin: 0; text-align: center;">
+                        <div class="badge-icon" style="font-size:24px;">📅</div>
+                        <p class="text-2xl font-bold text-slate-900" id="statLoggingConsistency">100%</p>
+                        <p class="text-[11px] text-slate-500 font-semibold uppercase mt-1">Disziplin-Score</p>
                     </div>
                 </div>
 
@@ -287,8 +315,8 @@
                 </div>
 
                 <div class="kps-box">
-                    <h3>Punkte-Historie</h3>
-                    <div id="pointsLogContainer" class="space-y-2"></div>
+                    <h3>Historie</h3>
+                    <div id="pointsLogContainer" class="space-y-3"></div>
                     <button id="loadMorePointsBtn" onclick="window.loadMorePoints()" class="kps-btn-loadmore hidden">Mehr laden...</button>
                 </div>
             </div>
@@ -426,31 +454,31 @@
 
         function renderManualButtons() {
             document.getElementById('manualButtons').innerHTML = routine.map(r => `
-                <button onclick="window.logSelectedWorkout('${r.name}')" class="kps-btn-action" style="font-size: 13px;">${r.name}</button>
+                <button onclick="window.logSelectedWorkout('${r.name}')" class="kps-btn-action" style="font-size: 14px;">${r.name}</button>
             `).join('');
         }
 
         function renderLibrary() {
             document.getElementById('planLibraryContainer').innerHTML = routine.map((r, idx) => {
-                let borderColor = r.color === "blue" ? "#3b82f6" : (r.color === "teal" ? "#14b8a6" : "#06b6d4");
+                let badgeColor = r.color === "blue" ? "bg-blue-100 text-blue-700" : (r.color === "teal" ? "bg-teal-100 text-teal-700" : "bg-cyan-100 text-cyan-700");
                 return `
-                <div class="kps-box" style="padding:0; border-top:none; border-left: 4px solid ${borderColor}; overflow: hidden;">
-                    <div onclick="window.toggleAccordion(${idx})" class="p-4 flex justify-between items-center cursor-pointer hover:bg-slate-50">
+                <div class="kps-box" style="padding:0;">
+                    <div onclick="window.toggleAccordion(${idx})" class="p-4 flex justify-between items-center cursor-pointer hover:bg-slate-50 transition-colors">
                         <div>
                             <h3 style="border:none; padding:0; margin:0; font-size:18px;">${r.name}</h3>
-                            <p class="text-[10px] text-slate-400 font-bold mt-1 uppercase">${r.library.length} Übungen</p>
+                            <span class="inline-block mt-2 text-[10px] font-bold px-2 py-1 rounded-full ${badgeColor} uppercase tracking-wide">${r.library.length} Übungen</span>
                         </div>
-                        <svg id="chevron-${idx}" class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+                        <svg id="chevron-${idx}" class="w-5 h-5 text-slate-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
                     </div>
-                    <div id="accordion-${idx}" class="accordion-content px-4 pb-4 space-y-2 bg-slate-50 border-t border-slate-100">
-                        <p class="text-[10px] font-black italic mb-2 mt-1 text-slate-500">"${r.motto}"</p>
+                    <div id="accordion-${idx}" class="accordion-content px-4 pb-4 space-y-3 border-t border-slate-100 bg-slate-50">
+                        <p class="text-[12px] font-medium italic mb-3 mt-3 text-slate-500">"${r.motto}"</p>
                         ${r.library.map(ex => `
-                            <div style="background:#fff; border-radius:8px; padding:12px; border:1px solid #e2e8f0;">
+                            <div style="background:#fff; border-radius:12px; padding:14px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
                                 <div class="flex justify-between items-start mb-1">
-                                    <p class="text-xs font-bold text-slate-800">${ex.name}</p>
-                                    <span class="text-[9px] font-black px-1.5 py-0.5 rounded uppercase bg-slate-100 text-slate-600 border border-slate-200">${ex.sets}</span>
+                                    <p class="text-sm font-bold text-slate-900">${ex.name}</p>
+                                    <span class="text-[10px] font-bold px-2 py-1 rounded-full uppercase bg-slate-100 text-slate-600">${ex.sets}</span>
                                 </div>
-                                <p class="text-[10px] text-slate-500 leading-relaxed font-medium">${ex.desc}</p>
+                                <p class="text-[12px] text-slate-500 leading-relaxed">${ex.desc}</p>
                             </div>
                         `).join('')}
                     </div>
@@ -531,25 +559,25 @@
             for (let day = 1; day <= totalDays; day++) {
                 const dateKey = `${displayYear}-${String(displayMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                 const dayDiv = document.createElement('div');
-                dayDiv.className = "h-8 w-8 mx-auto rounded flex items-center justify-center text-[10px] font-bold ";
+                dayDiv.className = "h-9 w-9 mx-auto rounded-full flex items-center justify-center text-[12px] font-semibold transition-all ";
                 dayDiv.innerText = day;
 
                 if (historyMap[dateKey]) {
                     const data = historyMap[dateKey];
                     combinedLogData.push({ date: dateKey, type: data.type, status: data.status, reason: data.reason, id: data.id });
-                    if (data.status === 'done') dayDiv.className += data.type.includes('Cardio') ? "bg-teal-400 text-white shadow-sm" : "bg-emerald-500 text-white shadow-sm";
-                    else dayDiv.className += "bg-slate-100 text-slate-400 border border-slate-200";
+                    if (data.status === 'done') dayDiv.className += data.type.includes('Cardio') ? "bg-teal-400 text-white" : "bg-emerald-500 text-white";
+                    else dayDiv.className += "bg-slate-200 text-slate-500";
                 } else {
                     if(dateKey < todayKey && dateKey >= firstAppUseDate) {
-                        dayDiv.className += "bg-slate-100 text-slate-400 border border-slate-200 opacity-60";
+                        dayDiv.className += "bg-slate-100 text-slate-400 opacity-60";
                         combinedLogData.push({ date: dateKey, type: "Rest Day (Auto)", status: "rest", id: `auto-${dateKey}` });
-                    } else dayDiv.className += "bg-white text-slate-300 border border-slate-100";
+                    } else dayDiv.className += "bg-white text-slate-300";
                 }
                 grid.appendChild(dayDiv);
             }
 
             if(combinedLogData.length === 0) {
-                logContainer.innerHTML = `<p class="text-xs text-slate-400 italic py-2">Keine Einträge.</p>`;
+                logContainer.innerHTML = `<p class="text-sm text-slate-400 py-2">Noch keine Einträge vorhanden.</p>`;
                 document.getElementById('loadMoreLogsBtn').classList.add('hidden');
             } else {
                 let sorted = combinedLogData.sort((a,b) => b.date.localeCompare(a.date));
@@ -558,11 +586,11 @@
                 logContainer.innerHTML = visible.map(item => {
                     const isRestOrSkip = (item.status === 'rest' || item.status === 'skipped');
                     let titleStyle = isRestOrSkip ? "text-slate-500 font-medium" : (item.type.includes('Cardio') ? "text-teal-600 font-bold" : "text-emerald-600 font-bold");
-                    let subText = item.reason ? `GRUND: ${item.reason}` : item.date.split('-').reverse().join('.');
+                    let subText = item.reason ? `Grund: ${item.reason}` : item.date.split('-').reverse().join('.');
                     return `
-                        <div class="bg-slate-50 p-3 rounded-lg flex justify-between items-center border border-slate-100">
-                            <div><p class="${titleStyle} text-sm">${item.type}</p><p class="text-[9px] text-slate-400 mt-1 font-bold uppercase">${subText}</p></div>
-                            ${!item.id.startsWith('auto-') ? `<button onclick="window.deleteEntry('${item.id}')" class="text-slate-400 hover:text-red-500"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>` : ''}
+                        <div class="bg-slate-50 p-4 rounded-xl flex justify-between items-center border border-slate-100">
+                            <div><p class="${titleStyle} text-[15px] mb-1">${item.type}</p><p class="text-[11px] text-slate-400 font-medium uppercase">${subText}</p></div>
+                            ${!item.id.startsWith('auto-') ? `<button onclick="window.deleteEntry('${item.id}')" class="text-slate-300 hover:text-red-500 transition-colors p-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>` : ''}
                         </div>`;
                 }).join('');
 
@@ -575,16 +603,22 @@
             document.getElementById('selectedMonthLabel').innerText = `(${monthNames[displayMonth]})`;
             const selectedMonthStr = `${displayYear}-${String(displayMonth + 1).padStart(2, '0')}`;
             let muscleHits = { "Brust":0, "Rücken":0, "Schultern":0, "Trizeps":0, "Bizeps":0, "Beine":0 };
-            let totalDoneInMonth = 0;
             
+            // BUGFIX: Zähler für den Monat hinzugefügt
+            let totalDoneInMonth = 0;
+            let monthStats = { strength: 0, cardio: 0 };
             let weekStats = { total: 0, strength: 0, cardio: 0 };
+            
             const today = new Date(); const dayOfWeek = today.getDay() === 0 ? 7 : today.getDay(); 
             const startOfWeek = new Date(today); startOfWeek.setDate(today.getDate() - dayOfWeek + 1);
             const startOfWeekStr = `${startOfWeek.getFullYear()}-${String(startOfWeek.getMonth() + 1).padStart(2, '0')}-${String(startOfWeek.getDate()).padStart(2, '0')}`;
 
             workoutsList.forEach(w => {
+                // Monats-Stats
                 if(w.status === 'done' && w.date.startsWith(selectedMonthStr)) {
                     totalDoneInMonth++;
+                    if(w.type.includes('Cardio')) monthStats.cardio++; else monthStats.strength++;
+
                     if(!w.type.includes('Cardio')) { 
                         if(w.type === "Oberkörper") { muscleHits["Brust"]++; muscleHits["Rücken"]++; muscleHits["Schultern"]++; muscleHits["Trizeps"]++; muscleHits["Bizeps"]++; }
                         if(w.type === "Unterkörper" || w.type === "Beine") { muscleHits["Beine"]++; }
@@ -592,38 +626,44 @@
                         if(w.type === "Pull") { muscleHits["Rücken"]++; muscleHits["Bizeps"]++; }
                     }
                 }
+                // Wochen-Stats
                 if(w.status === 'done' && w.date >= startOfWeekStr) {
                     weekStats.total++;
                     if(w.type && w.type.includes('Cardio')) weekStats.cardio++; else weekStats.strength++;
                 }
             });
             
+            // DOM Update für Woche
             document.getElementById('statWeekTotal').innerText = weekStats.total;
             document.getElementById('statWeekStrength').innerText = weekStats.strength;
             document.getElementById('statWeekCardio').innerText = weekStats.cardio;
+            
+            // DOM Update für Monat (Bugfix angewandt)
             document.getElementById('statMonthTotal').innerText = totalDoneInMonth;
+            document.getElementById('statMonthStrength').innerText = monthStats.strength;
+            document.getElementById('statMonthCardio').innerText = monthStats.cardio;
 
             let activeMuscles = Object.entries(muscleHits).filter(([n,c]) => c > 0).sort((a,b) => b[1] - a[1]);
             const muscleStatsEl = document.getElementById('statMonthMuscles');
             if (activeMuscles.length > 0) {
-                muscleStatsEl.innerHTML = activeMuscles.map(([name, count]) => `<span class="bg-emerald-50 text-emerald-700 border border-emerald-100 text-[10px] px-2 py-1 rounded font-black">${name}: ${count}x</span>`).join('');
+                muscleStatsEl.innerHTML = activeMuscles.map(([name, count]) => `<span class="bg-blue-50 text-blue-700 text-[11px] px-2.5 py-1 rounded-full font-semibold">${name}: ${count}x</span>`).join('');
                 let maxHits = activeMuscles[0][1]; let secondMaxHits = activeMuscles.length > 1 ? activeMuscles[1][1] : 0;
                 if ((maxHits - secondMaxHits) >= 2) document.getElementById('statMuscleMax').innerText = activeMuscles[0][0] + " Fokus";
-                else document.getElementById('statMuscleMax').innerText = "Balanced";
+                else document.getElementById('statMuscleMax').innerText = "Ausgeglichen";
 
                 let avgHits = activeMuscles.reduce((sum, [n,c]) => sum + c, 0) / activeMuscles.length;
                 let neglected = activeMuscles.filter(([n,c]) => c < (avgHits * 0.5) && avgHits > 1);
                 if(neglected.length > 0 && totalDoneInMonth >= 5) document.getElementById('statMuscleMin').innerText = neglected[neglected.length - 1][0];
-                else document.getElementById('statMuscleMin').innerText = "Ausgeglichen";
+                else document.getElementById('statMuscleMin').innerText = "Optimal";
             } else {
-                muscleStatsEl.innerHTML = `<span class="text-xs text-slate-400">Keine Daten</span>`;
+                muscleStatsEl.innerHTML = `<span class="text-sm text-slate-400">Keine Daten in diesem Monat</span>`;
                 document.getElementById('statMuscleMax').innerText = "-"; document.getElementById('statMuscleMin').innerText = "-";
             }
         }
 
         const pointRules = [
             { desc: "✅ Krafttraining", pts: "+15" }, { desc: "🏃 Cardio", pts: "+15" },
-            { desc: "⏭ Ruhetag geloggt", pts: "+5" }, { desc: "🏅 Meilenstein", pts: "+100" }
+            { desc: "⏭ Ruhetag", pts: "+5" }, { desc: "🏅 Meilenstein", pts: "+100" }
         ];
 
         const milestoneBadges = [
@@ -637,9 +677,9 @@
 
         function renderKarriereInitial() {
             document.getElementById('pointsBreakdownContainer').innerHTML = pointRules.map(r => `
-                <div class="bg-slate-50 border border-slate-100 rounded-lg p-2 text-center">
-                    <p class="text-[10px] font-black text-slate-600">${r.desc}</p>
-                    <p class="text-lg font-black text-blue-600">${r.pts}</p>
+                <div class="bg-slate-50 rounded-xl p-3 text-center">
+                    <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wide">${r.desc}</p>
+                    <p class="text-lg font-bold text-blue-600 mt-1">${r.pts}</p>
                 </div>
             `).join('');
         }
@@ -690,8 +730,8 @@
             if(badges) {
                 badges.innerHTML = milestoneBadges.map(b => `
                     <div class="${b.rule(tDone, pts, bestStreak) ? '' : 'badge-locked'}">
-                        <div class="badge-icon text-2xl">${b.icon}</div>
-                        <p class="text-[9px] font-bold text-slate-800 leading-tight">${b.name}</p>
+                        <div class="badge-icon text-3xl mb-1">${b.icon}</div>
+                        <p class="text-[10px] font-semibold text-slate-700 leading-tight">${b.name}</p>
                     </div>`).join('');
             }
 
@@ -701,17 +741,17 @@
             const pLog = document.getElementById('pointsLogContainer');
             if (pLog) {
                 if (history.length === 0) {
-                    pLog.innerHTML = `<p class="text-xs text-slate-400 italic py-2">Keine Punkte.</p>`;
+                    pLog.innerHTML = `<p class="text-sm text-slate-400 py-2">Noch keine Punkte gesammelt.</p>`;
                     document.getElementById('loadMorePointsBtn').classList.add('hidden');
                 } else {
                     let rev = history.reverse(); let vis = rev.slice(0, visiblePoints);
                     pLog.innerHTML = vis.map(item => `
-                        <div class="bg-slate-50 border border-slate-100 rounded-lg p-2 flex justify-between items-center shadow-sm">
-                            <div class="flex items-center gap-2">
-                                ${item.date ? `<span class="text-[9px] font-black text-slate-400">${item.date}</span>` : ""}
-                                <p class="text-xs font-bold text-slate-700">${item.action}</p>
+                        <div class="bg-slate-50 rounded-xl p-3 flex justify-between items-center">
+                            <div class="flex items-center gap-3">
+                                ${item.date ? `<span class="text-[11px] font-bold text-slate-400 w-10">${item.date}</span>` : ""}
+                                <p class="text-[14px] font-semibold text-slate-800">${item.action}</p>
                             </div>
-                            <p class="text-blue-600 font-black text-sm">${item.pts}</p>
+                            <p class="text-blue-600 font-bold text-[15px]">${item.pts}</p>
                         </div>`).join('');
                     if(rev.length > visiblePoints) document.getElementById('loadMorePointsBtn').classList.remove('hidden');
                     else document.getElementById('loadMorePointsBtn').classList.add('hidden');
@@ -731,7 +771,7 @@
                 if (proposedWorkout) {
                     document.getElementById('proposedWorkoutName').innerText = proposedWorkout.name;
                     document.getElementById('motivationQuote').innerText = isDoneToday ? `"Muskeln wachsen in der Ruhephase."` : `"${proposedWorkout.motto}"`;
-                    document.getElementById('proposedWorkoutDetails').innerHTML = proposedWorkout.exercises.map(ex => `<li class="flex items-center gap-2"><div class="w-1.5 h-1.5 bg-blue-600 rounded-full"></div>${ex}</li>`).join('');
+                    document.getElementById('proposedWorkoutDetails').innerHTML = proposedWorkout.exercises.map(ex => `<li class="flex items-center gap-3"><div class="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>${ex}</li>`).join('');
                 }
 
                 if(isDoneToday) {
@@ -754,3 +794,5 @@
     </script>
 </body>
 </html>
+
+```
