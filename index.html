@@ -22,7 +22,7 @@
             margin: 0; padding: 0; color: var(--ios-text);
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             overflow-x: hidden; 
-            padding-top: calc(env(safe-area-inset-top) + 104px); /* Perfekt ausbalancierter Abstand Desktop */
+            padding-top: calc(env(safe-area-inset-top) + 94px); /* Reduzierter Abstand nach oben für Desktop */
             padding-bottom: 60px;
             -webkit-font-smoothing: antialiased;
             font-size: 16px;
@@ -77,7 +77,7 @@
         .hud-item { display: flex; align-items: center; gap: 4px; font-size: 16px; font-weight: 700; color: var(--ios-text); }
         .hud-divider { width: 1.5px; height: 16px; background: rgba(0, 0, 0, 0.1); border-radius: 2px; }
 
-        /* Segmented Control im iOS Style */
+        /* Segmented Control im iOS Style - Emojis only & etwas kleiner/harmonischer */
         .kps-tabs-container { 
             display: flex; background: var(--ios-gray-bg); padding: 4px; 
             border-radius: 99px; 
@@ -155,8 +155,9 @@
 
         @media (max-width: 640px) {
             body {
-                /* Exakte Berechnung für perfekte Symmetrie auf dem Handy */
-                padding-top: calc(env(safe-area-inset-top) + 84px);
+                /* Exakte Berechnung für perfekte Symmetrie auf dem Handy. 
+                   Reduziert den Platz über den Buttons, sodass er ca. den 16px nach unten entspricht */
+                padding-top: calc(env(safe-area-inset-top) + 74px); 
             }
             .kps-topbar { padding: calc(env(safe-area-inset-top) + 12px) 16px 12px 16px; }
             .topbar-title { font-size: 22px; }
@@ -164,7 +165,7 @@
             .hud-item { font-size: 15px; }
             .kps-box { padding: 20px; border-radius: 24px; }
             .kps-tabs-container { 
-                margin: 0 auto 16px auto; /* 16px nach unten zur Box, nach oben regelt der Body */
+                margin: 0 auto 16px auto; /* 0px Abstand nach oben (regelt der Body), 16px nach unten */
             }
         }
     </style>
