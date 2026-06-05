@@ -22,7 +22,7 @@
             margin: 0; padding: 0; color: var(--ios-text);
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             overflow-x: hidden; 
-            padding-top: calc(env(safe-area-inset-top) + 94px); /* Reduzierter Abstand nach oben für Desktop */
+            padding-top: calc(env(safe-area-inset-top) + 104px); 
             padding-bottom: 60px;
             -webkit-font-smoothing: antialiased;
             font-size: 16px;
@@ -155,9 +155,8 @@
 
         @media (max-width: 640px) {
             body {
-                /* Exakte Berechnung für perfekte Symmetrie auf dem Handy. 
-                   Reduziert den Platz über den Buttons, sodass er ca. den 16px nach unten entspricht */
-                padding-top: calc(env(safe-area-inset-top) + 74px); 
+                /* Abstand repariert: 92px lässt genau den perfekten Freiraum unter dem Header */
+                padding-top: calc(env(safe-area-inset-top) + 92px); 
             }
             .kps-topbar { padding: calc(env(safe-area-inset-top) + 12px) 16px 12px 16px; }
             .topbar-title { font-size: 22px; }
@@ -165,7 +164,7 @@
             .hud-item { font-size: 15px; }
             .kps-box { padding: 20px; border-radius: 24px; }
             .kps-tabs-container { 
-                margin: 0 auto 16px auto; /* 0px Abstand nach oben (regelt der Body), 16px nach unten */
+                margin: 0 auto 16px auto; /* 0px Abstand nach oben (regelt der Body), 16px nach unten zur ersten Box */
             }
         }
     </style>
