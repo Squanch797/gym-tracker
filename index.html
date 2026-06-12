@@ -646,15 +646,15 @@
         };
 
         // --- APP DATA & LOGIC ---
-        // Push Routine aktualisiert, um "Bankdrücken (LH/KH)" zu enthalten
+        // Push Routine aktualisiert, um "Bankdrücken (LH)" zu enthalten
         const routine = [
             { 
                 name: "Oberkörper", motto: "Schwere Gewichte. Voller Fokus.", color: "blue",
-                exercises: ["Latzug", "Enges Rudern", "Bankdrücken (LH/KH)", "Schrägbank (KH)", "Fliegende", "Seilzug Trizeps", "Bizepscurls"],
+                exercises: ["Latzug", "Enges Rudern", "Bankdrücken (LH)", "Schrägbank (KH)", "Fliegende", "Seilzug Trizeps", "Bizepscurls"],
                 library: [
                     { name: "Latzug", sets: "3x 8-10", desc: "Brust raus, zur oberen Brust ziehen." },
                     { name: "Enges Rudern", sets: "3x 8-10", desc: "Ellbogen eng am Körper führen." },
-                    { name: "Bankdrücken (LH/KH)", sets: "4x 5-8", desc: "Kontrolliert ab, explosiv hoch. 2 RIR." },
+                    { name: "Bankdrücken (LH)", sets: "4x 5-8", desc: "Kontrolliert ab, explosiv hoch. 2 RIR." },
                     { name: "Schrägbank (KH)", sets: "3x 8-12", desc: "Obere Brust. 30° Winkel." },
                     { name: "Fliegende", sets: "3x 10-15", desc: "Konstante Spannung auf der Brust." },
                     { name: "Seilzug Trizeps", sets: "3x 10-12", desc: "Trizeps isolieren." },
@@ -674,10 +674,10 @@
             },
             { 
                 name: "Push", motto: "Pump, Volumen und maximale Dehnung.", color: "cyan",
-                exercises: ["Schrägbank (KH)", "Bankdrücken (LH/KH)", "Schulterdrücken", "Seitheben (Kabel)", "Trizeps"],
+                exercises: ["Schrägbank (KH)", "Bankdrücken (LH)", "Schulterdrücken", "Seitheben (Kabel)", "Trizeps"],
                 library: [
                     { name: "KH Schrägbank", sets: "4x 8-10", desc: "Fokus auf obere Brust." },
-                    { name: "Bankdrücken (LH/KH)", sets: "3x 10-15", desc: "Kontrolliert aus der Brust." },
+                    { name: "Bankdrücken (LH)", sets: "3x 10-15", desc: "Kontrolliert aus der Brust." },
                     { name: "Schulterdrücken", sets: "3x 8-10", desc: "Sauber nach oben drücken." },
                     { name: "Seitheben (Kabel)", sets: "4x 12-15", desc: "Kabelzug." },
                     { name: "Trizeps", sets: "3x 12-15", desc: "Pump am Ende." }
@@ -1050,8 +1050,9 @@
             }
 
             // --- TRACKING GRAFIK ZEICHNEN ---
+            // Filter nach LH, nimmt als Fallback aber auch die alten KH/LH Einträge, damit die Daten nicht weg sind!
             const trackDataList = workoutsList
-                .filter(w => w.status === 'done' && w.trackedData && w.trackedData["Bankdrücken (LH/KH)"])
+                .filter(w => w.status === 'done' && w.trackedData && (w.trackedData["Bankdrücken (LH)"] || w.trackedData["Bankdrücken (LH/KH)"]))
                 .sort((a,b) => a.date.localeCompare(b.date))
                 .slice(-7); // Die letzten 7 Einträge
 
@@ -1059,10 +1060,13 @@
             const chartLabels = document.getElementById('progressChartLabels');
 
             if (trackDataList.length > 0) {
-                const maxWeight = Math.max(...trackDataList.map(d => d.trackedData["Bankdrücken (LH/KH)"].weight), 40);
+                const maxWeight = Math.max(...trackDataList.map(d => {
+                    let td = d.trackedData["Bankdrücken (LH)"] || d.trackedData["Bankdrücken (LH/KH)"];
+                    return td.weight;
+                }), 40);
                 
                 chartContainer.innerHTML = trackDataList.map((d, index) => {
-                    const data = d.trackedData["Bankdrücken (LH/KH)"];
+                    const data = d.trackedData["Bankdrücken (LH)"] || d.trackedData["Bankdrücken (LH/KH)"];
                     const heightPerc = Math.max(15, (data.weight / maxWeight) * 100); // min 15% visual height
                     const isLast = index === trackDataList.length - 1;
                     const barColor = isLast ? 'bg-blue-500 shadow-lg shadow-blue-500/40' : 'bg-blue-200';
