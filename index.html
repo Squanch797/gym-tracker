@@ -184,7 +184,7 @@
         </div>
     </div>
 
-    <!-- Apple-Style Custom Modal -->
+    <!-- Apple-Style Custom Modal (Generic) -->
     <div id="kps-modal" class="hidden fixed inset-0 z-[10001] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 opacity-0 transition-opacity duration-300">
         <div class="bg-white rounded-[32px] p-6 w-full max-w-sm shadow-2xl transform scale-95 transition-transform duration-300" id="kps-modal-box">
             <h3 id="modal-title" class="text-2xl font-extrabold mb-2 text-slate-900 text-center tracking-tight">Titel</h3>
@@ -193,6 +193,30 @@
             <div class="flex gap-3">
                 <button id="modal-btn-cancel" class="flex-1 py-3.5 bg-slate-100 text-slate-600 font-bold rounded-[16px] active:scale-95 transition-transform">Abbrechen</button>
                 <button id="modal-btn-confirm" class="flex-1 py-3.5 bg-blue-600 text-white font-bold rounded-[16px] active:scale-95 transition-transform">Bestätigen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Apple-Style Tracking Modal -->
+    <div id="track-modal" class="hidden fixed inset-0 z-[10001] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-[32px] p-6 w-full max-w-sm shadow-2xl transform scale-95 transition-transform duration-300" id="track-modal-box">
+            <h3 id="track-modal-title" class="text-2xl font-extrabold mb-2 text-slate-900 text-center tracking-tight">Bankdrücken</h3>
+            <p class="text-slate-500 mb-6 font-medium text-center text-sm">Trage deinen schwersten Satz ein.</p>
+            
+            <div class="flex gap-4 mb-6">
+                <div class="flex-1">
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wide mb-2 text-center">Gewicht (kg)</label>
+                    <input type="number" id="track-input-weight" class="w-full bg-slate-100 rounded-[16px] px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500 font-bold text-center text-xl text-blue-600" placeholder="0">
+                </div>
+                <div class="flex-1">
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wide mb-2 text-center">Wdh.</label>
+                    <input type="number" id="track-input-reps" class="w-full bg-slate-100 rounded-[16px] px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500 font-bold text-center text-xl text-blue-600" placeholder="0">
+                </div>
+            </div>
+
+            <div class="flex gap-3">
+                <button onclick="window.closeTrackModal(false)" class="flex-1 py-3.5 bg-slate-100 text-slate-600 font-bold rounded-[16px] active:scale-95 transition-transform">Abbrechen</button>
+                <button onclick="window.closeTrackModal(true)" class="flex-1 py-3.5 bg-blue-600 text-white font-bold rounded-[16px] active:scale-95 transition-transform">Speichern</button>
             </div>
         </div>
     </div>
@@ -252,7 +276,7 @@
                             <h2 class="text-4xl font-extrabold text-slate-900 mb-2" id="proposedWorkoutName">Lade...</h2>
                             <p class="text-base text-slate-500 mb-8 font-medium" id="motivationQuote">"Daten werden synchronisiert..."</p>
                             <div style="background: var(--ios-bg); border-radius: 20px; padding: 20px; margin-bottom: 28px;">
-                                <ul id="proposedWorkoutDetails" class="space-y-4 text-base text-slate-800 font-medium"></ul>
+                                <ul id="proposedWorkoutDetails" class="space-y-2 text-base text-slate-800 font-medium"></ul>
                             </div>
                             <div class="flex gap-4">
                                 <button onclick="window.logSelectedWorkout('proposed')" class="kps-btn-main" style="flex: 2;">Erledigt</button>
@@ -340,6 +364,19 @@
                         </div>
                     </div>
                     
+                    <div class="kps-box">
+                        <h3 class="mb-5 flex justify-between items-center">
+                            <span>📈 Kraft-Fortschritt</span>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider bg-slate-100 px-2 py-1 rounded-lg">Bankdrücken</span>
+                        </h3>
+                        <div id="progressChartContainer" class="flex items-end gap-2 h-32 mt-4">
+                            <!-- Bars dynamic -->
+                        </div>
+                        <div id="progressChartLabels" class="flex gap-2 mt-3 text-[10px] text-slate-400 font-bold text-center">
+                            <!-- Labels dynamic -->
+                        </div>
+                    </div>
+
                     <div class="kps-box">
                         <h3 class="mb-5">Protokoll</h3>
                         <div id="logContainer" class="space-y-3"></div>
@@ -459,6 +496,10 @@
         let previousRank = null;
         let previousMilestones = 0;
         let globalCurrentStreak = 0;
+        
+        // Progressive Overload Tracking State
+        let tempTrackedExercises = {};
+        let currentTrackExercise = null;
 
         // --- AUTHENTICATION LOGIC ---
         const allowedEmails = ['hachingschauthin@gmail.com', 'simon.laber@kps.com'];
@@ -484,6 +525,7 @@
                 document.getElementById('main-app').style.display = 'none';
                 if (unsubscribeFirestore) unsubscribeFirestore();
                 globalWorkoutsList = [];
+                tempTrackedExercises = {};
             }
         });
 
@@ -530,6 +572,40 @@
             });
         };
 
+        window.openTrackModal = function(exName) {
+            currentTrackExercise = exName;
+            document.getElementById('track-modal-title').innerText = exName;
+            
+            const existing = tempTrackedExercises[exName];
+            document.getElementById('track-input-weight').value = existing ? existing.weight : '';
+            document.getElementById('track-input-reps').value = existing ? existing.reps : '';
+            
+            const modal = document.getElementById('track-modal');
+            const box = document.getElementById('track-modal-box');
+            modal.classList.remove('hidden');
+            setTimeout(() => { modal.classList.add('opacity-100'); box.classList.remove('scale-95'); }, 10);
+            
+            setTimeout(() => document.getElementById('track-input-weight').focus(), 300);
+        };
+
+        window.closeTrackModal = function(save) {
+            if (save && currentTrackExercise) {
+                const w = parseFloat(document.getElementById('track-input-weight').value);
+                const r = parseInt(document.getElementById('track-input-reps').value);
+                if (w > 0 && r > 0) {
+                    tempTrackedExercises[currentTrackExercise] = { weight: w, reps: r };
+                }
+            }
+            const modal = document.getElementById('track-modal');
+            const box = document.getElementById('track-modal-box');
+            modal.classList.remove('opacity-100'); box.classList.add('scale-95');
+            setTimeout(() => { 
+                modal.classList.add('hidden'); 
+                currentTrackExercise = null;
+                renderProposedWorkoutDetails(); // UI aktualisieren
+            }, 300);
+        };
+
         window.showFloatingPoints = function(pts) {
             const el = document.createElement('div');
             el.innerText = `+${pts} Pts`;
@@ -569,8 +645,8 @@
             window.showModal(`Training am ${formatted}`, info, false);
         };
 
-
         // --- APP DATA & LOGIC ---
+        // Push Routine aktualisiert, um "Bankdrücken (LH/KH)" zu enthalten
         const routine = [
             { 
                 name: "Oberkörper", motto: "Schwere Gewichte. Voller Fokus.", color: "blue",
@@ -598,10 +674,10 @@
             },
             { 
                 name: "Push", motto: "Pump, Volumen und maximale Dehnung.", color: "cyan",
-                exercises: ["Schrägbank (KH)", "Brustpresse", "Schulterdrücken", "Seitheben (Kabel)", "Trizeps"],
+                exercises: ["Schrägbank (KH)", "Bankdrücken (LH/KH)", "Schulterdrücken", "Seitheben (Kabel)", "Trizeps"],
                 library: [
                     { name: "KH Schrägbank", sets: "4x 8-10", desc: "Fokus auf obere Brust." },
-                    { name: "Brustpresse", sets: "3x 10-15", desc: "Konstante Spannung." },
+                    { name: "Bankdrücken (LH/KH)", sets: "3x 10-15", desc: "Kontrolliert aus der Brust." },
                     { name: "Schulterdrücken", sets: "3x 8-10", desc: "Sauber nach oben drücken." },
                     { name: "Seitheben (Kabel)", sets: "4x 12-15", desc: "Kabelzug." },
                     { name: "Trizeps", sets: "3x 12-15", desc: "Pump am Ende." }
@@ -754,12 +830,50 @@
             return nextWorkout || routine[0];
         }
 
+        // Rendert die Liste der Übungen und baut die klickbaren Track-Buttons ein
+        function renderProposedWorkoutDetails() {
+            if (!proposedWorkout) return;
+            document.getElementById('proposedWorkoutDetails').innerHTML = proposedWorkout.exercises.map(ex => {
+                const isTrackable = ex.includes("Bankdrücken");
+                if (isTrackable) {
+                    const tracked = tempTrackedExercises[ex];
+                    const badgeHtml = tracked ? 
+                        `<span class="ml-auto text-xs font-bold bg-blue-100 text-blue-700 px-3 py-1 rounded-full border border-blue-200 shadow-sm">${tracked.weight}kg × ${tracked.reps}</span>` : 
+                        `<span class="ml-auto text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-full uppercase tracking-wider">Tippen zum Tracken</span>`;
+                    
+                    return `<li onclick="window.openTrackModal('${ex}')" class="flex items-center gap-3 cursor-pointer p-2 -mx-2 rounded-xl hover:bg-slate-50 active:bg-slate-100 transition-colors">
+                                <div class="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0 shadow-sm border border-blue-100">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                                </div>
+                                <span class="font-bold text-blue-900">${ex}</span>
+                                ${badgeHtml}
+                            </li>`;
+                } else {
+                    return `<li class="flex items-center gap-4 py-1.5"><div class="w-2 h-2 bg-slate-300 rounded-full ml-3 flex-shrink-0"></div><span class="text-slate-700">${ex}</span></li>`;
+                }
+            }).join('');
+        }
+
         window.logSelectedWorkout = async function(type) {
             if(!currentUser) return;
             let w = type === 'proposed' ? proposedWorkout : routine.find(r => r.name === type);
             if(!w) return;
             window.showFloatingPoints(15);
-            await db.collection('workouts').add({ date: getLocalTodayDate(), type: w.name, status: "done", timestamp: firebase.firestore.FieldValue.serverTimestamp() });
+            
+            let payload = { 
+                date: getLocalTodayDate(), 
+                type: w.name, 
+                status: "done", 
+                timestamp: firebase.firestore.FieldValue.serverTimestamp() 
+            };
+            
+            // Gefüllte Track-Daten anhängen, falls vorhanden
+            if (Object.keys(tempTrackedExercises).length > 0) {
+                payload.trackedData = tempTrackedExercises;
+            }
+
+            await db.collection('workouts').add(payload);
+            tempTrackedExercises = {}; // Cache leeren
         };
 
         window.logRestDay = async function() {
@@ -920,7 +1034,7 @@
                 if (maxHits >= 2) {
                     let zeroMuscles = allMuscles.filter(([n,c]) => c === 0);
                     if (zeroMuscles.length > 0) {
-                        neglectedLabel = zeroMuscles[0][0] + " fehlt!"; // Der wichtigste nicht-trainierte Muskel
+                        neglectedLabel = zeroMuscles[0][0] + " fehlt!"; 
                     } else {
                         let minHits = allMuscles[allMuscles.length - 1][1];
                         if (maxHits - minHits >= 2) {
@@ -933,6 +1047,41 @@
                 muscleStatsEl.innerHTML = `<span class="text-base text-slate-400">Keine Daten in diesem Monat</span>`;
                 document.getElementById('statMuscleMax').innerText = "-"; 
                 document.getElementById('statMuscleMin').innerText = "-";
+            }
+
+            // --- TRACKING GRAFIK ZEICHNEN ---
+            const trackDataList = workoutsList
+                .filter(w => w.status === 'done' && w.trackedData && w.trackedData["Bankdrücken (LH/KH)"])
+                .sort((a,b) => a.date.localeCompare(b.date))
+                .slice(-7); // Die letzten 7 Einträge
+
+            const chartContainer = document.getElementById('progressChartContainer');
+            const chartLabels = document.getElementById('progressChartLabels');
+
+            if (trackDataList.length > 0) {
+                const maxWeight = Math.max(...trackDataList.map(d => d.trackedData["Bankdrücken (LH/KH)"].weight), 40);
+                
+                chartContainer.innerHTML = trackDataList.map((d, index) => {
+                    const data = d.trackedData["Bankdrücken (LH/KH)"];
+                    const heightPerc = Math.max(15, (data.weight / maxWeight) * 100); // min 15% visual height
+                    const isLast = index === trackDataList.length - 1;
+                    const barColor = isLast ? 'bg-blue-500 shadow-lg shadow-blue-500/40' : 'bg-blue-200';
+                    
+                    return `
+                        <div class="flex-1 flex flex-col justify-end items-center group relative h-full">
+                            <span class="text-[10px] font-bold text-slate-500 mb-1 absolute -top-5">${data.weight}</span>
+                            <div class="w-full ${barColor} rounded-t-[8px] transition-all duration-500" style="height: ${heightPerc}%"></div>
+                        </div>
+                    `;
+                }).join('');
+                
+                chartLabels.innerHTML = trackDataList.map(d => {
+                    const dayMonth = d.date.split('-').slice(1,3).reverse().join('.');
+                    return `<div class="flex-1 truncate">${dayMonth}</div>`;
+                }).join('');
+            } else {
+                chartContainer.innerHTML = `<div class="w-full h-full flex items-center justify-center text-sm font-medium text-slate-400 bg-slate-50 rounded-2xl border border-slate-100">Noch keine Gewichte eingetragen.</div>`;
+                chartLabels.innerHTML = '';
             }
         }
 
@@ -1116,7 +1265,7 @@
                 if (proposedWorkout) {
                     document.getElementById('proposedWorkoutName').innerText = proposedWorkout.name;
                     document.getElementById('motivationQuote').innerText = `"${getPersonalizedQuote(proposedWorkout.name, globalCurrentStreak, isDoneToday)}"`;
-                    document.getElementById('proposedWorkoutDetails').innerHTML = proposedWorkout.exercises.map(ex => `<li class="flex items-center gap-4"><div class="w-2 h-2 bg-blue-500 rounded-full"></div>${ex}</li>`).join('');
+                    renderProposedWorkoutDetails();
                 }
 
                 if(isDoneToday) {
