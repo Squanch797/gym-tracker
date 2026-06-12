@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
@@ -653,6 +653,10 @@
             const d = new Date();
             return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
         }
+        
+        function formatDateStr(d) {
+            return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        }
 
         // --- Personalisierte Sprüche für Simon ---
         function getPersonalizedQuote(workoutType, streak, isDone) {
@@ -872,7 +876,6 @@
             const startOfWeekStr = `${startOfWeek.getFullYear()}-${String(startOfWeek.getMonth() + 1).padStart(2, '0')}-${String(startOfWeek.getDate()).padStart(2, '0')}`;
 
             workoutsList.forEach(w => {
-                // Monats-Stats (hängen vom ausgewählten Monat ab!)
                 if(w.status === 'done' && w.date.startsWith(selectedMonthStr)) {
                     totalDoneInMonth++;
                     if(w.type.includes('Cardio')) monthStats.cardio++; else monthStats.strength++;
@@ -884,7 +887,6 @@
                         if(w.type === "Pull") { muscleHits["Rücken"]++; muscleHits["Bizeps"]++; }
                     }
                 }
-                // Wochen-Stats (immer Live die letzten 7 Tage, egal welcher Kalendermonat!)
                 if(w.status === 'done' && w.date >= startOfWeekStr) {
                     weekStats.total++;
                     if(w.type && w.type.includes('Cardio')) weekStats.cardio++; else weekStats.strength++;
@@ -899,21 +901,38 @@
             document.getElementById('statMonthStrength').innerText = monthStats.strength;
             document.getElementById('statMonthCardio').innerText = monthStats.cardio;
 
-            let activeMuscles = Object.entries(muscleHits).filter(([n,c]) => c > 0).sort((a,b) => b[1] - a[1]);
+            // NEUE LOGIK FÜR MUSKEL-FOKUS UND ABWEICHUNG
+            let allMuscles = Object.entries(muscleHits).sort((a,b) => b[1] - a[1]);
+            let activeMuscles = allMuscles.filter(([n,c]) => c > 0);
             const muscleStatsEl = document.getElementById('statMonthMuscles');
+            
             if (activeMuscles.length > 0) {
                 muscleStatsEl.innerHTML = activeMuscles.map(([name, count]) => `<span class="bg-blue-50 text-blue-700 text-sm px-3.5 py-1.5 rounded-full font-bold">${name}: ${count}x</span>`).join('');
-                let maxHits = activeMuscles[0][1]; let secondMaxHits = activeMuscles.length > 1 ? activeMuscles[1][1] : 0;
-                if ((maxHits - secondMaxHits) >= 2) document.getElementById('statMuscleMax').innerText = activeMuscles[0][0] + " Fokus";
+                
+                let maxHits = allMuscles[0][1]; 
+                let secondMaxHits = activeMuscles.length > 1 ? activeMuscles[1][1] : 0;
+                
+                if ((maxHits - secondMaxHits) >= 2) document.getElementById('statMuscleMax').innerText = allMuscles[0][0] + " Fokus";
                 else document.getElementById('statMuscleMax').innerText = "Ausgeglichen";
 
-                let avgHits = activeMuscles.reduce((sum, [n,c]) => sum + c, 0) / activeMuscles.length;
-                let neglected = activeMuscles.filter(([n,c]) => c < (avgHits * 0.5) && avgHits > 1);
-                if(neglected.length > 0 && totalDoneInMonth >= 5) document.getElementById('statMuscleMin').innerText = neglected[neglected.length - 1][0];
-                else document.getElementById('statMuscleMin').innerText = "Optimal";
+                // Abweichung anzeigen, sobald ein Muskel >= 2x trainiert wurde
+                let neglectedLabel = "Optimal";
+                if (maxHits >= 2) {
+                    let zeroMuscles = allMuscles.filter(([n,c]) => c === 0);
+                    if (zeroMuscles.length > 0) {
+                        neglectedLabel = zeroMuscles[0][0] + " fehlt!"; // Der wichtigste nicht-trainierte Muskel
+                    } else {
+                        let minHits = allMuscles[allMuscles.length - 1][1];
+                        if (maxHits - minHits >= 2) {
+                            neglectedLabel = allMuscles[allMuscles.length - 1][0] + " ("+minHits+"x)";
+                        }
+                    }
+                }
+                document.getElementById('statMuscleMin').innerText = neglectedLabel;
             } else {
                 muscleStatsEl.innerHTML = `<span class="text-base text-slate-400">Keine Daten in diesem Monat</span>`;
-                document.getElementById('statMuscleMax').innerText = "-"; document.getElementById('statMuscleMin').innerText = "-";
+                document.getElementById('statMuscleMax').innerText = "-"; 
+                document.getElementById('statMuscleMin').innerText = "-";
             }
         }
 
@@ -942,31 +961,82 @@
 
         function calculateGamification(workoutsList) {
             if (!workoutsList) return;
-            let pts = 0; let curStreak = 0; let bestStreak = 0; let tDone = 0; let tSkip = 0; let history = [];
+            let pts = 0; let tDone = 0; let tSkip = 0; let history = [];
             let sorted = [...workoutsList].filter(w => w.status).sort((a,b) => a.timestamp - b.timestamp);
             
+            // Map aufbauen, damit wir jeden Tag genau betrachten können
+            let historyByDate = {};
+
             sorted.forEach(w => {
                 let fDate = w.date.split('-').reverse().slice(0,2).join('.');
-                if (w.status === "done") { pts += 15; tDone++; history.push({ date: fDate, action: w.type, pts: `+15` }); }
+                if (w.status === "done") { 
+                    pts += 15; tDone++; history.push({ date: fDate, action: w.type, pts: `+15` }); 
+                    historyByDate[w.date] = 'done'; // Done überschreibt restliche Stats
+                }
                 else if (w.status === "skipped") { tSkip++; }
-                else if (w.status === "rest" && w.timestamp && !w.type.includes("Auto")) { pts += 5; history.push({ date: fDate, action: "Ruhetag", pts: `+5` }); }
+                else if (w.status === "rest" && w.timestamp && !w.type.includes("Auto")) { 
+                    pts += 5; history.push({ date: fDate, action: "Ruhetag", pts: `+5` }); 
+                    if (historyByDate[w.date] !== 'done') historyByDate[w.date] = 'rest';
+                }
             });
 
             if (tDone >= 10) { pts += 100; history.push({date: "", action: "Meilenstein: Athlet V", pts: "+100"}); }
             if (tDone >= 50) { pts += 100; history.push({date: "", action: "Meilenstein: Profi", pts: "+100"}); }
 
-            let dDates = new Set(sorted.filter(w => w.status === 'done').map(w => w.date));
-            let sPtr = new Date(); if (!dDates.has(getLocalTodayDate())) sPtr.setDate(sPtr.getDate() - 1);
-            while (true) { let k = sPtr.toISOString().split('T')[0]; if (dDates.has(k)) { curStreak++; sPtr.setDate(sPtr.getDate() - 1); } else break; }
+            // --- NEUE, INTELLIGENTE STREAK LOGIK ---
+            let curStreak = 0;
+            let sPtr = new Date();
+            const todayStr = getLocalTodayDate();
+            
+            if (!historyByDate[todayStr]) {
+                sPtr.setDate(sPtr.getDate() - 1); // Wenn heute noch leer ist, schauen wir ab gestern
+            }
+            
+            let consecutiveRests = 0;
+            while (true) {
+                let k = formatDateStr(sPtr);
+                let status = historyByDate[k];
+                
+                if (status === 'done') {
+                    curStreak++;
+                    consecutiveRests = 0; // Kette von Rest Days unterbrochen
+                    sPtr.setDate(sPtr.getDate() - 1);
+                } else if (status === 'rest') {
+                    consecutiveRests++;
+                    if (consecutiveRests >= 2) break; // 2 Rest Days in Folge brechen die Streak sofort!
+                    curStreak++; // Ein einzelner Rest Day zählt zur Streak
+                    sPtr.setDate(sPtr.getDate() - 1);
+                } else {
+                    break; // Ein ungeloggter/leerer Tag bricht die Streak sofort!
+                }
+            }
             globalCurrentStreak = curStreak;
 
-            let sDates = [...dDates].sort(); let tmpStreak = 0;
-            if (sDates.length > 0) {
-                tmpStreak = 1; bestStreak = 1;
-                for (let i = 1; i < sDates.length; i++) {
-                    let d1 = new Date(sDates[i-1]); d1.setDate(d1.getDate() + 1);
-                    if (d1.toISOString().split('T')[0] === sDates[i]) { tmpStreak++; if (tmpStreak > bestStreak) bestStreak = tmpStreak; } 
-                    else tmpStreak = 1;
+            // BEST STREAK BERECHNEN (mit den gleichen intelligenten Regeln)
+            let bestStreak = 0;
+            let allDates = Object.keys(historyByDate).sort();
+            if (allDates.length > 0) {
+                let startD = new Date(allDates[0]);
+                let endD = new Date(todayStr);
+                let tempS = 0;
+                let tempR = 0;
+                for (let d = new Date(startD); d <= endD; d.setDate(d.getDate() + 1)) {
+                    let k = formatDateStr(d);
+                    let status = historyByDate[k];
+                    if (status === 'done') {
+                        tempS++; tempR = 0;
+                        if (tempS > bestStreak) bestStreak = tempS;
+                    } else if (status === 'rest') {
+                        tempR++;
+                        if (tempR >= 2) { 
+                            tempS = 0; tempR = 1; // Streak bricht, der 2. Restday könnte theoretisch einen Startpunkt für die neue Streak bilden
+                        } else { 
+                            tempS++; 
+                            if (tempS > bestStreak) bestStreak = tempS; 
+                        }
+                    } else {
+                        tempS = 0; tempR = 0;
+                    }
                 }
             }
 
