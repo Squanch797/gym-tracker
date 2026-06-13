@@ -22,7 +22,7 @@
             margin: 0; padding: 0; color: var(--ios-text);
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             overflow-x: hidden; 
-            padding-top: calc(env(safe-area-inset-top) + 114px); /* Desktop: entsprechend leicht erhöht */
+            padding-top: calc(env(safe-area-inset-top) + 114px); 
             padding-bottom: 60px;
             -webkit-font-smoothing: antialiased;
             font-size: 16px;
@@ -77,7 +77,7 @@
         .hud-item { display: flex; align-items: center; gap: 4px; font-size: 16px; font-weight: 700; color: var(--ios-text); }
         .hud-divider { width: 1.5px; height: 16px; background: rgba(0, 0, 0, 0.1); border-radius: 2px; }
 
-        /* Segmented Control im iOS Style - Emojis only & etwas kleiner/harmonischer */
+        /* Segmented Control im iOS Style */
         .kps-tabs-container { 
             display: flex; background: var(--ios-gray-bg); padding: 4px; 
             border-radius: 99px; 
@@ -155,7 +155,6 @@
 
         @media (max-width: 640px) {
             body {
-                /* Abstand auf 102px erhöht, damit die Lücke nach oben exakt ausbalanciert ist */
                 padding-top: calc(env(safe-area-inset-top) + 102px); 
             }
             .kps-topbar { padding: calc(env(safe-area-inset-top) + 12px) 16px 12px 16px; }
@@ -163,9 +162,7 @@
             .hud-pill { padding: 6px 14px; }
             .hud-item { font-size: 15px; }
             .kps-box { padding: 20px; border-radius: 24px; }
-            .kps-tabs-container { 
-                margin: 0 auto 16px auto; 
-            }
+            .kps-tabs-container { margin: 0 auto 16px auto; }
         }
     </style>
 </head>
@@ -369,7 +366,7 @@
                             <span>📈 Kraft-Fortschritt</span>
                             <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider bg-slate-100 px-2 py-1 rounded-lg">Bankdrücken</span>
                         </h3>
-                        <div id="progressChartContainer" class="flex items-end gap-2 h-32 mt-4">
+                        <div id="progressChartContainer" class="flex items-end gap-2 h-36 mt-8">
                             <!-- Bars dynamic -->
                         </div>
                         <div id="progressChartLabels" class="flex gap-2 mt-3 text-[10px] text-slate-400 font-bold text-center">
@@ -500,6 +497,50 @@
         // Progressive Overload Tracking State
         let tempTrackedExercises = {};
         let currentTrackExercise = null;
+
+        // --- SWIPE NAVIGATION ---
+        let touchstartX = 0;
+        let touchendX = 0;
+        let touchstartY = 0;
+        let touchendY = 0;
+        const tabsOrder = ['tracker', 'calendar', 'plan', 'karriere'];
+
+        document.addEventListener('touchstart', e => {
+            // Keine Swipes wenn man in Modals oder Input Feldern ist
+            if (e.target.closest('#kps-modal') || e.target.closest('#track-modal') || e.target.closest('#celebration-modal') || e.target.tagName.toLowerCase() === 'input') {
+                return;
+            }
+            touchstartX = e.changedTouches[0].screenX;
+            touchstartY = e.changedTouches[0].screenY;
+        }, {passive: true});
+
+        document.addEventListener('touchend', e => {
+            if (e.target.closest('#kps-modal') || e.target.closest('#track-modal') || e.target.closest('#celebration-modal') || e.target.tagName.toLowerCase() === 'input') {
+                return;
+            }
+            touchendX = e.changedTouches[0].screenX;
+            touchendY = e.changedTouches[0].screenY;
+            handleSwipe();
+        }, {passive: true});
+
+        function handleSwipe() {
+            const diffX = touchendX - touchstartX;
+            const diffY = touchendY - touchstartY;
+
+            // Toleranz für den Swipe (horizontal wischen muss stärker sein als vertikal)
+            if (Math.abs(diffX) > 60 && Math.abs(diffX) > Math.abs(diffY)) {
+                let currentTab = tabsOrder.find(t => document.getElementById(`tab-${t}`).classList.contains('active')) || 'tracker';
+                let currentIndex = tabsOrder.indexOf(currentTab);
+
+                if (diffX < 0) {
+                    // Wisch nach Links -> Nächster Tab
+                    if (currentIndex < tabsOrder.length - 1) window.switchTab(tabsOrder[currentIndex + 1]);
+                } else {
+                    // Wisch nach Rechts -> Vorheriger Tab
+                    if (currentIndex > 0) window.switchTab(tabsOrder[currentIndex - 1]);
+                }
+            }
+        }
 
         // --- AUTHENTICATION LOGIC ---
         const allowedEmails = ['hachingschauthin@gmail.com', 'simon.laber@kps.com'];
@@ -834,7 +875,7 @@
         function renderProposedWorkoutDetails() {
             if (!proposedWorkout) return;
             document.getElementById('proposedWorkoutDetails').innerHTML = proposedWorkout.exercises.map(ex => {
-                const isTrackable = ex.includes("Bankdrücken");
+                const isTrackable = ex.includes("Bankdrücken (LH)");
                 if (isTrackable) {
                     const tracked = tempTrackedExercises[ex];
                     const badgeHtml = tracked ? 
@@ -1015,7 +1056,6 @@
             document.getElementById('statMonthStrength').innerText = monthStats.strength;
             document.getElementById('statMonthCardio').innerText = monthStats.cardio;
 
-            // NEUE LOGIK FÜR MUSKEL-FOKUS UND ABWEICHUNG
             let allMuscles = Object.entries(muscleHits).sort((a,b) => b[1] - a[1]);
             let activeMuscles = allMuscles.filter(([n,c]) => c > 0);
             const muscleStatsEl = document.getElementById('statMonthMuscles');
@@ -1029,7 +1069,6 @@
                 if ((maxHits - secondMaxHits) >= 2) document.getElementById('statMuscleMax').innerText = allMuscles[0][0] + " Fokus";
                 else document.getElementById('statMuscleMax').innerText = "Ausgeglichen";
 
-                // Abweichung anzeigen, sobald ein Muskel >= 2x trainiert wurde
                 let neglectedLabel = "Optimal";
                 if (maxHits >= 2) {
                     let zeroMuscles = allMuscles.filter(([n,c]) => c === 0);
@@ -1050,11 +1089,11 @@
             }
 
             // --- TRACKING GRAFIK ZEICHNEN ---
-            // Filter nach LH, nimmt als Fallback aber auch die alten KH/LH Einträge, damit die Daten nicht weg sind!
+            // Nimmt "Bankdrücken (LH)" oder alte "LH/KH" Einträge für lückenlose Historie
             const trackDataList = workoutsList
                 .filter(w => w.status === 'done' && w.trackedData && (w.trackedData["Bankdrücken (LH)"] || w.trackedData["Bankdrücken (LH/KH)"]))
                 .sort((a,b) => a.date.localeCompare(b.date))
-                .slice(-7); // Die letzten 7 Einträge
+                .slice(-7); 
 
             const chartContainer = document.getElementById('progressChartContainer');
             const chartLabels = document.getElementById('progressChartLabels');
@@ -1067,13 +1106,16 @@
                 
                 chartContainer.innerHTML = trackDataList.map((d, index) => {
                     const data = d.trackedData["Bankdrücken (LH)"] || d.trackedData["Bankdrücken (LH/KH)"];
-                    const heightPerc = Math.max(15, (data.weight / maxWeight) * 100); // min 15% visual height
+                    const heightPerc = Math.max(15, (data.weight / maxWeight) * 100); 
                     const isLast = index === trackDataList.length - 1;
                     const barColor = isLast ? 'bg-blue-500 shadow-lg shadow-blue-500/40' : 'bg-blue-200';
                     
                     return `
                         <div class="flex-1 flex flex-col justify-end items-center group relative h-full">
-                            <span class="text-[10px] font-bold text-slate-500 mb-1 absolute -top-5">${data.weight}</span>
+                            <div class="absolute -top-8 w-full flex flex-col items-center justify-end text-center">
+                                <span class="text-[11px] font-black text-slate-700 leading-none">${data.weight}<span class="text-[8px] font-bold text-slate-400 ml-0.5">kg</span></span>
+                                <span class="text-[9px] font-bold text-slate-500 mt-0.5">${data.reps}x</span>
+                            </div>
                             <div class="w-full ${barColor} rounded-t-[8px] transition-all duration-500" style="height: ${heightPerc}%"></div>
                         </div>
                     `;
@@ -1117,14 +1159,13 @@
             let pts = 0; let tDone = 0; let tSkip = 0; let history = [];
             let sorted = [...workoutsList].filter(w => w.status).sort((a,b) => a.timestamp - b.timestamp);
             
-            // Map aufbauen, damit wir jeden Tag genau betrachten können
             let historyByDate = {};
 
             sorted.forEach(w => {
                 let fDate = w.date.split('-').reverse().slice(0,2).join('.');
                 if (w.status === "done") { 
                     pts += 15; tDone++; history.push({ date: fDate, action: w.type, pts: `+15` }); 
-                    historyByDate[w.date] = 'done'; // Done überschreibt restliche Stats
+                    historyByDate[w.date] = 'done'; 
                 }
                 else if (w.status === "skipped") { tSkip++; }
                 else if (w.status === "rest" && w.timestamp && !w.type.includes("Auto")) { 
@@ -1136,13 +1177,12 @@
             if (tDone >= 10) { pts += 100; history.push({date: "", action: "Meilenstein: Athlet V", pts: "+100"}); }
             if (tDone >= 50) { pts += 100; history.push({date: "", action: "Meilenstein: Profi", pts: "+100"}); }
 
-            // --- NEUE, INTELLIGENTE STREAK LOGIK ---
             let curStreak = 0;
             let sPtr = new Date();
             const todayStr = getLocalTodayDate();
             
             if (!historyByDate[todayStr]) {
-                sPtr.setDate(sPtr.getDate() - 1); // Wenn heute noch leer ist, schauen wir ab gestern
+                sPtr.setDate(sPtr.getDate() - 1); 
             }
             
             let consecutiveRests = 0;
@@ -1152,20 +1192,19 @@
                 
                 if (status === 'done') {
                     curStreak++;
-                    consecutiveRests = 0; // Kette von Rest Days unterbrochen
+                    consecutiveRests = 0; 
                     sPtr.setDate(sPtr.getDate() - 1);
                 } else if (status === 'rest') {
                     consecutiveRests++;
-                    if (consecutiveRests >= 2) break; // 2 Rest Days in Folge brechen die Streak sofort!
-                    curStreak++; // Ein einzelner Rest Day zählt zur Streak
+                    if (consecutiveRests >= 2) break; 
+                    curStreak++; 
                     sPtr.setDate(sPtr.getDate() - 1);
                 } else {
-                    break; // Ein ungeloggter/leerer Tag bricht die Streak sofort!
+                    break; 
                 }
             }
             globalCurrentStreak = curStreak;
 
-            // BEST STREAK BERECHNEN (mit den gleichen intelligenten Regeln)
             let bestStreak = 0;
             let allDates = Object.keys(historyByDate).sort();
             if (allDates.length > 0) {
@@ -1182,7 +1221,7 @@
                     } else if (status === 'rest') {
                         tempR++;
                         if (tempR >= 2) { 
-                            tempS = 0; tempR = 1; // Streak bricht, der 2. Restday könnte theoretisch einen Startpunkt für die neue Streak bilden
+                            tempS = 0; tempR = 1; 
                         } else { 
                             tempS++; 
                             if (tempS > bestStreak) bestStreak = tempS; 
@@ -1199,7 +1238,6 @@
             let cRank = ranks[0]; let nRank = ranks[1];
             for (let i = ranks.length - 1; i >= 0; i--) { if (pts >= ranks[i].pts) { cRank = ranks[i]; nRank = ranks[i+1]; break; } }
             
-            // Check for Animations (Rankup / Milestone)
             let unlockedBadgesCount = milestoneBadges.filter(b => b.rule(tDone, pts, bestStreak)).length;
 
             if (!isInitialLoad) {
@@ -1262,7 +1300,6 @@
                     if(data.date === todayStr) { isDoneToday = true; todayDocId = doc.id; }
                 });
 
-                // Erst Gamification wegen globalCurrentStreak, dann Vorschlag berechnen
                 calculateGamification(globalWorkoutsList);
                 
                 proposedWorkout = calculateProposal(globalWorkoutsList);
@@ -1289,7 +1326,7 @@
                 renderCalendarAndLogs(globalWorkoutsList); 
                 calculateStats(globalWorkoutsList); 
                 
-                isInitialLoad = false; // Nach dem ersten Laden setzen, um spätere Animationen zu erlauben
+                isInitialLoad = false; 
             }, (error) => { console.error("Firestore Error:", error); });
         }
 
