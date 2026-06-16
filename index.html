@@ -613,20 +613,25 @@
             });
         };
 
+        let resolveTrackModal = null;
+
         window.openTrackModal = function(exName) {
-            currentTrackExercise = exName;
-            document.getElementById('track-modal-title').innerText = exName;
-            
-            const existing = tempTrackedExercises[exName];
-            document.getElementById('track-input-weight').value = existing ? existing.weight : '';
-            document.getElementById('track-input-reps').value = existing ? existing.reps : '';
-            
-            const modal = document.getElementById('track-modal');
-            const box = document.getElementById('track-modal-box');
-            modal.classList.remove('hidden');
-            setTimeout(() => { modal.classList.add('opacity-100'); box.classList.remove('scale-95'); }, 10);
-            
-            setTimeout(() => document.getElementById('track-input-weight').focus(), 300);
+            return new Promise((resolve) => {
+                resolveTrackModal = resolve;
+                currentTrackExercise = exName;
+                document.getElementById('track-modal-title').innerText = exName;
+                
+                const existing = tempTrackedExercises[exName];
+                document.getElementById('track-input-weight').value = existing ? existing.weight : '';
+                document.getElementById('track-input-reps').value = existing ? existing.reps : '';
+                
+                const modal = document.getElementById('track-modal');
+                const box = document.getElementById('track-modal-box');
+                modal.classList.remove('hidden');
+                setTimeout(() => { modal.classList.add('opacity-100'); box.classList.remove('scale-95'); }, 10);
+                
+                setTimeout(() => document.getElementById('track-input-weight').focus(), 300);
+            });
         };
 
         window.closeTrackModal = function(save) {
@@ -640,10 +645,15 @@
             const modal = document.getElementById('track-modal');
             const box = document.getElementById('track-modal-box');
             modal.classList.remove('opacity-100'); box.classList.add('scale-95');
+            
+            let resolveRef = resolveTrackModal;
+            resolveTrackModal = null;
+            
             setTimeout(() => { 
                 modal.classList.add('hidden'); 
                 currentTrackExercise = null;
                 renderProposedWorkoutDetails(); // UI aktualisieren
+                if(resolveRef) resolveRef(save);
             }, 300);
         };
 
@@ -899,6 +909,12 @@
             if(!currentUser) return;
             let w = type === 'proposed' ? proposedWorkout : routine.find(r => r.name === type);
             if(!w) return;
+            
+            // Wenn alternatives Workout gewählt wurde und es Bankdrücken enthält -> Tracking-Modal öffnen
+            if (type !== 'proposed' && w.exercises.includes("Bankdrücken (LH)")) {
+                await window.openTrackModal("Bankdrücken (LH)");
+            }
+            
             window.showFloatingPoints(15);
             
             let payload = { 
