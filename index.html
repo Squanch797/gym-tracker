@@ -77,12 +77,10 @@
         .hud-item { display: flex; align-items: center; gap: 4px; font-size: 16px; font-weight: 700; color: var(--ios-text); }
         .hud-divider { width: 1.5px; height: 16px; background: rgba(0, 0, 0, 0.1); border-radius: 2px; }
 
-        /* Segmented Control im iOS Style */
+        /* Segmented Control */
         .kps-tabs-container { 
             display: flex; background: var(--ios-gray-bg); padding: 4px; 
-            border-radius: 99px; 
-            margin: 0 auto 20px auto; 
-            max-width: 600px;
+            border-radius: 99px; margin: 0 auto 20px auto; max-width: 600px;
         }
         .main-tab-btn {
             flex: 1; text-align: center; background: transparent; border: none; padding: 8px 0; 
@@ -100,14 +98,14 @@
         .tab-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Cleane Cards im iOS Style */
+        /* Cleane Cards */
         .kps-box {
             background: var(--ios-card); padding: 24px; margin-bottom: 20px; border-radius: 28px; 
             box-shadow: 0 4px 24px rgba(0,0,0,0.04); position: relative; overflow: hidden;
         }
         .kps-box h3 { margin-top: 0; color: var(--ios-text); font-size: 22px; font-weight: 800; margin-bottom: 20px; letter-spacing: -0.5px; }
 
-        /* Buttons im iOS Style */
+        /* Buttons */
         .kps-btn-main {
             background: var(--ios-blue); color: #ffffff;
             border: none; padding: 18px 24px; border-radius: 20px; font-size: 18px; font-weight: 700; 
@@ -145,7 +143,6 @@
             100% { transform: scale(1); opacity: 1; }
         }
 
-        /* Apple spezifische Farbanpassungen */
         .text-emerald-600 { color: var(--ios-green) !important; }
         .bg-emerald-500 { background-color: var(--ios-green) !important; }
         .text-teal-600 { color: var(--ios-teal) !important; }
@@ -154,9 +151,7 @@
         .bg-blue-600 { background-color: var(--ios-blue) !important; }
 
         @media (max-width: 640px) {
-            body {
-                padding-top: calc(env(safe-area-inset-top) + 102px); 
-            }
+            body { padding-top: calc(env(safe-area-inset-top) + 102px); }
             .kps-topbar { padding: calc(env(safe-area-inset-top) + 12px) 16px 12px 16px; }
             .topbar-title { font-size: 22px; }
             .hud-pill { padding: 6px 14px; }
@@ -178,6 +173,17 @@
                 Mit Google anmelden
             </button>
             <p id="login-error" style="color: #ff3b30; font-size: 13px; font-weight: 600; margin-top: 16px; display: none;"></p>
+        </div>
+    </div>
+
+    <!-- Retro Log Modal (Nachtragen) -->
+    <div id="retro-modal" class="hidden fixed inset-0 z-[10003] flex items-end justify-center bg-black/40 backdrop-blur-sm p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-[32px] p-6 w-full max-w-sm shadow-2xl transform translate-y-full transition-transform duration-300" id="retro-modal-box">
+            <h3 class="text-xl font-extrabold mb-4 text-slate-900 text-center tracking-tight" id="retro-modal-title">Nachtragen</h3>
+            <div class="grid grid-cols-2 gap-3 mb-6" id="retro-options">
+                <!-- Javascript füllt dies mit Buttons -->
+            </div>
+            <button onclick="window.closeRetroModal()" class="w-full py-3.5 bg-slate-100 text-slate-600 font-bold rounded-[16px] active:scale-95 transition-transform">Abbrechen</button>
         </div>
     </div>
 
@@ -203,11 +209,11 @@
             <div class="flex gap-4 mb-6">
                 <div class="flex-1">
                     <label class="block text-xs font-bold text-slate-400 uppercase tracking-wide mb-2 text-center">Gewicht (kg)</label>
-                    <input type="number" id="track-input-weight" class="w-full bg-slate-100 rounded-[16px] px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500 font-bold text-center text-xl text-blue-600" placeholder="0">
+                    <input type="number" id="track-input-weight" class="w-full bg-slate-100 rounded-[16px] px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500 font-bold text-center text-xl text-blue-600" placeholder="z.B. 80">
                 </div>
                 <div class="flex-1">
                     <label class="block text-xs font-bold text-slate-400 uppercase tracking-wide mb-2 text-center">Wdh.</label>
-                    <input type="number" id="track-input-reps" class="w-full bg-slate-100 rounded-[16px] px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500 font-bold text-center text-xl text-blue-600" placeholder="0">
+                    <input type="number" id="track-input-reps" class="w-full bg-slate-100 rounded-[16px] px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500 font-bold text-center text-xl text-blue-600" placeholder="z.B. 5">
                 </div>
             </div>
 
@@ -361,12 +367,13 @@
                         </div>
                     </div>
                     
+                    <!-- NEUER CHART BEREICH -->
                     <div class="kps-box">
                         <h3 class="mb-5 flex justify-between items-center">
-                            <span>📈 Kraft-Fortschritt</span>
+                            <span>📈 Kraft (e1RM)</span>
                             <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider bg-slate-100 px-2 py-1 rounded-lg">Bankdrücken</span>
                         </h3>
-                        <div id="progressChartContainer" class="flex items-end gap-2 h-36 mt-8">
+                        <div id="progressChartContainer" class="flex items-end gap-2 h-36 mt-10">
                             <!-- Bars dynamic -->
                         </div>
                         <div id="progressChartLabels" class="flex gap-2 mt-3 text-[10px] text-slate-400 font-bold text-center">
@@ -497,6 +504,8 @@
         // Progressive Overload Tracking State
         let tempTrackedExercises = {};
         let currentTrackExercise = null;
+        let pendingWorkoutType = null;
+        let pendingWorkoutDate = null;
 
         // --- SWIPE NAVIGATION ---
         let touchstartX = 0;
@@ -506,18 +515,13 @@
         const tabsOrder = ['tracker', 'calendar', 'plan', 'karriere'];
 
         document.addEventListener('touchstart', e => {
-            // Keine Swipes wenn man in Modals oder Input Feldern ist
-            if (e.target.closest('#kps-modal') || e.target.closest('#track-modal') || e.target.closest('#celebration-modal') || e.target.tagName.toLowerCase() === 'input') {
-                return;
-            }
+            if (e.target.closest('#kps-modal') || e.target.closest('#track-modal') || e.target.closest('#retro-modal') || e.target.closest('#celebration-modal') || e.target.tagName.toLowerCase() === 'input') return;
             touchstartX = e.changedTouches[0].screenX;
             touchstartY = e.changedTouches[0].screenY;
         }, {passive: true});
 
         document.addEventListener('touchend', e => {
-            if (e.target.closest('#kps-modal') || e.target.closest('#track-modal') || e.target.closest('#celebration-modal') || e.target.tagName.toLowerCase() === 'input') {
-                return;
-            }
+            if (e.target.closest('#kps-modal') || e.target.closest('#track-modal') || e.target.closest('#retro-modal') || e.target.closest('#celebration-modal') || e.target.tagName.toLowerCase() === 'input') return;
             touchendX = e.changedTouches[0].screenX;
             touchendY = e.changedTouches[0].screenY;
             handleSwipe();
@@ -526,19 +530,11 @@
         function handleSwipe() {
             const diffX = touchendX - touchstartX;
             const diffY = touchendY - touchstartY;
-
-            // Toleranz für den Swipe (horizontal wischen muss stärker sein als vertikal)
             if (Math.abs(diffX) > 60 && Math.abs(diffX) > Math.abs(diffY)) {
                 let currentTab = tabsOrder.find(t => document.getElementById(`tab-${t}`).classList.contains('active')) || 'tracker';
                 let currentIndex = tabsOrder.indexOf(currentTab);
-
-                if (diffX < 0) {
-                    // Wisch nach Links -> Nächster Tab
-                    if (currentIndex < tabsOrder.length - 1) window.switchTab(tabsOrder[currentIndex + 1]);
-                } else {
-                    // Wisch nach Rechts -> Vorheriger Tab
-                    if (currentIndex > 0) window.switchTab(tabsOrder[currentIndex - 1]);
-                }
+                if (diffX < 0 && currentIndex < tabsOrder.length - 1) window.switchTab(tabsOrder[currentIndex + 1]);
+                else if (diffX > 0 && currentIndex > 0) window.switchTab(tabsOrder[currentIndex - 1]);
             }
         }
 
@@ -587,12 +583,11 @@
             if (confirmed) { auth.signOut(); }
         };
 
-        // --- UI ANIMATIONS & MODALS ---
+        // --- MODALS & ANIMATIONS ---
         window.showModal = function(title, text, showInput = false) {
             return new Promise((resolve) => {
                 const modal = document.getElementById('kps-modal');
                 const box = document.getElementById('kps-modal-box');
-                
                 document.getElementById('modal-title').innerText = title;
                 document.getElementById('modal-text').innerText = text;
                 const input = document.getElementById('modal-input');
@@ -613,25 +608,62 @@
             });
         };
 
-        let resolveTrackModal = null;
+        // Retro-Modal logic
+        window.openRetroModal = function(dateStr) {
+            const formatted = dateStr.split('-').reverse().join('.');
+            document.getElementById('retro-modal-title').innerText = `Nachtrag für ${formatted}`;
+            
+            let html = routine.map(r => 
+                `<button onclick="window.logSelectedWorkout('${r.name}', '${dateStr}')" class="bg-slate-50 text-blue-600 py-3 rounded-[16px] font-bold border border-slate-100 active:bg-slate-200 transition-colors">${r.name}</button>`
+            ).join('');
+            html += `<button onclick="window.logRetroSpecial('Rest Day', '${dateStr}')" class="bg-slate-50 text-slate-600 py-3 rounded-[16px] font-bold border border-slate-100 active:bg-slate-200 transition-colors">Rest Day</button>`;
+            html += `<button onclick="window.logRetroSpecial('Skipped', '${dateStr}')" class="bg-red-50 text-red-500 py-3 rounded-[16px] font-bold border border-red-100 active:bg-red-100 transition-colors">Skipped</button>`;
+            
+            document.getElementById('retro-options').innerHTML = html;
+            
+            const modal = document.getElementById('retro-modal');
+            const box = document.getElementById('retro-modal-box');
+            modal.classList.remove('hidden');
+            setTimeout(() => { modal.classList.add('opacity-100'); box.classList.remove('translate-y-full'); }, 10);
+        };
 
+        window.closeRetroModal = function() {
+            const modal = document.getElementById('retro-modal');
+            const box = document.getElementById('retro-modal-box');
+            modal.classList.remove('opacity-100'); box.classList.add('translate-y-full');
+            setTimeout(() => { modal.classList.add('hidden'); }, 300);
+        };
+
+        window.logRetroSpecial = async function(type, dateStr) {
+            if(!currentUser) return;
+            window.closeRetroModal();
+            let payload = { date: dateStr, timestamp: firebase.firestore.FieldValue.serverTimestamp() };
+            if (type === 'Rest Day') {
+                payload.type = "Active Rest geloggt";
+                payload.status = "rest";
+                window.showFloatingPoints(5);
+            } else {
+                payload.type = "Skip: Nachtrag";
+                payload.status = "skipped";
+                payload.reason = "Nachträglich markiert";
+            }
+            await db.collection('workouts').add(payload);
+        };
+
+        // Tracking Modal Logic
         window.openTrackModal = function(exName) {
-            return new Promise((resolve) => {
-                resolveTrackModal = resolve;
-                currentTrackExercise = exName;
-                document.getElementById('track-modal-title').innerText = exName;
-                
-                const existing = tempTrackedExercises[exName];
-                document.getElementById('track-input-weight').value = existing ? existing.weight : '';
-                document.getElementById('track-input-reps').value = existing ? existing.reps : '';
-                
-                const modal = document.getElementById('track-modal');
-                const box = document.getElementById('track-modal-box');
-                modal.classList.remove('hidden');
-                setTimeout(() => { modal.classList.add('opacity-100'); box.classList.remove('scale-95'); }, 10);
-                
-                setTimeout(() => document.getElementById('track-input-weight').focus(), 300);
-            });
+            currentTrackExercise = exName;
+            document.getElementById('track-modal-title').innerText = exName;
+            
+            const existing = tempTrackedExercises[exName];
+            document.getElementById('track-input-weight').value = existing ? existing.weight : '';
+            document.getElementById('track-input-reps').value = existing ? existing.reps : '';
+            
+            const modal = document.getElementById('track-modal');
+            const box = document.getElementById('track-modal-box');
+            modal.classList.remove('hidden');
+            setTimeout(() => { modal.classList.add('opacity-100'); box.classList.remove('scale-95'); }, 10);
+            setTimeout(() => document.getElementById('track-input-weight').focus(), 300);
         };
 
         window.closeTrackModal = function(save) {
@@ -639,21 +671,38 @@
                 const w = parseFloat(document.getElementById('track-input-weight').value);
                 const r = parseInt(document.getElementById('track-input-reps').value);
                 if (w > 0 && r > 0) {
-                    tempTrackedExercises[currentTrackExercise] = { weight: w, reps: r };
+                    // Berechnung des e1RM (Epley Formel)
+                    const e1rm = Math.round(w * (1 + r / 30));
+                    tempTrackedExercises[currentTrackExercise] = { weight: w, reps: r, e1rm: e1rm };
                 }
             }
             const modal = document.getElementById('track-modal');
             const box = document.getElementById('track-modal-box');
             modal.classList.remove('opacity-100'); box.classList.add('scale-95');
             
-            let resolveRef = resolveTrackModal;
-            resolveTrackModal = null;
-            
             setTimeout(() => { 
                 modal.classList.add('hidden'); 
                 currentTrackExercise = null;
-                renderProposedWorkoutDetails(); // UI aktualisieren
-                if(resolveRef) resolveRef(save);
+                
+                // Falls wir durch Alternatives/Nachtragen hier gelandet sind
+                if (pendingWorkoutType) {
+                    if (save) {
+                        let payload = { 
+                            date: pendingWorkoutDate, 
+                            type: pendingWorkoutType, 
+                            status: "done", 
+                            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                            trackedData: tempTrackedExercises
+                        };
+                        window.showFloatingPoints(15);
+                        db.collection('workouts').add(payload);
+                    }
+                    pendingWorkoutType = null;
+                    pendingWorkoutDate = null;
+                    tempTrackedExercises = {};
+                } else {
+                    renderProposedWorkoutDetails();
+                }
             }, 300);
         };
 
@@ -697,7 +746,6 @@
         };
 
         // --- APP DATA & LOGIC ---
-        // Push Routine aktualisiert, um "Bankdrücken (LH)" zu enthalten
         const routine = [
             { 
                 name: "Oberkörper", motto: "Schwere Gewichte. Voller Fokus.", color: "blue",
@@ -785,17 +833,13 @@
             return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
         }
 
-        // --- Personalisierte Sprüche für Simon ---
         function getPersonalizedQuote(workoutType, streak, isDone) {
             const useName = Math.random() > 0.5 ? ", Simon" : "";
-            
             if (isDone) return `Stark abgeliefert${useName}! Erhol dich gut, morgen geht's weiter.`;
             if (streak >= 3 && Math.random() > 0.4) return `${streak} Tage Streak! Du bist on fire${useName} 🔥 Behalte das Momentum.`;
-            
             if (workoutType.includes("Unterkörper") || workoutType.includes("Beine")) return `Beine wachsen nicht vom Reden${useName}. Lass brennen!`;
             if (workoutType.includes("Oberkörper") || workoutType.includes("Push") || workoutType.includes("Pull")) return `Schwere Gewichte. Voller Fokus. Lass uns wachsen${useName}.`;
             if (workoutType.includes("Cardio")) return `Aktive Erholung und Cardio. Gut fürs Herz und die Gains${useName}!`;
-            
             return `Lass uns heute Gas geben${useName}!`;
         }
 
@@ -881,7 +925,6 @@
             return nextWorkout || routine[0];
         }
 
-        // Rendert die Liste der Übungen und baut die klickbaren Track-Buttons ein
         function renderProposedWorkoutDetails() {
             if (!proposedWorkout) return;
             document.getElementById('proposedWorkoutDetails').innerHTML = proposedWorkout.exercises.map(ex => {
@@ -905,32 +948,39 @@
             }).join('');
         }
 
-        window.logSelectedWorkout = async function(type) {
+        window.logSelectedWorkout = async function(type, retroDate = null) {
             if(!currentUser) return;
             let w = type === 'proposed' ? proposedWorkout : routine.find(r => r.name === type);
             if(!w) return;
             
-            // Wenn alternatives Workout gewählt wurde und es Bankdrücken enthält -> Tracking-Modal öffnen
-            if (type !== 'proposed' && w.exercises.includes("Bankdrücken (LH)")) {
-                await window.openTrackModal("Bankdrücken (LH)");
+            if (retroDate) window.closeRetroModal();
+
+            const dateToLog = retroDate || getLocalTodayDate();
+            let needsTracking = w.exercises.includes("Bankdrücken (LH)");
+
+            // Wenn es manuell ausgewählt wurde (Alternative oder Retro) UND getrackt werden muss:
+            if (type !== 'proposed' && needsTracking) {
+                pendingWorkoutType = w.name;
+                pendingWorkoutDate = dateToLog;
+                window.openTrackModal("Bankdrücken (LH)");
+                return; // Die Log-Funktion wird in closeTrackModal fortgesetzt
             }
-            
+
+            // Normaler Ablauf (Proposed geklickt oder Übung ohne Tracking)
             window.showFloatingPoints(15);
-            
             let payload = { 
-                date: getLocalTodayDate(), 
+                date: dateToLog, 
                 type: w.name, 
                 status: "done", 
                 timestamp: firebase.firestore.FieldValue.serverTimestamp() 
             };
             
-            // Gefüllte Track-Daten anhängen, falls vorhanden
             if (Object.keys(tempTrackedExercises).length > 0) {
                 payload.trackedData = tempTrackedExercises;
             }
 
             await db.collection('workouts').add(payload);
-            tempTrackedExercises = {}; // Cache leeren
+            tempTrackedExercises = {}; 
         };
 
         window.logRestDay = async function() {
@@ -993,10 +1043,8 @@
                     if (data.status === 'done') dayDiv.className += data.type.includes('Cardio') ? "bg-teal-400 text-white" : "bg-emerald-500 text-white";
                     else dayDiv.className += "bg-slate-200 text-slate-500";
                     
-                    // Klickbar machen für Modal
                     dayDiv.classList.add('cursor-pointer', 'active:scale-90');
                     dayDiv.onclick = () => window.showDayDetails(data);
-
                 } else {
                     if(dateKey < todayKey && dateKey >= firstAppUseDate) {
                         dayDiv.className += "bg-slate-100 text-slate-400 opacity-60 cursor-pointer active:scale-90";
@@ -1019,10 +1067,19 @@
                     const isRestOrSkip = (item.status === 'rest' || item.status === 'skipped');
                     let titleStyle = isRestOrSkip ? "text-slate-500 font-medium" : (item.type.includes('Cardio') ? "text-teal-600 font-bold" : "text-emerald-600 font-bold");
                     let subText = item.reason ? `Grund: ${item.reason}` : item.date.split('-').reverse().join('.');
+                    
+                    // Button zum Bearbeiten/Löschen
+                    let actionBtn = '';
+                    if (!item.id.startsWith('auto-')) {
+                        actionBtn = `<button onclick="window.deleteEntry('${item.id}')" class="text-slate-300 hover:text-red-500 transition-colors p-2"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>`;
+                    } else {
+                        actionBtn = `<button onclick="window.openRetroModal('${item.date}')" class="text-slate-300 hover:text-blue-500 transition-colors p-2" title="Nachtragen"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button>`;
+                    }
+
                     return `
                         <div class="bg-slate-50 p-5 rounded-2xl flex justify-between items-center border border-slate-100">
                             <div><p class="${titleStyle} text-[17px] mb-1.5">${item.type}</p><p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">${subText}</p></div>
-                            ${!item.id.startsWith('auto-') ? `<button onclick="window.deleteEntry('${item.id}')" class="text-slate-300 hover:text-red-500 transition-colors p-2"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>` : ''}
+                            ${actionBtn}
                         </div>`;
                 }).join('');
 
@@ -1105,7 +1162,6 @@
             }
 
             // --- TRACKING GRAFIK ZEICHNEN ---
-            // Nimmt "Bankdrücken (LH)" oder alte "LH/KH" Einträge für lückenlose Historie
             const trackDataList = workoutsList
                 .filter(w => w.status === 'done' && w.trackedData && (w.trackedData["Bankdrücken (LH)"] || w.trackedData["Bankdrücken (LH/KH)"]))
                 .sort((a,b) => a.date.localeCompare(b.date))
@@ -1115,22 +1171,27 @@
             const chartLabels = document.getElementById('progressChartLabels');
 
             if (trackDataList.length > 0) {
-                const maxWeight = Math.max(...trackDataList.map(d => {
+                const maxE1RM = Math.max(...trackDataList.map(d => {
                     let td = d.trackedData["Bankdrücken (LH)"] || d.trackedData["Bankdrücken (LH/KH)"];
-                    return td.weight;
+                    return td.e1rm || td.weight; // Fallback auf Gewichte, falls e1rm nicht existiert
                 }), 40);
                 
                 chartContainer.innerHTML = trackDataList.map((d, index) => {
                     const data = d.trackedData["Bankdrücken (LH)"] || d.trackedData["Bankdrücken (LH/KH)"];
-                    const heightPerc = Math.max(15, (data.weight / maxWeight) * 100); 
+                    const e1rmVal = data.e1rm || data.weight; 
+                    const repsVal = data.reps || 1;
+                    const weightVal = data.weight;
+
+                    const heightPerc = Math.max(15, (e1rmVal / maxE1RM) * 100); 
                     const isLast = index === trackDataList.length - 1;
                     const barColor = isLast ? 'bg-blue-500 shadow-lg shadow-blue-500/40' : 'bg-blue-200';
                     
                     return `
                         <div class="flex-1 flex flex-col justify-end items-center group relative h-full">
-                            <div class="absolute -top-8 w-full flex flex-col items-center justify-end text-center">
-                                <span class="text-[11px] font-black text-slate-700 leading-none">${data.weight}<span class="text-[8px] font-bold text-slate-400 ml-0.5">kg</span></span>
-                                <span class="text-[9px] font-bold text-slate-500 mt-0.5">${data.reps}x</span>
+                            <div class="absolute -top-10 w-full flex flex-col items-center justify-end text-center">
+                                <span class="text-[11px] font-black text-slate-700 leading-none">${e1rmVal}<span class="text-[8px] font-bold text-slate-400 ml-0.5">kg</span></span>
+                                <span class="text-[9px] font-bold text-slate-400 mt-1 uppercase whitespace-nowrap hidden sm:block">${weightVal}kg × ${repsVal}</span>
+                                <span class="text-[9px] font-bold text-slate-400 mt-0.5 sm:hidden">${weightVal}×${repsVal}</span>
                             </div>
                             <div class="w-full ${barColor} rounded-t-[8px] transition-all duration-500" style="height: ${heightPerc}%"></div>
                         </div>
